@@ -292,8 +292,8 @@ function AllSelectable({ selectedIds, setSelectedIds }) {
       <div className="grid sm:grid-cols-3 gap-3">
         {DATA.map(k => {
           // on homogénéise en hiragana pour l'affichage
-          const kunKana = (k.kunyomi ?? []).map(normalizeKana);
-          const onKana  = (k.onyomi  ?? []).map(normalizeKana);
+          const kunKana = k.kunyomi ?? [];
+          const onKana  = k.onyomi ?? [];
           return (
             <label key={k.id} className={`p-3 rounded-xl border cursor-pointer ${selectedIds.has(k.id)?"bg-pink-100 border-pink-300":"bg-white hover:bg-gray-50"}`}>
               <div className="flex items-center">
