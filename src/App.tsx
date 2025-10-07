@@ -217,7 +217,7 @@ function getReadingsBothByType(k) {
   return { kunKana, onKana, kunRoma, onRoma };
 }
 
-/** Pastilles colorées : KUN = bleu, ON = orange */
+/** Pastilles colorées : KUN = bleu, ON = orange (prend kana ou romaji selon ce qu'on lui passe) */
 function ReadingChips({ kun = [], on = [], className = "" }) {
   return (
     <span className={`inline-flex flex-wrap gap-2 ${className}`}>
@@ -292,8 +292,8 @@ function AllSelectable({ selectedIds, setSelectedIds }) {
       <div className="grid sm:grid-cols-3 gap-3">
         {DATA.map(k => {
           // on homogénéise en hiragana pour l'affichage
-          const kunKana = k.kunyomi ?? [];
-          const onKana  = k.onyomi ?? [];
+          const kunKana = (k.kunyomi ?? []).map(normalizeKana);
+          const onKana  = (k.onyomi  ?? []).map(normalizeKana);
           return (
             <label key={k.id} className={`p-3 rounded-xl border cursor-pointer ${selectedIds.has(k.id)?"bg-pink-100 border-pink-300":"bg-white hover:bg-gray-50"}`}>
               <div className="flex items-center">
@@ -421,7 +421,7 @@ function QuizTradToKanji({ picked, onBack, title }) {
       ) : (
         <div className="space-y-3">
           {questions.map((q, qi) => (
-            <div key={qi} className="p-3 rounded-xl bg-gray-50">
+            <div key={qi} className="p-3 rounded-2xl bg-gray-50">
               <div className="mb-2 font-medium">{q.prompt}</div>
               <div className="grid sm:grid-cols-4 gap-2">
                 {q.choices.map((c, ci) => {
@@ -463,7 +463,7 @@ function QuizTradToKanji({ picked, onBack, title }) {
   );
 }
 
-/** ================== Quiz Kanji → Traduction (toutes les traductions) ================== */
+/** ================== Quiz Kanji → Traduction (toutes les réponses) ================== */
 function QuizKanjiTrad({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -617,7 +617,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
   );
 }
 
-/** ================== Quiz Kanji → Lecture (rōmaji OU kana, récap KUN/ON coloré) ================== */
+/** ================== Quiz Kanji → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
 function QuizKanjiLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -664,6 +664,8 @@ function QuizKanjiLecture({ picked, onBack, title }) {
       found: foundNow,
       kun: currentQ.kunRoma,
       on: currentQ.onRoma,
+      kunKana: currentQ.kunKana,   // KANA sauvés pour affichage
+      onKana: currentQ.onKana,
     });
     if (idx + 1 < total) {
       setIdx(idx + 1);
@@ -751,36 +753,50 @@ function QuizKanjiLecture({ picked, onBack, title }) {
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
-            const foundSet = new Set(r.found);
-            const missingAll = r.expected.filter(x => !foundSet.has(x));
-            const missingKun = r.kun.filter(x => !foundSet.has(x));
-            const missingOn  = r.on.filter(x => !foundSet.has(x));
+            const foundSet = new Set(r.found); // romaji normalisés saisis
+
+            // Lier romaji <-> kana par index
+            const pairsKun = r.kun.map((roma, idx) => ({ roma, kana: r.kunKana[idx] }));
+            const pairsOn  = r.on.map((roma, idx)  => ({ roma, kana: r.onKana[idx]  }));
+
+            // Kana trouvés
+            const foundKunKana = pairsKun.filter(p => foundSet.has(p.roma)).map(p => p.kana);
+            const foundOnKana  = pairsOn .filter(p => foundSet.has(p.roma)).map(p => p.kana);
+
+            // Attendues (kana)
+            const expKunKana = r.kunKana;
+            const expOnKana  = r.onKana;
+
+            // Manquantes (kana)
+            const missKunKana = pairsKun.filter(p => !foundSet.has(p.roma)).map(p => p.kana);
+            const missOnKana  = pairsOn .filter(p => !foundSet.has(p.roma)).map(p => p.kana);
+
+            const totalExp = r.expected.length;
+            const totalFound = totalExp - (missKunKana.length + missOnKana.length);
+
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-2xl font-bold">{r.id}</div>
-                  <div className={missingAll.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
-                    {r.expected.length - missingAll.length}/{r.expected.length}
+                  <div className={totalFound===totalExp ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {totalFound}/{totalExp}
                   </div>
                 </div>
 
                 <div className="text-sm mb-1">
                   <span className="text-gray-500">Trouvées :</span>{" "}
-                  <ReadingChips
-                    kun={r.found.filter(x => r.kun.includes(x))}
-                    on={r.found.filter(x => r.on.includes(x))}
-                  />
+                  <ReadingChips kun={foundKunKana} on={foundOnKana} />
                 </div>
 
                 <div className="text-sm mb-1">
                   <span className="text-gray-500">Attendues :</span>{" "}
-                  <ReadingChips kun={r.kun} on={r.on} />
+                  <ReadingChips kun={expKunKana} on={expOnKana} />
                 </div>
 
-                {missingAll.length>0 && (
+                {(missKunKana.length>0 || missOnKana.length>0) && (
                   <div className="text-sm">
                     <span className="text-gray-500">Manquantes :</span>{" "}
-                    <ReadingChips kun={missingKun} on={missingOn} />
+                    <ReadingChips kun={missKunKana} on={missOnKana} />
                   </div>
                 )}
               </div>
@@ -795,7 +811,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
   );
 }
 
-/** ================== Quiz Traduction → Lecture (kana OU rōmaji, récap KUN/ON coloré) ================== */
+/** ================== Quiz Traduction → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
 function QuizTradLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -844,6 +860,8 @@ function QuizTradLecture({ picked, onBack, title }) {
       found: foundNow,
       kun: currentQ.kunRoma,
       on: currentQ.onRoma,
+      kunKana: currentQ.kunKana,
+      onKana: currentQ.onKana,
     });
     if (idx + 1 < total) {
       setIdx(idx + 1);
@@ -935,35 +953,45 @@ function QuizTradLecture({ picked, onBack, title }) {
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
-            const missingAll = r.expected.filter(x=>!foundSet.has(x));
-            const missingKun = r.kun.filter(x=>!foundSet.has(x));
-            const missingOn  = r.on.filter(x=>!foundSet.has(x));
+
+            const pairsKun = r.kun.map((roma, idx) => ({ roma, kana: r.kunKana[idx] }));
+            const pairsOn  = r.on.map((roma, idx)  => ({ roma, kana: r.onKana[idx]  }));
+
+            const foundKunKana = pairsKun.filter(p => foundSet.has(p.roma)).map(p => p.kana);
+            const foundOnKana  = pairsOn .filter(p => foundSet.has(p.roma)).map(p => p.kana);
+
+            const expKunKana = r.kunKana;
+            const expOnKana  = r.onKana;
+
+            const missKunKana = pairsKun.filter(p => !foundSet.has(p.roma)).map(p => p.kana);
+            const missOnKana  = pairsOn .filter(p => !foundSet.has(p.roma)).map(p => p.kana);
+
+            const totalExp = r.expected.length;
+            const totalFound = totalExp - (missKunKana.length + missOnKana.length);
+
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-2xl font-bold">{r.meaningPretty.join(" ／ ")}</div>
-                  <div className={missingAll.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
-                    {r.expected.length - missingAll.length}/{r.expected.length}
+                  <div className={totalFound===totalExp ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {totalFound}/{totalExp}
                   </div>
                 </div>
 
                 <div className="text-sm mb-1">
                   <span className="text-gray-500">Trouvées :</span>{" "}
-                  <ReadingChips
-                    kun={r.found.filter(x => r.kun.includes(x))}
-                    on={r.found.filter(x => r.on.includes(x))}
-                  />
+                  <ReadingChips kun={foundKunKana} on={foundOnKana} />
                 </div>
 
                 <div className="text-sm mb-1">
                   <span className="text-gray-500">Attendues :</span>{" "}
-                  <ReadingChips kun={r.kun} on={r.on} />
+                  <ReadingChips kun={expKunKana} on={expOnKana} />
                 </div>
 
-                {missingAll.length>0 && (
+                {(missKunKana.length>0 || missOnKana.length>0) && (
                   <div className="text-sm">
                     <span className="text-gray-500">Manquantes :</span>{" "}
-                    <ReadingChips kun={missingKun} on={missingOn} />
+                    <ReadingChips kun={missKunKana} on={missOnKana} />
                   </div>
                 )}
               </div>
