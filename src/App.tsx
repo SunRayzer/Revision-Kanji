@@ -22,21 +22,21 @@ const DATA = [
   { id: "子", meaningFR: "enfant", meaningEN: "child", onyomi: ["シ"], kunyomi: ["こ"] },
   { id: "女", meaningFR: "femme", meaningEN: "woman", onyomi: ["ジョ","ニョ"], kunyomi: ["おんな","め"] },
   { id: "男", meaningFR: "homme", meaningEN: "man", onyomi: ["ダン","ナン"], kunyomi: ["おとこ"] },
-  { id: "上", meaningFR: "au-dessus; monter", meaningEN: "above; up", onyomi: ["ジョウ"], kunyomi: ["うえ","あげる","あがる","のぼる"] },
-  { id: "下", meaningFR: "en dessous; descendre", meaningEN: "below; down", onyomi: ["カ","ゲ"], kunyomi: ["した","さげる","さがる","くだる"] },
-  { id: "中", meaningFR: "milieu; intérieur", meaningEN: "middle; inside", onyomi: ["チュウ"], kunyomi: ["なか"] },
+  { id: "上", meaningFR: "au-dessus; monter; se lever; lever; grimper", meaningEN: "above; up", onyomi: ["ジョウ"], kunyomi: ["うえ","あげる","あがる","のぼる"] },
+  { id: "下", meaningFR: "en dessous; descendre; baisser", meaningEN: "below; down", onyomi: ["カ","ゲ"], kunyomi: ["した","さげる","さがる","くだる"] },
+  { id: "中", meaningFR: "milieu; intérieur; dans; dedans; centre; moyenne", meaningEN: "middle; inside", onyomi: ["チュウ"], kunyomi: ["なか"] },
   { id: "大", meaningFR: "grand", meaningEN: "big", onyomi: ["ダイ","タイ"], kunyomi: ["おおきい"] },
   { id: "小", meaningFR: "petit", meaningEN: "small", onyomi: ["ショウ"], kunyomi: ["ちいさい","こ","お"] },
   { id: "長", meaningFR: "long; chef", meaningEN: "long; leader", onyomi: ["チョウ"], kunyomi: ["ながい"] },
-  { id: "高", meaningFR: "haut; cher", meaningEN: "high; expensive", onyomi: ["コウ"], kunyomi: ["たかい","たか"] },
-  { id: "学", meaningFR: "études; apprendre", meaningEN: "study; learn", onyomi: ["ガク"], kunyomi: ["まなぶ"] },
+  { id: "高", meaningFR: "haut; cher; élevé", meaningEN: "high; expensive", onyomi: ["コウ"], kunyomi: ["たかい","たか"] },
+  { id: "学", meaningFR: "étudier; études; apprendre; sciense", meaningEN: "study; learn", onyomi: ["ガク"], kunyomi: ["まなぶ"] },
   { id: "校", meaningFR: "école", meaningEN: "school", onyomi: ["コウ"], kunyomi: [] },
   { id: "先", meaningFR: "avant; précédent", meaningEN: "before; previous", onyomi: ["セン"], kunyomi: ["さき"] },
-  { id: "生", meaningFR: "vie; naître; cru", meaningEN: "life; to be born; raw", onyomi: ["セイ","ショウ"], kunyomi: ["いきる","うまれる","なま"] },
-  { id: "年", meaningFR: "année", meaningEN: "year", onyomi: ["ネン"], kunyomi: ["とし"] },
+  { id: "生", meaningFR: "vie; naître; cru; vivre; authentique", meaningEN: "life; to be born; raw", onyomi: ["セイ","ショウ"], kunyomi: ["いきる","うまれる","なま"] },
+  { id: "年", meaningFR: "année; an; âge", meaningEN: "year", onyomi: ["ネン"], kunyomi: ["とし"] },
   { id: "時", meaningFR: "temps; heure", meaningEN: "time; hour", onyomi: ["ジ"], kunyomi: ["とき"] },
   { id: "間", meaningFR: "intervalle; entre", meaningEN: "interval; between", onyomi: ["カン","ケン"], kunyomi: ["あいだ","ま"] },
-  { id: "分", meaningFR: "minute; part; diviser", meaningEN: "minute; part; divide", onyomi: ["ブン","フン","ブ"], kunyomi: ["わける","わかる"] },
+  { id: "分", meaningFR: "minute; partager; diviser; comprendre; partie", meaningEN: "minute; part; divide", onyomi: ["ブン","フン","ブ"], kunyomi: ["わける","わかる"] },
   { id: "前", meaningFR: "avant; devant", meaningEN: "before; in front", onyomi: ["ゼン"], kunyomi: ["まえ"] },
   { id: "後", meaningFR: "après; derrière", meaningEN: "after; behind", onyomi: ["ゴ","コウ"], kunyomi: ["あと","うしろ","のち"] },
   { id: "北", meaningFR: "nord", meaningEN: "north", onyomi: ["ホク"], kunyomi: ["きた"] },
@@ -45,30 +45,30 @@ const DATA = [
   { id: "西", meaningFR: "ouest", meaningEN: "west", onyomi: ["セイ","サイ"], kunyomi: ["にし"] },
   { id: "左", meaningFR: "gauche", meaningEN: "left", onyomi: ["サ"], kunyomi: ["ひだり"] },
   { id: "右", meaningFR: "droite", meaningEN: "right", onyomi: ["ウ","ユウ"], kunyomi: ["みぎ"] },
-  { id: "出", meaningFR: "sortir", meaningEN: "to go out", onyomi: ["シュツ"], kunyomi: ["でる","だす"] },
-  { id: "入", meaningFR: "entrer", meaningEN: "to enter", onyomi: ["ニュウ"], kunyomi: ["はいる","いれる"] },
-  { id: "行", meaningFR: "aller; ligne", meaningEN: "to go; line", onyomi: ["コウ","ギョウ","アン"], kunyomi: ["いく","ゆく","おこなう"] },
-  { id: "来", meaningFR: "venir", meaningEN: "to come", onyomi: ["ライ"], kunyomi: ["くる","きます","こない"] },
-  { id: "見", meaningFR: "voir", meaningEN: "to see", onyomi: ["ケン"], kunyomi: ["みる","みえる","みせる"] },
+  { id: "出", meaningFR: "sortir; envoyer; présence; quitter; partir", meaningEN: "to go out", onyomi: ["シュツ"], kunyomi: ["でる","だす"] },
+  { id: "入", meaningFR: "entrer; insérer", meaningEN: "to enter", onyomi: ["ニュウ"], kunyomi: ["はいる","いれる"] },
+  { id: "行", meaningFR: "aller; ligne; organiser", meaningEN: "to go; line", onyomi: ["コウ","ギョウ","アン"], kunyomi: ["いく","ゆく","おこなう"] },
+  { id: "来", meaningFR: "venir; suivant", meaningEN: "to come", onyomi: ["ライ"], kunyomi: ["くる","きます","こない"] },
+  { id: "見", meaningFR: "voir; regarder; montrer", meaningEN: "to see", onyomi: ["ケン"], kunyomi: ["みる","みえる","みせる"] },
   { id: "言", meaningFR: "dire; mot", meaningEN: "to say; word", onyomi: ["ゲン","ゴン"], kunyomi: ["いう","こと"] },
-  { id: "話", meaningFR: "parler; histoire", meaningEN: "to speak; story", onyomi: ["ワ"], kunyomi: ["はなす","はなし"] },
+  { id: "話", meaningFR: "parler; histoire; dire", meaningEN: "to speak; story", onyomi: ["ワ"], kunyomi: ["はなす","はなし"] },
   { id: "聞", meaningFR: "entendre; écouter; demander", meaningEN: "hear; listen; ask", onyomi: ["ブン","モン"], kunyomi: ["きく","きこえる"] },
   { id: "書", meaningFR: "écrire; écrit", meaningEN: "to write; writing", onyomi: ["ショ"], kunyomi: ["かく"] },
   { id: "読", meaningFR: "lire", meaningEN: "to read", onyomi: ["ドク"], kunyomi: ["よむ"] },
   { id: "食", meaningFR: "manger; nourriture", meaningEN: "to eat; food", onyomi: ["ショク"], kunyomi: ["たべる","くう"] },
-  { id: "飲", meaningFR: "boire", meaningEN: "to drink", onyomi: ["イン"], kunyomi: ["のむ"] },
+  { id: "飲", meaningFR: "boire; boisson; avaler", meaningEN: "to drink", onyomi: ["イン"], kunyomi: ["のむ"] },
   { id: "買", meaningFR: "acheter", meaningEN: "to buy", onyomi: ["バイ"], kunyomi: ["かう"] },
   { id: "売", meaningFR: "vendre", meaningEN: "to sell", onyomi: ["バイ"], kunyomi: ["うる"] },
-  { id: "店", meaningFR: "magasin", meaningEN: "shop", onyomi: ["テン"], kunyomi: ["みせ"] },
-  { id: "車", meaningFR: "voiture", meaningEN: "car", onyomi: ["シャ"], kunyomi: ["くるま"] },
-  { id: "駅", meaningFR: "gare", meaningEN: "station", onyomi: ["エキ"], kunyomi: [] },
+  { id: "店", meaningFR: "magasin; boutique; échoppe; établissement", meaningEN: "shop", onyomi: ["テン"], kunyomi: ["みせ"] },
+  { id: "車", meaningFR: "voiture; véhicule; roue", meaningEN: "car", onyomi: ["シャ"], kunyomi: ["くるま"] },
+  { id: "駅", meaningFR: "gare; station", meaningEN: "station", onyomi: ["エキ"], kunyomi: [] },
   { id: "道", meaningFR: "route; chemin", meaningEN: "road; way", onyomi: ["ドウ"], kunyomi: ["みち"] },
-  { id: "山", meaningFR: "montagne", meaningEN: "mountain", onyomi: ["サン"], kunyomi: ["やま"] },
-  { id: "川", meaningFR: "rivière", meaningEN: "river", onyomi: ["セン"], kunyomi: ["かわ"] },
+  { id: "山", meaningFR: "montagne", meaningEN: "mountain", onyomi: ["サン","ザン","セン"], kunyomi: ["やま"] },
+  { id: "川", meaningFR: "rivière; fleuve", meaningEN: "river", onyomi: ["セン"], kunyomi: ["かわ"] },
   { id: "田", meaningFR: "rizière; champ", meaningEN: "rice field", onyomi: ["デン"], kunyomi: ["た"] },
   { id: "町", meaningFR: "ville; quartier", meaningEN: "town", onyomi: ["チョウ"], kunyomi: ["まち"] },
   { id: "村", meaningFR: "village", meaningEN: "village", onyomi: ["ソン"], kunyomi: ["むら"] },
-  { id: "空", meaningFR: "ciel; vide", meaningEN: "sky; empty", onyomi: ["クウ"], kunyomi: ["そら","から"] },
+  { id: "空", meaningFR: "ciel; vide; se vider; creux; se libérer", meaningEN: "sky; empty", onyomi: ["クウ"], kunyomi: ["そら","から"] },
   { id: "天", meaningFR: "ciel; paradis", meaningEN: "heaven; sky", onyomi: ["テン"], kunyomi: [] },
   { id: "気", meaningFR: "esprit; air; humeur", meaningEN: "spirit; air", onyomi: ["キ"], kunyomi: [] },
   { id: "雨", meaningFR: "pluie", meaningEN: "rain", onyomi: ["ウ"], kunyomi: ["あめ"] },
@@ -80,58 +80,44 @@ const DATA = [
   { id: "森", meaningFR: "forêt (dense)", meaningEN: "forest", onyomi: ["シン"], kunyomi: ["もり"] },
   { id: "林", meaningFR: "bois (petite forêt)", meaningEN: "grove", onyomi: ["リン"], kunyomi: ["はやし"] },
   { id: "石", meaningFR: "pierre", meaningEN: "stone", onyomi: ["セキ"], kunyomi: ["いし"] },
-  { id: "金", meaningFR: "or; argent (monnaie); vendredi", meaningEN: "gold; money; Friday", onyomi: ["キン","コン"], kunyomi: ["かね"] },
-  { id: "土", meaningFR: "terre; sol; samedi", meaningEN: "earth; Saturday", onyomi: ["ド","ト"], kunyomi: ["つち"] },
-  { id: "水", meaningFR: "eau; mercredi", meaningEN: "water; Wednesday", onyomi: ["スイ"], kunyomi: ["みず"] },
-  { id: "火", meaningFR: "feu; mardi", meaningEN: "fire; Tuesday", onyomi: ["カ"], kunyomi: ["ひ"] },
-  { id: "月", meaningFR: "lune; mois; lundi", meaningEN: "moon; Monday", onyomi: ["ゲツ","ガツ"], kunyomi: ["つき"] },
+  { id: "金", meaningFR: "or; argent (monnaie); métal", meaningEN: "gold; money; Friday", onyomi: ["キン","コン"], kunyomi: ["かね"] },
+  { id: "土", meaningFR: "terre; sol; terrain", meaningEN: "earth; Saturday", onyomi: ["ド","ト"], kunyomi: ["つち"] },
+  { id: "水", meaningFR: "eau", meaningEN: "water; Wednesday", onyomi: ["スイ"], kunyomi: ["みず"] },
+  { id: "火", meaningFR: "feu", meaningEN: "fire; Tuesday", onyomi: ["カ"], kunyomi: ["ひ"] },
+  { id: "月", meaningFR: "lune; mois", meaningEN: "moon; Monday", onyomi: ["ゲツ","ガツ"], kunyomi: ["つき"] },
   { id: "今", meaningFR: "maintenant", meaningEN: "now", onyomi: ["コン"], kunyomi: ["いま"] },
   { id: "午", meaningFR: "midi", meaningEN: "noon", onyomi: ["ゴ"], kunyomi: [] },
-  { id: "名", meaningFR: "nom", meaningEN: "name", onyomi: ["メイ","ミョウ"], kunyomi: ["な"] },
+  { id: "名", meaningFR: "nom; célèbre: fameux", meaningEN: "name", onyomi: ["メイ","ミョウ"], kunyomi: ["な"] },
   { id: "友", meaningFR: "ami", meaningEN: "friend", onyomi: ["ユウ"], kunyomi: ["とも"] },
   { id: "父", meaningFR: "père", meaningEN: "father", onyomi: ["フ"], kunyomi: ["ちち"] },
   { id: "母", meaningFR: "mère", meaningEN: "mother", onyomi: ["ボ"], kunyomi: ["はは"] },
-  { id: "兄", meaningFR: "grand frère", meaningEN: "older brother", onyomi: ["ケイ","キョウ"], kunyomi: ["あに"] },
-  { id: "姉", meaningFR: "grande sœur", meaningEN: "older sister", onyomi: ["シ"], kunyomi: ["あね"] },
-  { id: "弟", meaningFR: "petit frère", meaningEN: "younger brother", onyomi: ["テイ","ダイ"], kunyomi: ["おとうと"] },
-  { id: "妹", meaningFR: "petite sœur", meaningEN: "younger sister", onyomi: ["マイ"], kunyomi: ["いもうと"] },
-  { id: "家", meaningFR: "maison; famille", meaningEN: "house; family", onyomi: ["カ"], kunyomi: ["いえ","うち"] },
   { id: "社", meaningFR: "sanctuaire; société", meaningEN: "shrine; company", onyomi: ["シャ"], kunyomi: [] },
-  { id: "毎", meaningFR: "chaque", meaningEN: "every", onyomi: ["マイ"], kunyomi: [] },
+  { id: "毎", meaningFR: "chaque; tous les", meaningEN: "every", onyomi: ["マイ"], kunyomi: [] },
   { id: "白", meaningFR: "blanc", meaningEN: "white", onyomi: ["ハク","ビャク"], kunyomi: ["しろ","しろい"] },
-  { id: "黒", meaningFR: "noir", meaningEN: "black", onyomi: ["コク"], kunyomi: ["くろ","くろい"] },
-  { id: "赤", meaningFR: "rouge", meaningEN: "red", onyomi: ["セキ"], kunyomi: ["あか","あかい"] },
-  { id: "青", meaningFR: "bleu; vert (feux)", meaningEN: "blue/green (traffic)", onyomi: ["セイ"], kunyomi: ["あお","あおい"] },
-  { id: "黄", meaningFR: "jaune", meaningEN: "yellow", onyomi: ["オウ"], kunyomi: ["き","きいろ"] },
-  { id: "多", meaningFR: "nombreux", meaningEN: "many", onyomi: ["タ"], kunyomi: ["おおい"] },
+  { id: "多", meaningFR: "nombreux; beaucoup", meaningEN: "many", onyomi: ["タ"], kunyomi: ["おおい"] },
   { id: "少", meaningFR: "peu; peu nombreux", meaningEN: "few; little", onyomi: ["ショウ"], kunyomi: ["すくない","すこし"] },
-  { id: "新", meaningFR: "nouveau", meaningEN: "new", onyomi: ["シン"], kunyomi: ["あたらしい","あらた"] },
+  { id: "新", meaningFR: "nouveau; neuf; frais", meaningEN: "new", onyomi: ["シン"], kunyomi: ["あたらしい","あらた"] },
   { id: "古", meaningFR: "ancien; vieux", meaningEN: "old", onyomi: ["コ"], kunyomi: ["ふるい"] },
-  { id: "早", meaningFR: "tôt; rapide", meaningEN: "early; fast", onyomi: ["ソウ"], kunyomi: ["はやい"] },
-  { id: "明", meaningFR: "clair; lumineux", meaningEN: "bright", onyomi: ["メイ","ミョウ"], kunyomi: ["あかるい"] },
-  { id: "夜", meaningFR: "nuit", meaningEN: "night", onyomi: ["ヤ"], kunyomi: ["よる","よ"] },
-  { id: "朝", meaningFR: "matin", meaningEN: "morning", onyomi: ["チョウ"], kunyomi: ["あさ"] },
-  { id: "昼", meaningFR: "midi; journée", meaningEN: "noon; daytime", onyomi: ["チュウ"], kunyomi: ["ひる"] },
-  { id: "夕", meaningFR: "soir", meaningEN: "evening", onyomi: ["セキ"], kunyomi: ["ゆう"] },
   { id: "目", meaningFR: "œil", meaningEN: "eye", onyomi: ["モク"], kunyomi: ["め"] },
   { id: "口", meaningFR: "bouche", meaningEN: "mouth", onyomi: ["コウ","ク"], kunyomi: ["くち"] },
   { id: "耳", meaningFR: "oreille", meaningEN: "ear", onyomi: ["ジ"], kunyomi: ["みみ"] },
-  { id: "頭", meaningFR: "tête", meaningEN: "head", onyomi: ["トウ","ズ"], kunyomi: ["あたま"] },
-  { id: "体", meaningFR: "corps", meaningEN: "body", onyomi: ["タイ"], kunyomi: ["からだ"] },
-  { id: "心", meaningFR: "cœur; esprit", meaningEN: "heart; mind", onyomi: ["シン"], kunyomi: ["こころ"] },
   { id: "力", meaningFR: "force; pouvoir", meaningEN: "power; strength", onyomi: ["リョク","リキ"], kunyomi: ["ちから"] },
-  { id: "雲", meaningFR: "nuage", meaningEN: "cloud", onyomi: ["ウン"], kunyomi: ["くも"] },
   { id: "電", meaningFR: "électricité", meaningEN: "electricity", onyomi: ["デン"], kunyomi: [] },
-  { id: "虫", meaningFR: "insecte", meaningEN: "insect", onyomi: ["チュウ"], kunyomi: ["むし"] },
   { id: "魚", meaningFR: "poisson", meaningEN: "fish", onyomi: ["ギョ"], kunyomi: ["さかな"] },
-  { id: "鳥", meaningFR: "oiseau", meaningEN: "bird", onyomi: ["チョウ"], kunyomi: ["とり"] },
-  { id: "牛", meaningFR: "vache; bœuf", meaningEN: "cow; ox", onyomi: ["ギュウ"], kunyomi: ["うし"] },
-  { id: "馬", meaningFR: "cheval", meaningEN: "horse", onyomi: ["バ"], kunyomi: ["うま"] },
   { id: "犬", meaningFR: "chien", meaningEN: "dog", onyomi: ["ケン"], kunyomi: ["いぬ"] },
-  { id: "海", meaningFR: "mer", meaningEN: "sea", onyomi: ["カイ"], kunyomi: ["うみ"] },
-  { id: "島", meaningFR: "île", meaningEN: "island", onyomi: ["トウ"], kunyomi: ["しま"] },
-  { id: "京", meaningFR: "capitale (Kyō)", meaningEN: "capital (Kyō)", onyomi: ["キョウ"], kunyomi: [] },
-  { id: "何", meaningFR: "quoi", meaningEN: "what", onyomi: ["カ"], kunyomi: ["なに","なん"] },
+  { id: "何", meaningFR: "quoi; que; quel, quelle", meaningEN: "what", onyomi: ["カ"], kunyomi: ["なに","なん"] },
+  { id: "休", meaningFR: "repos, congé", meaningEN: "", onyomi: ["キュウ"], kunyomi: ["やす"] },
+  { id: "本", meaningFR: "livre; origine; essentiel; réalité", meaningEN: "", onyomi: ["ホン"], kunyomi: ["おと"] },
+  { id: "国", meaningFR: "pays; patrie", meaningEN: "", onyomi: ["コク"], kunyomi: ["くに"] },
+  { id: "手", meaningFR: "main", meaningEN: "", onyomi: ["シュ","ズ"], kunyomi: ["て","た"] },
+  { id: "足", meaningFR: "pied; jambe; ajouter", meaningEN: "", onyomi: ["ソク"], kunyomi: ["あし","た"] },
+  { id: "語", meaningFR: "mot; langue; raconter; language", meaningEN: "", onyomi: ["ゴ"], kunyomi: ["かた"] },
+  { id: "半", meaningFR: "moitier; milieu; demi", meaningEN: "", onyomi: ["ハン"], kunyomi: ["なか"] },
+  { id: "週", meaningFR: "semaine", meaningEN: "", onyomi: ["シュウ"], kunyomi: [] },
+  { id: "外", meaningFR: "extérieur; dehors", meaningEN: "", onyomi: ["ガイ","ゲ"], kunyomi: ["そと","ほか","はず"] },
+  { id: "安", meaningFR: "calme; bon marché; tranquilité; sûr; peu cher", meaningEN: "", onyomi: ["アン"], kunyomi: ["やす"] },
+  { id: "立", meaningFR: "se lerver; être debout; se dresser", meaningEN: "", onyomi: ["リツ"], kunyomi: ["た"] },
+  { id: "会", meaningFR: "réunion; rencontrer; association; parti", meaningEN: "", onyomi: ["カイ","エ"], kunyomi: ["あ"] },
 ];
 
 /** Pool de lectures (pour générer des distracteurs) */
@@ -203,7 +189,53 @@ function kanaToRomaji(input){
   return out;
 }
 
-/** Outils QCM */
+/** ======= Helpers pour kana & rōmaji ======= */
+const isKana = (s) => /[\u3040-\u309F\u30A0-\u30FF]/.test(s);
+const kataToHira = (s) =>
+  Array.from(s).map(ch => {
+    const code = ch.charCodeAt(0);
+    return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
+  }).join("");
+const normalizeKana = (s) => kataToHira(s).replace(/\s+/g, "").trim();
+
+/** Normalisation rōmaji */
+const norm = (s) => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+
+/** Sépare lectures par type — en rōmaji */
+function getRomajiReadingsByType(k) {
+  const kun = Array.from(new Set((k.kunyomi ?? []).filter(Boolean).map(kanaToRomaji).map(norm)));
+  const on  = Array.from(new Set((k.onyomi  ?? []).filter(Boolean).map(kanaToRomaji).map(norm)));
+  return { kun, on };
+}
+
+/** Sépare lectures par type — kana (hiragana) + rōmaji */
+function getReadingsBothByType(k) {
+  const kunKana = Array.from(new Set((k.kunyomi ?? []).filter(Boolean).map(normalizeKana)));
+  const onKana  = Array.from(new Set((k.onyomi  ?? []).filter(Boolean).map(normalizeKana)));
+  const kunRoma = Array.from(new Set(kunKana.map(x => norm(kanaToRomaji(x)))));
+  const onRoma  = Array.from(new Set(onKana.map(x => norm(kanaToRomaji(x)))));
+  return { kunKana, onKana, kunRoma, onRoma };
+}
+
+/** Pastilles colorées : KUN = bleu, ON = orange */
+function ReadingChips({ kun = [], on = [], className = "" }) {
+  return (
+    <span className={`inline-flex flex-wrap gap-2 ${className}`}>
+      {kun.map((r) => (
+        <span key={`kun-${r}`} className="px-2 py-1 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">
+          {r}
+        </span>
+      ))}
+      {on.map((r) => (
+        <span key={`on-${r}`} className="px-2 py-1 rounded-full border text-xs border-orange-300 bg-orange-50 text-orange-700">
+          {r}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** ================== Génération QCM ================== */
 function padToFour(base, pool) {
   const out = [...base];
   let i = 0;
@@ -242,14 +274,9 @@ function makeTradToKanjiQuestions(fromKanji) {
   });
 }
 
-/** ================== Composants ================== */
-
+/** ================== Sélecteur Kanji (avec lectures colorées) ================== */
 function AllSelectable({ selectedIds, setSelectedIds }) {
-  const toggle = id => { 
-    const next = new Set(selectedIds); 
-    next.has(id)?next.delete(id):next.add(id); 
-    setSelectedIds(next); 
-  };
+  const toggle = id => { const next = new Set(selectedIds); next.has(id)?next.delete(id):next.add(id); setSelectedIds(next); };
   const selectAll = () => setSelectedIds(new Set(DATA.map(k=>k.id)));
   const clearAll = () => setSelectedIds(new Set());
   return (
@@ -263,19 +290,31 @@ function AllSelectable({ selectedIds, setSelectedIds }) {
         </div>
       </div>
       <div className="grid sm:grid-cols-3 gap-3">
-        {DATA.map(k => (
-          <label key={k.id} className={`p-3 rounded-xl border cursor-pointer ${selectedIds.has(k.id)?"bg-pink-100 border-pink-300":"bg-white"}`}>
-            <input type="checkbox" className="mr-2" checked={selectedIds.has(k.id)} onChange={()=>toggle(k.id)} />
-            <span className="text-xl font-bold mr-2">{k.id}</span>
-            <span className="text-gray-600 text-sm">{k.meaningFR}</span>
-          </label>
-        ))}
+        {DATA.map(k => {
+          // on homogénéise en hiragana pour l'affichage
+          const kunKana = (k.kunyomi ?? []).map(normalizeKana);
+          const onKana  = (k.onyomi  ?? []).map(normalizeKana);
+          return (
+            <label key={k.id} className={`p-3 rounded-xl border cursor-pointer ${selectedIds.has(k.id)?"bg-pink-100 border-pink-300":"bg-white hover:bg-gray-50"}`}>
+              <div className="flex items-center">
+                <input type="checkbox" className="mr-2" checked={selectedIds.has(k.id)} onChange={()=>toggle(k.id)} />
+                <span className="text-xl font-bold mr-2">{k.id}</span>
+                <span className="text-gray-600 text-sm">{k.meaningFR}</span>
+              </div>
+              {(kunKana.length>0 || onKana.length>0) && (
+                <div className="mt-2">
+                  <ReadingChips kun={kunKana} on={onKana} />
+                </div>
+              )}
+            </label>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-/** Quiz Général */
+/** ================== Quiz Général (QCM) ================== */
 function QuizGeneral({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState([]);
@@ -353,7 +392,7 @@ function QuizGeneral({ picked, onBack, title }) {
   );
 }
 
-/** Quiz Traduction → Kanji (QCM) */
+/** ================== Quiz Traduction → Kanji (QCM) ================== */
 function QuizTradToKanji({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [answers, setAnswers] = useState([]);
@@ -424,37 +463,23 @@ function QuizTradToKanji({ picked, onBack, title }) {
   );
 }
 
-/** Quiz Kanji → Traduction (toutes les traductions, récap correct) */
+/** ================== Quiz Kanji → Traduction (toutes les traductions) ================== */
 function QuizKanjiTrad({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [order, setOrder] = useState<any[]>([]);
+  const [order, setOrder] = useState([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [found, setFound] = useState<Set<string>>(new Set());
-  const [status, setStatus] = useState<"idle"|"hit"|"miss"|"complete">("idle");
-  const autoNext = useRef<any>(null);
+  const [found, setFound] = useState(new Set());
+  const [status, setStatus] = useState("idle");
+  const autoNext = useRef(null);
+  const results = useRef([]);
 
-  // 👉 nouveau : ref qui suit "found" pour éviter les valeurs obsolètes
-  const foundRef = useRef<Set<string>>(new Set());
+  const foundRef = useRef(new Set());
   useEffect(() => { foundRef.current = found; }, [found]);
 
-  // Si tu as déjà stripAccents et splitFR plus haut, on réutilise :
-  const normalizeFR = (s: string) =>
-    (stripAccents(s) ?? "")
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .trim();
+  const normalizeFR = (s) => stripAccents(s).toLowerCase().replace(/\s+/g," ").trim();
 
-  // On stocke les résultats dans un ref (comme avant)
-  const results = useRef<Array<{
-    id: string;
-    expected: string[];         // attendus (normalisés)
-    pretty: string[];           // attendus "lisibles" (non normalisés)
-    found: string[];            // trouvés (normalisés)
-  }>>([]);
-
-  // Démarrer
   const start = () => {
     setOrder(shuffle(picked));
     setIdx(0);
@@ -466,13 +491,12 @@ function QuizKanjiTrad({ picked, onBack, title }) {
     setStarted(true);
   };
 
-  // Question courante
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
     const k = order[idx];
-    const prettyTokens = splitFR(k.meaningFR);                 // ex: ["jour", "soleil"]
-    const expectedNorm = Array.from(new Set(prettyTokens.map(normalizeFR))).filter(Boolean);
-    return { id: k.id, expected: expectedNorm, pretty: prettyTokens };
+    const prettyTokens = splitFR(k.meaningFR);
+    const expected = Array.from(new Set(prettyTokens.map(normalizeFR))).filter(Boolean);
+    return { id: k.id, expected, pretty: prettyTokens };
   }, [started, idx, order]);
 
   const total = order.length;
@@ -482,18 +506,13 @@ function QuizKanjiTrad({ picked, onBack, title }) {
 
   const goNext = () => {
     if (!currentQ) return;
-
-    // 🔒 Toujours lire la version LA PLUS RÉCENTE de found ici
     const foundNow = Array.from(foundRef.current);
-
-    // Enregistre un snapshot cohérent pour le récap
     results.current.push({
       id: currentQ.id,
       expected: currentQ.expected,
       pretty: currentQ.pretty,
       found: foundNow,
     });
-
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
@@ -514,20 +533,17 @@ function QuizKanjiTrad({ picked, onBack, title }) {
     const already = foundRef.current.has(val);
 
     if (isExpected && !already) {
-      const nxt = new Set(foundRef.current);
-      nxt.add(val);
-      setFound(nxt);                   // met à jour le state
+      const nxt = new Set(foundRef.current); nxt.add(val);
+      setFound(nxt);
       setInput("");
       setStatus("hit");
-
-      // tout trouvé -> auto next après 1s
       if (nxt.size === currentQ.expected.length) {
         setStatus("complete");
         if (autoNext.current) clearTimeout(autoNext.current);
-        autoNext.current = setTimeout(goNext, 500);
+        autoNext.current = setTimeout(goNext, 500); // 0.5s
       }
     } else {
-      setStatus("miss");               // mauvais ou doublon
+      setStatus("miss");
       setInput("");
     }
   };
@@ -541,34 +557,21 @@ function QuizKanjiTrad({ picked, onBack, title }) {
       </div>
 
       {!started ? (
-        <button
-          onClick={start}
-          disabled={picked.length===0}
-          className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}
-        >
-          Commencer le {title}
-        </button>
+        <button onClick={start} disabled={picked.length===0} className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>Commencer le {title}</button>
       ) : !finished ? (
         <div className="flex flex-col items-center gap-4 p-4">
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
           <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">{currentQ?.id}</div>
-
           <input
             autoFocus
             type="text"
-            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
-              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
-            }`}
-            placeholder="Entre une traduction en français puis Entrée"
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
+            placeholder="Tape une traduction en français puis Entrée"
             value={input}
             onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
-
-          <div className="text-sm text-gray-700">
-            Trouvées {found.size}/{currentQ?.expected.length ?? 0}
-          </div>
-
+          <div className="text-sm text-gray-700">Trouvées {found.size}/{currentQ?.expected.length ?? 0}</div>
           <div className="flex flex-wrap gap-2 max-w-md">
             {Array.from(found).map((f) => (
               <span key={f} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-xs">
@@ -576,25 +579,11 @@ function QuizKanjiTrad({ picked, onBack, title }) {
               </span>
             ))}
           </div>
-
           <div className="flex items-center gap-2 w-full max-w-md">
-            <button
-              onClick={handleSubmit}
-              disabled={!input.trim()}
-              className={`flex-1 p-3 rounded-xl text-white ${input.trim() ? "bg-pink-400" : "bg-gray-300"}`}
-            >
-              Valider
-            </button>
-            <button
-              onClick={goNext}
-              className="px-4 py-3 rounded-xl bg-gray-100"
-              title="Passer au kanji suivant"
-            >
-              Suivant
-            </button>
+            <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim() ? 'bg-pink-400' : 'bg-gray-300'}`}>Valider</button>
+            <button onClick={goNext} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
             <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
           </div>
-
           {status==='miss' && (<div className="text-sm text-red-600">Pas attendu ou déjà donné.</div>)}
           {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
           {status==='complete' && (<div className="text-sm text-green-600">Toutes les traductions trouvées !</div>)}
@@ -628,7 +617,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
   );
 }
 
-/** Quiz Kanji → Lecture (toutes les lectures en rōmaji) */
+/** ================== Quiz Kanji → Lecture (rōmaji OU kana, récap KUN/ON coloré) ================== */
 function QuizKanjiLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -639,18 +628,15 @@ function QuizKanjiLecture({ picked, onBack, title }) {
   const [status, setStatus] = useState("idle");
   const autoNext = useRef(null);
   const results = useRef([]);
+  const foundRef = useRef(new Set());
+  useEffect(() => { foundRef.current = found; }, [found]);
 
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
     const k = order[idx];
-    const readings = unique([...(k.kunyomi||[]), ...(k.onyomi||[])]);
-    const expected = unique(
-      readings
-        .filter(Boolean)
-        .map(r => normalize(kanaToRomaji(r)))
-        .filter(Boolean)
-    );
-    return { id: k.id, expected };
+    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k);
+    const expected = Array.from(new Set([...kunRoma, ...onRoma]));
+    return { id: k.id, kunKana, onKana, kunRoma, onRoma, expected };
   }, [started, idx, order]);
 
   const start = () => {
@@ -671,7 +657,14 @@ function QuizKanjiLecture({ picked, onBack, title }) {
 
   const goNext = () => {
     if (!currentQ) return;
-    results.current.push({ id: currentQ.id, expected: currentQ.expected, found: Array.from(found) });
+    const foundNow = Array.from(foundRef.current);
+    results.current.push({
+      id: currentQ.id,
+      expected: currentQ.expected,
+      found: foundNow,
+      kun: currentQ.kunRoma,
+      on: currentQ.onRoma,
+    });
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
@@ -685,19 +678,34 @@ function QuizKanjiLecture({ picked, onBack, title }) {
 
   const handleSubmit = () => {
     if (!currentQ) return;
-    const val = normalize(input);
-    if (!val) return;
-    const ok = currentQ.expected.includes(val);
-    if (ok && !found.has(val)) {
-      const nxt = new Set(found); nxt.add(val); setFound(nxt); setInput(""); setStatus("hit");
+    const raw = input;
+    if (!raw.trim()) return;
+
+    let key = null; // clé de comparaison en rōmaji normalisé
+
+    if (isKana(raw)) {
+      const hira = normalizeKana(raw);
+      const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
+      if (matchKana) key = norm(kanaToRomaji(hira));
+    } else {
+      key = norm(raw);
+    }
+
+    if (!key) { setStatus("miss"); setInput(""); return; }
+
+    const ok = currentQ.expected.includes(key);
+    const already = foundRef.current.has(key);
+
+    if (ok && !already) {
+      const nxt = new Set(foundRef.current); nxt.add(key);
+      setFound(nxt); setInput(""); setStatus("hit");
       if (nxt.size === currentQ.expected.length) {
         setStatus("complete");
         if (autoNext.current) clearTimeout(autoNext.current);
-        autoNext.current = setTimeout(goNext, (500));
+        autoNext.current = setTimeout(goNext, 500);
       }
     } else {
-      setStatus("miss");
-      setInput("");
+      setStatus("miss"); setInput("");
     }
   };
 
@@ -718,10 +726,10 @@ function QuizKanjiLecture({ picked, onBack, title }) {
           <input
             autoFocus
             type="text"
-            className="w-full max-w-md p-3 rounded-xl border text-lg"
-            placeholder="Écris une lecture en rōmaji puis Entrée (ex: hi, nichi, tsuki)"
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
+            placeholder="Écris une lecture (kana OU rōmaji), puis Entrée"
             value={input}
-            onChange={e => { setInput(e.target.value); if(status!=='idle') setStatus('idle'); }}
+            onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
           <div className="text-sm text-gray-700">Trouvées {found.size}/{currentQ?.expected.length ?? 0}</div>
@@ -731,11 +739,11 @@ function QuizKanjiLecture({ picked, onBack, title }) {
             ))}
           </div>
           <div className="flex items-center gap-2 w-full max-w-md">
-            <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim() ? "bg-pink-400" : "bg-gray-300"}`}>Valider</button>
+            <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim()? "bg-pink-400":"bg-gray-300"}`}>Valider</button>
             <button onClick={goNext} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
             <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
           </div>
-          {status==='miss' && (<div className="text-sm text-red-600">Ce rōmaji n'est pas attendu ou déjà saisi.</div>)}
+          {status==='miss' && (<div className="text-sm text-red-600">Non attendu ou déjà saisi.</div>)}
           {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
           {status==='complete' && (<div className="text-sm text-green-600">Toutes les lectures trouvées !</div>)}
         </div>
@@ -744,18 +752,37 @@ function QuizKanjiLecture({ picked, onBack, title }) {
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
-            const missing = r.expected.filter(x=>!foundSet.has(x));
+            const missingAll = r.expected.filter(x => !foundSet.has(x));
+            const missingKun = r.kun.filter(x => !foundSet.has(x));
+            const missingOn  = r.on.filter(x => !foundSet.has(x));
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-2xl font-bold">{r.id}</div>
-                  <div className={missing.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
-                    {r.expected.length - missing.length}/{r.expected.length}
+                  <div className={missingAll.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {r.expected.length - missingAll.length}/{r.expected.length}
                   </div>
                 </div>
-                <div className="text-sm"><span className="text-gray-500">Trouvées :</span> {r.found.join(", ") || "—"}</div>
-                <div className="text-sm text-blue-600">Attendues : {r.expected.join(", ")}</div>
-                {missing.length>0 && (<div className="text-sm text-blue-700">Manquantes : {missing.join(", ")}</div>)}
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Trouvées :</span>{" "}
+                  <ReadingChips
+                    kun={r.found.filter(x => r.kun.includes(x))}
+                    on={r.found.filter(x => r.on.includes(x))}
+                  />
+                </div>
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Attendues :</span>{" "}
+                  <ReadingChips kun={r.kun} on={r.on} />
+                </div>
+
+                {missingAll.length>0 && (
+                  <div className="text-sm">
+                    <span className="text-gray-500">Manquantes :</span>{" "}
+                    <ReadingChips kun={missingKun} on={missingOn} />
+                  </div>
+                )}
               </div>
             );
           })}
@@ -768,44 +795,27 @@ function QuizKanjiLecture({ picked, onBack, title }) {
   );
 }
 
-/** Quiz Traduction → Lecture (toutes les lectures en rōmaji) — corrigé récap 3/3 */
+/** ================== Quiz Traduction → Lecture (kana OU rōmaji, récap KUN/ON coloré) ================== */
 function QuizTradLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [order, setOrder] = useState<any[]>([]);
+  const [order, setOrder] = useState([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [found, setFound] = useState<Set<string>>(new Set());
-  const [status, setStatus] = useState<"idle"|"hit"|"miss"|"complete">("idle");
-
-  const autoNext = useRef<any>(null);
-  const results = useRef<Array<{ id:string; meaningPretty:string[]; expected:string[]; found:string[] }>>([]);
-
-  // 👉 NEW: ref qui suit la dernière valeur de "found" (évite les valeurs obsolètes après setTimeout)
-  const foundRef = useRef<Set<string>>(new Set());
+  const [found, setFound] = useState(new Set());
+  const [status, setStatus] = useState("idle");
+  const autoNext = useRef(null);
+  const results = useRef([]);
+  const foundRef = useRef(new Set());
   useEffect(() => { foundRef.current = found; }, [found]);
-
-  // Normalisation romaji (déjà dans ton fichier, sinon garde celle-ci)
-  const norm = (s:string) =>
-    (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
 
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
     const k = order[idx];
-
-    // Affichage des traductions FR (jolis labels)
     const meaningPretty = splitFR(k.meaningFR);
-
-    // Lectures attendues en romaji normalisé
-    const readings = unique([...(k.kunyomi||[]), ...(k.onyomi||[])]);
-    const expected = unique(
-      readings
-        .filter(Boolean)
-        .map(r => norm(kanaToRomaji(r)))
-        .filter(Boolean)
-    );
-
-    return { id: k.id, meaningPretty, expected };
+    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k);
+    const expected = Array.from(new Set([...kunRoma, ...onRoma]));
+    return { id: k.id, meaningPretty, kunKana, onKana, kunRoma, onRoma, expected };
   }, [started, idx, order]);
 
   const start = () => {
@@ -826,18 +836,15 @@ function QuizTradLecture({ picked, onBack, title }) {
 
   const goNext = () => {
     if (!currentQ) return;
-
-    // ✅ On lit la dernière version de found via foundRef:
     const foundNow = Array.from(foundRef.current);
-
-    // Enregistrer un snapshot cohérent pour le récap
     results.current.push({
       id: currentQ.id,
       meaningPretty: currentQ.meaningPretty,
       expected: currentQ.expected,
       found: foundNow,
+      kun: currentQ.kunRoma,
+      on: currentQ.onRoma,
     });
-
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
@@ -851,28 +858,34 @@ function QuizTradLecture({ picked, onBack, title }) {
 
   const handleSubmit = () => {
     if (!currentQ) return;
-    const val = norm(input);
-    if (!val) return;
+    const raw = input;
+    if (!raw.trim()) return;
 
-    const ok = currentQ.expected.includes(val);
-    const already = foundRef.current.has(val);
+    let key = null;
+
+    if (isKana(raw)) {
+      const hira = normalizeKana(raw);
+      const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
+      if (matchKana) key = norm(kanaToRomaji(hira));
+    } else {
+      key = norm(raw);
+    }
+
+    if (!key) { setStatus("miss"); setInput(""); return; }
+
+    const ok = currentQ.expected.includes(key);
+    const already = foundRef.current.has(key);
 
     if (ok && !already) {
-      const nxt = new Set(foundRef.current);
-      nxt.add(val);
-      setFound(nxt);
-      setInput("");
-      setStatus("hit");
-
-      // tout trouvé → passage auto en 0.5s
+      const nxt = new Set(foundRef.current); nxt.add(key);
+      setFound(nxt); setInput(""); setStatus("hit");
       if (nxt.size === currentQ.expected.length) {
         setStatus("complete");
         if (autoNext.current) clearTimeout(autoNext.current);
         autoNext.current = setTimeout(goNext, 500);
       }
     } else {
-      setStatus("miss");    // mauvais ou doublon
-      setInput("");
+      setStatus("miss"); setInput("");
     }
   };
 
@@ -885,48 +898,35 @@ function QuizTradLecture({ picked, onBack, title }) {
       </div>
 
       {!started ? (
-        <button onClick={start} disabled={picked.length===0}
-          className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>
-          Commencer le {title}
-        </button>
+        <button onClick={start} disabled={picked.length===0} className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>Commencer le {title}</button>
       ) : !finished ? (
         <div className="flex flex-col items-center gap-4 p-4">
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
-
-          {/* Prompt: traductions FR */}
           <div className="text-center">
             <div className="text-sm text-gray-500 mb-1">Traduction(s) :</div>
-            <div className="text-2xl font-semibold">
-              {currentQ?.meaningPretty.join(" ／ ")}
-            </div>
+            <div className="text-2xl font-semibold">{currentQ?.meaningPretty.join(" ／ ")}</div>
           </div>
-
           <input
             autoFocus
             type="text"
-            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
-              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
-            }`}
-            placeholder="Écris une lecture en rōmaji (ex: hi, nichi, tsuki) puis Entrée"
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
+            placeholder="Écris une lecture (kana OU rōmaji), puis Entrée"
             value={input}
             onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
           <div className="text-sm text-gray-700">Trouvées {found.size}/{currentQ?.expected.length ?? 0}</div>
-
           <div className="flex flex-wrap gap-2 max-w-md">
             {Array.from(found).map(r => (
               <span key={r} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-xs">{r}</span>
             ))}
           </div>
-
           <div className="flex items-center gap-2 w-full max-w-md">
             <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim()? "bg-pink-400":"bg-gray-300"}`}>Valider</button>
             <button onClick={goNext} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
             <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
           </div>
-
-          {status==='miss' && (<div className="text-sm text-red-600">Ce rōmaji n'est pas attendu ou déjà saisi.</div>)}
+          {status==='miss' && (<div className="text-sm text-red-600">Non attendu ou déjà saisi.</div>)}
           {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
           {status==='complete' && (<div className="text-sm text-green-600">Toutes les lectures trouvées !</div>)}
         </div>
@@ -935,18 +935,37 @@ function QuizTradLecture({ picked, onBack, title }) {
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
-            const missing = r.expected.filter(x=>!foundSet.has(x));
+            const missingAll = r.expected.filter(x=>!foundSet.has(x));
+            const missingKun = r.kun.filter(x=>!foundSet.has(x));
+            const missingOn  = r.on.filter(x=>!foundSet.has(x));
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-2xl font-bold">{r.meaningPretty.join(" ／ ")}</div>
-                  <div className={missing.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
-                    {r.expected.length - missing.length}/{r.expected.length}
+                  <div className={missingAll.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {r.expected.length - missingAll.length}/{r.expected.length}
                   </div>
                 </div>
-                <div className="text-sm"><span className="text-gray-500">Trouvées :</span> {r.found.join(", ") || "—"}</div>
-                <div className="text-sm text-blue-600">Attendues : {r.expected.join(", ")}</div>
-                {missing.length>0 && (<div className="text-sm text-blue-700">Manquantes : {missing.join(", ")}</div>)}
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Trouvées :</span>{" "}
+                  <ReadingChips
+                    kun={r.found.filter(x => r.kun.includes(x))}
+                    on={r.found.filter(x => r.on.includes(x))}
+                  />
+                </div>
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Attendues :</span>{" "}
+                  <ReadingChips kun={r.kun} on={r.on} />
+                </div>
+
+                {missingAll.length>0 && (
+                  <div className="text-sm">
+                    <span className="text-gray-500">Manquantes :</span>{" "}
+                    <ReadingChips kun={missingKun} on={missingOn} />
+                  </div>
+                )}
               </div>
             );
           })}
@@ -959,17 +978,16 @@ function QuizTradLecture({ picked, onBack, title }) {
   );
 }
 
-
-/** Menu Quiz */
+/** ================== Menu Quiz ================== */
 function QuizMenu({ setQuizMode }) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
       <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Général</button>
       <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Kanji</button>
-      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
+      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
     </div>
   );
 }
@@ -978,29 +996,20 @@ function QuizMenu({ setQuizMode }) {
 export default function App() {
   const [route, setRoute] = useState("select");
   const [quizMode, setQuizMode] = useState(null);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => {
+  const [selectedIds, setSelectedIds] = useState(() => {
     try {
-    const raw = localStorage.getItem("jlpt_selected_ids");
-    if (raw) {
-      const arr = JSON.parse(raw);
-      if (Array.isArray(arr)) return new Set(arr);
-    }
-  } catch {}
-  return new Set(DATA.map(k => k.id));
-});
-
-  useEffect(() => { try {
-    const raw = localStorage.getItem("jlpt_selected_ids");
-    if (raw) { const arr = JSON.parse(raw); if (Array.isArray(arr) && arr.length>0) setSelectedIds(new Set(arr)); }
-  } catch {} }, []);
+      const raw = localStorage.getItem("jlpt_selected_ids");
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr) && arr.length>0) return new Set(arr);
+      }
+    } catch {}
+    return new Set(DATA.map(k=>k.id)); // par défaut: tout sélectionné
+  });
 
   useEffect(() => {
-     try { localStorage.setItem(
-      "jlpt_selected_ids",
-      JSON.stringify(Array.from(selectedIds))
-    ); 
-  } catch {} }, 
-  [selectedIds]);
+    try { localStorage.setItem("jlpt_selected_ids", JSON.stringify(Array.from(selectedIds))); } catch {}
+  }, [selectedIds]);
 
   const picked = useMemo(() => DATA.filter(k=>selectedIds.has(k.id)), [selectedIds]);
 
@@ -1033,16 +1042,16 @@ export default function App() {
           <QuizTradToKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Kanji" />
         )}
 
-        {route === "quiz" && quizMode === "tradLecture" && (
-          <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture (rōmaji)" />
-        )}
-
         {route === "quiz" && quizMode === "kanjiTrad" && (
           <QuizKanjiTrad picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Traduction" />
         )}
 
         {route === "quiz" && quizMode === "kanjiLecture" && (
-          <QuizKanjiLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Lecture (rōmaji)" />
+          <QuizKanjiLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Lecture" />
+        )}
+
+        {route === "quiz" && quizMode === "tradLecture" && (
+          <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
         )}
       </main>
     </div>
