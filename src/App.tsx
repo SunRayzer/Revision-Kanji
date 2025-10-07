@@ -463,28 +463,25 @@ function QuizTradToKanji({ picked, onBack, title }) {
   );
 }
 
-/** ================== Quiz Kanji → Traduction (toutes les réponses) ================== */
+/** ================== Quiz Kanji → Traduction (une bonne réponse suffit) ================== */
 function QuizKanjiTrad({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [order, setOrder] = useState([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [found, setFound] = useState(new Set());
-  const [status, setStatus] = useState("idle");
-  const autoNext = useRef(null);
-  const results = useRef([]);
+  const [status, setStatus] = useState<"idle"|"hit"|"miss"|"complete">("idle");
+  const autoNext = useRef<number | null>(null);
+  const results = useRef<Array<{ id:string; ok:boolean; user:string; accepted?:string; expected:string[]; pretty:string[] }>>([]);
 
-  const foundRef = useRef(new Set());
-  useEffect(() => { foundRef.current = found; }, [found]);
-
-  const normalizeFR = (s) => stripAccents(s).toLowerCase().replace(/\s+/g," ").trim();
+  // normalisation pour comparer les traductions FR
+  const normalizeFR = (s: string) =>
+    stripAccents(s).toLowerCase().replace(/\s+/g," ").trim();
 
   const start = () => {
     setOrder(shuffle(picked));
     setIdx(0);
     setInput("");
-    setFound(new Set());
     setStatus("idle");
     results.current = [];
     setFinished(false);
@@ -494,8 +491,8 @@ function QuizKanjiTrad({ picked, onBack, title }) {
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
     const k = order[idx];
-    const prettyTokens = splitFR(k.meaningFR);
-    const expected = Array.from(new Set(prettyTokens.map(normalizeFR))).filter(Boolean);
+    const prettyTokens = splitFR(k.meaningFR);                           // affichage (avec accents)
+    const expected = Array.from(new Set(prettyTokens.map(normalizeFR))); // clés de comparaison
     return { id: k.id, expected, pretty: prettyTokens };
   }, [started, idx, order]);
 
@@ -504,19 +501,20 @@ function QuizKanjiTrad({ picked, onBack, title }) {
 
   useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
 
-  const goNext = () => {
+  const goNext = (ok: boolean, accepted?: string) => {
     if (!currentQ) return;
-    const foundNow = Array.from(foundRef.current);
     results.current.push({
       id: currentQ.id,
+      ok,
+      user: input,
+      accepted,
       expected: currentQ.expected,
       pretty: currentQ.pretty,
-      found: foundNow,
     });
+
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
-      setFound(new Set());
       setStatus("idle");
     } else {
       setFinished(true);
@@ -529,23 +527,25 @@ function QuizKanjiTrad({ picked, onBack, title }) {
     const val = normalizeFR(input);
     if (!val) return;
 
-    const isExpected = currentQ.expected.includes(val);
-    const already = foundRef.current.has(val);
+    // si l'une des traductions attendues correspond → validé
+    const ok = currentQ.expected.includes(val);
 
-    if (isExpected && !already) {
-      const nxt = new Set(foundRef.current); nxt.add(val);
-      setFound(nxt);
-      setInput("");
+    if (ok) {
       setStatus("hit");
-      if (nxt.size === currentQ.expected.length) {
-        setStatus("complete");
-        if (autoNext.current) clearTimeout(autoNext.current);
-        autoNext.current = setTimeout(goNext, 500); // 0.5s
-      }
+      // on enregistre et on passe au suivant après 0.5s
+      if (autoNext.current) clearTimeout(autoNext.current);
+      autoNext.current = window.setTimeout(() => goNext(true, val), 500);
     } else {
       setStatus("miss");
+      // on peut laisser retaper (ne vide pas forcément l’input, à toi de voir)
+      // ici on vide pour encourager une nouvelle tentative
       setInput("");
     }
+  };
+
+  const skip = () => {
+    // passage au suivant sans bonne réponse
+    goNext(false);
   };
 
   return (
@@ -554,60 +554,77 @@ function QuizKanjiTrad({ picked, onBack, title }) {
         <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        {finished && (
+          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+            Score: {results.current.filter(r=>r.ok).length}/{results.current.length}
+          </span>
+        )}
       </div>
 
       {!started ? (
-        <button onClick={start} disabled={picked.length===0} className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>Commencer le {title}</button>
+        <button
+          onClick={start}
+          disabled={picked.length===0}
+          className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}
+        >
+          Commencer le {title}
+        </button>
       ) : !finished ? (
         <div className="flex flex-col items-center gap-4 p-4">
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
-          <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">{currentQ?.id}</div>
+          <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">
+            {currentQ?.id}
+          </div>
+
           <input
             autoFocus
             type="text"
-            className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
+              status==='miss' ? 'border-red-400'
+              : status==='hit' ? 'border-green-500'
+              : ''
+            }`}
             placeholder="Tape une traduction en français puis Entrée"
             value={input}
             onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
+            disabled={status==='hit'}
           />
-          <div className="text-sm text-gray-700">Trouvées {found.size}/{currentQ?.expected.length ?? 0}</div>
-          <div className="flex flex-wrap gap-2 max-w-md">
-            {Array.from(found).map((f) => (
-              <span key={f} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-xs">
-                {f}
-              </span>
-            ))}
-          </div>
+
           <div className="flex items-center gap-2 w-full max-w-md">
-            <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim() ? 'bg-pink-400' : 'bg-gray-300'}`}>Valider</button>
-            <button onClick={goNext} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
+            <button
+              onClick={handleSubmit}
+              disabled={!input.trim() || status==='hit'}
+              className={`flex-1 p-3 rounded-xl text-white ${input.trim() && status!=='hit' ? 'bg-pink-400' : 'bg-gray-300'}`}
+            >
+              Valider
+            </button>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
             <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
           </div>
-          {status==='miss' && (<div className="text-sm text-red-600">Pas attendu ou déjà donné.</div>)}
-          {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
-          {status==='complete' && (<div className="text-sm text-green-600">Toutes les traductions trouvées !</div>)}
+
+          {status==='miss' && (<div className="text-sm text-red-600">Incorrect. Réessaie ou clique sur “Suivant”.</div>)}
+          {status==='hit' && (<div className="text-sm text-green-600">Correct !</div>)}
         </div>
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
-          {results.current.map((r,i) => {
-            const foundSet = new Set(r.found);
-            const missing = r.expected.filter(x => !foundSet.has(x));
-            return (
-              <div key={i} className="p-3 rounded-xl bg-gray-50">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="text-2xl font-bold">{r.id}</div>
-                  <div className={missing.length===0 ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
-                    {r.expected.length - missing.length}/{r.expected.length}
-                  </div>
+          {results.current.map((r,i) => (
+            <div key={i} className="p-3 rounded-xl bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-2xl font-bold">{r.id}</div>
+                <div className={r.ok ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                  {r.ok ? "Correct" : "Faux"}
                 </div>
-                <div className="text-sm"><span className="text-gray-500">Trouvées :</span> {r.found.join(", ") || "—"}</div>
-                <div className="text-sm text-blue-600">Attendues : {r.pretty.join(", ")}</div>
-                {missing.length>0 && (<div className="text-sm text-blue-700">Manquantes : {missing.join(", ")}</div>)}
               </div>
-            );
-          })}
+              <div className="text-sm">
+                <span className="text-gray-500">Ta réponse :</span> {r.user || "—"}
+              </div>
+              <div className="text-sm text-blue-600">
+                Traductions acceptées : {r.pretty.join(", ")}
+              </div>
+            </div>
+          ))}
           <div className="flex gap-2">
             <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">Recommencer</button>
           </div>
@@ -616,6 +633,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
     </div>
   );
 }
+
 
 /** ================== Quiz Kanji → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
 function QuizKanjiLecture({ picked, onBack, title }) {
