@@ -1636,7 +1636,8 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Saisie Kanji</button>
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
-      <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-x1 text-white bg-oink-400">Quiz Lecture KUN/Kanji (dessin/saisie)</button>
+      <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture KUN → Kanji (dessin/saisie)</button>
+
 
     </div>
   );
