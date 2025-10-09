@@ -1041,20 +1041,20 @@ function QuizTradLecture({ picked, onBack, title }) {
   );
 }
 
-/** ================== Quiz Traduction → Dessin/Saisie Kanji (IME 手書き ou frappe directe) ================== */
-function DrawingPad({ onChangeStroke }) {
-  const canvasRef = React.useRef(null);
+/** ================== Quiz Traduction → Dessin/Saisie Kanji (IME 手書き ou frappe) ================== */
+function DrawingPad({ onChangeStroke }: { onChangeStroke?: () => void }) {
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const [drawing, setDrawing] = useState(false);
 
-  // redimensionne en DPR pour netteté
   useEffect(() => {
     const cvs = canvasRef.current;
     if (!cvs) return;
     const dpr = window.devicePixelRatio || 1;
     const rect = cvs.getBoundingClientRect();
-    cvs.width = Math.floor(rect.width * dpr);
-    cvs.height = Math.floor(rect.height * dpr);
+    cvs.width = Math.max(1, Math.floor(rect.width * dpr));
+    cvs.height = Math.max(1, Math.floor(rect.height * dpr));
     const ctx = cvs.getContext("2d");
+    if (!ctx) return;
     ctx.scale(dpr, dpr);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -1062,78 +1062,105 @@ function DrawingPad({ onChangeStroke }) {
     ctx.strokeStyle = "#111827";
   }, []);
 
-  const getPos = (e) => {
-    const cvs = canvasRef.current;
+  const getPos = (e: React.MouseEvent | React.TouchEvent) => {
+    const cvs = canvasRef.current!;
     const rect = cvs.getBoundingClientRect();
-    if (e.touches && e.touches[0]) {
+    if ("touches" in e && e.touches[0]) {
       return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
     }
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    const me = e as React.MouseEvent;
+    return { x: me.clientX - rect.left, y: me.clientY - rect.top };
   };
 
-  const start = (e) => {
+  const start = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    const ctx = canvasRef.current.getContext("2d");
+    const cvs = canvasRef.current!;
+    const ctx = cvs.getContext("2d");
+    if (!ctx) return;
     const { x, y } = getPos(e);
     ctx.beginPath();
     ctx.moveTo(x, y);
     setDrawing(true);
-    onChangeStroke?.();
+    if (onChangeStroke) onChangeStroke();
   };
-  const move = (e) => {
+  const move = (e: React.MouseEvent | React.TouchEvent) => {
     if (!drawing) return;
     e.preventDefault();
-    const ctx = canvasRef.current.getContext("2d");
+    const cvs = canvasRef.current!;
+    const ctx = cvs.getContext("2d");
+    if (!ctx) return;
     const { x, y } = getPos(e);
     ctx.lineTo(x, y);
     ctx.stroke();
   };
-  const end = (e) => {
+  const end = (e: React.MouseEvent | React.TouchEvent) => {
     if (!drawing) return;
     e.preventDefault();
     setDrawing(false);
   };
 
   const clear = () => {
-    const cvs = canvasRef.current;
+    const cvs = canvasRef.current!;
     const ctx = cvs.getContext("2d");
+    if (!ctx) return;
     ctx.clearRect(0, 0, cvs.width, cvs.height);
   };
 
   return (
     <div className="w-full max-w-md">
-      <div className="text-xs text-gray-500 mb-1">Espace d’entraînement (non utilisé pour la validation)</div>
+      <div className="text-xs text-gray-500 mb-1">
+        Espace d’entraînement (non utilisé pour la validation)
+      </div>
       <div className="border rounded-xl bg-white">
         <canvas
           ref={canvasRef}
           className="w-full h-48 touch-none"
-          onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
-          onTouchStart={start} onTouchMove={move} onTouchEnd={end}
+          onMouseDown={start}
+          onMouseMove={move}
+          onMouseUp={end}
+          onMouseLeave={end}
+          onTouchStart={start}
+          onTouchMove={move}
+          onTouchEnd={end}
         />
       </div>
       <div className="mt-2 text-right">
-        <button onClick={clear} className="px-3 py-1 rounded bg-gray-100">Effacer</button>
+        <button onClick={clear} className="px-3 py-1 rounded bg-gray-100">
+          Effacer
+        </button>
       </div>
     </div>
   );
 }
 
-function QuizDrawKanji({ picked, onBack, title }) {
+function QuizDrawKanji({
+  picked,
+  onBack,
+  title,
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+}) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState<any[]>([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | hit | miss
-  const autoNext = useRef(null);
-  const results = useRef([]);
+  const [status, setStatus] = useState<"idle" | "hit" | "miss">("idle");
+  const autoNext = useRef<number | null>(null);
+  const results = useRef<
+    { id: string; ok: boolean; user: string; meaning: string }[]
+  >([]);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (started && !finished) {
-      const t = setTimeout(() => inputRef.current?.focus(), 0);
-      return () => clearTimeout(t);
+      const t = window.setTimeout(() => inputRef.current?.focus(), 0);
+      return () => window.clearTimeout(t);
     }
+    return;
   }, [started, finished, idx, status]);
 
   const start = () => {
@@ -1144,35 +1171,41 @@ function QuizDrawKanji({ picked, onBack, title }) {
     results.current = [];
     setFinished(false);
     setStarted(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
+    window.setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const currentQ = useMemo(() => {
-    if (!started || idx >= order.length) return null;
+    if (!started || idx >= order.length) return null as
+      | { id: string; meaningFRTokens: string[]; meaningFull: string }
+      | null;
     const k = order[idx];
     const fr = splitFR(k.meaningFR);
-    return { id: k.id, meaningFRTokens: fr, meaningFull: k.meaningFR };
+    return { id: k.id as string, meaningFRTokens: fr, meaningFull: k.meaningFR as string };
   }, [started, idx, order]);
 
   const total = order.length;
   const remaining = Math.max(0, total - idx - 1);
 
-  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
+  useEffect(() => {
+    return () => {
+      if (autoNext.current) window.clearTimeout(autoNext.current);
+    };
+  }, []);
 
-  const goNext = (ok) => {
+  const goNext = (ok: boolean) => {
     if (!currentQ) return;
     results.current.push({
       id: currentQ.id,
       ok,
       user: input.trim(),
-      meaning: currentQ.meaningFull
+      meaning: currentQ.meaningFull,
     });
 
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
       setStatus("idle");
-      setTimeout(() => inputRef.current?.focus(), 0);
+      window.setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
     }
@@ -1183,17 +1216,17 @@ function QuizDrawKanji({ picked, onBack, title }) {
     const val = input.trim();
     if (!val) return;
 
-    // on valide si le premier caractère non-espace contient le kanji attendu
-    const firstKanji = Array.from(val).find(ch => /\S/.test(ch));
-    const ok = firstKanji === currentQ.id;
+    // On valide si le premier caractère non blanc est exactement le kanji attendu
+    const firstChar = Array.from(val).find((ch) => /\S/.test(ch));
+    const ok = firstChar === currentQ.id;
 
     if (ok) {
       setStatus("hit");
-      if (autoNext.current) clearTimeout(autoNext.current);
-      autoNext.current = setTimeout(() => goNext(true), 500); // auto-next en 0.5s
+      if (autoNext.current) window.clearTimeout(autoNext.current);
+      autoNext.current = window.setTimeout(() => goNext(true), 500); // 0.5s
     } else {
       setStatus("miss");
-      // on ne vide pas, pour laisser corriger
+      // Laisse corriger sans vider
     }
   };
 
@@ -1202,32 +1235,47 @@ function QuizDrawKanji({ picked, onBack, title }) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
       <div className="flex items-center gap-2 mb-2">
-        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">
+          ← Retour
+        </button>
         <span className="font-semibold">{title}</span>
-        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+          {picked.length} sélectionnés
+        </span>
         {finished && (
           <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-            Score: {results.current.filter(r=>r.ok).length}/{results.current.length}
+            Score: {results.current.filter((r) => r.ok).length}/{results.current.length}
           </span>
         )}
       </div>
 
       {!started ? (
         <div className="space-y-3">
-          <button onClick={start} disabled={picked.length===0} className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>
+          <button
+            onClick={start}
+            disabled={picked.length === 0}
+            className={`w-full p-3 rounded-xl text-white ${
+              picked.length > 0 ? "bg-pink-400" : "bg-gray-300"
+            }`}
+          >
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Astuce : active le clavier japonais et choisis le mode <b>手書き</b> (handwriting) pour dessiner le kanji, il sera inséré ici ⤵︎
+            Astuce : active le clavier japonais et choisis le mode <b>手書き</b> pour dessiner
+            le kanji ; l’IME insérera le caractère ici ↓
           </div>
         </div>
       ) : !finished ? (
         <div className="flex flex-col items-center gap-5 p-4">
-          <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
+          <div className="text-sm text-gray-600">
+            Question {idx + 1} / {total}
+          </div>
 
           <div className="text-center">
             <div className="text-sm text-gray-500 mb-1">Traduction(s) :</div>
-            <div className="text-2xl font-semibold">{currentQ?.meaningFRTokens.join(" ／ ")}</div>
+            <div className="text-2xl font-semibold">
+              {currentQ?.meaningFRTokens.join(" ／ ")}
+            </div>
           </div>
 
           <input
@@ -1235,31 +1283,54 @@ function QuizDrawKanji({ picked, onBack, title }) {
             autoFocus
             type="text"
             inputMode="text"
-            className={`w-full max-w-md p-3 rounded-xl border text-3xl tracking-wider text-center font-[system-ui] ${
-              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
+            className={`w-full max-w-md p-3 rounded-xl border text-3xl tracking-wider text-center ${
+              status === "miss" ? "border-red-400" : status === "hit" ? "border-green-500" : ""
             }`}
-            style={{ fontFamily: `"Hiragino Mincho ProN","Yu Mincho", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Noto Serif JP","Noto Sans JP", system-ui, sans-serif` }}
+            style={{
+              fontFamily:
+                '"Hiragino Mincho ProN","Yu Mincho","Yu Gothic","Hiragino Kaku Gothic ProN","Noto Serif JP","Noto Sans JP",system-ui,sans-serif',
+            }}
             placeholder="Dessine/tape le kanji ici puis Entrée"
             value={input}
-            onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
-            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
+            onChange={(e) => {
+              setInput(e.target.value);
+              if (status !== "idle") setStatus("idle");
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && input.trim()) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
           />
 
-          <DrawingPad onChangeStroke={()=>{/* juste pour l'UX */}} />
+          <DrawingPad onChangeStroke={() => {}} />
 
           <div className="flex items-center gap-2 w-full max-w-md">
-            <button onClick={handleSubmit} disabled={!input.trim() || status==='hit'} className={`flex-1 p-3 rounded-xl text-white ${input.trim() && status!=='hit' ? 'bg-pink-400' : 'bg-gray-300'}`}>Valider</button>
-            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
-            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+            <button
+              onClick={handleSubmit}
+              disabled={!input.trim() || status === "hit"}
+              className={`flex-1 p-3 rounded-xl text-white ${
+                input.trim() && status !== "hit" ? "bg-pink-400" : "bg-gray-300"
+              }`}
+            >
+              Valider
+            </button>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">
+              Suivant
+            </button>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {Math.max(0, total - idx - 1)}</span>
           </div>
 
-          {status==='miss' && (<div className="text-sm text-red-600">Ce caractère ne correspond pas. Corrige et réessaie.</div>)}
-          {status==='hit' && (<div className="text-sm text-green-600">Correct !</div>)}
+          {status === "miss" && (
+            <div className="text-sm text-red-600">Ce caractère ne correspond pas. Corrige et réessaie.</div>
+          )}
+          {status === "hit" && <div className="text-sm text-green-600">Correct !</div>}
         </div>
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
-          {results.current.map((r,i)=>(
+          {results.current.map((r, i) => (
             <div key={i} className="p-3 rounded-xl bg-gray-50">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-sm text-gray-500">{r.meaning}</div>
@@ -1276,13 +1347,16 @@ function QuizDrawKanji({ picked, onBack, title }) {
             </div>
           ))}
           <div className="flex gap-2">
-            <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">Recommencer</button>
+            <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">
+              Recommencer
+            </button>
           </div>
         </div>
       )}
     </div>
   );
 }
+
 
 
 /** ================== Menu Quiz ================== */
@@ -1295,8 +1369,7 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
       <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
-      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Dessin/Saisie Kanji
-</button>
+      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Dessin/Saisie Kanji</button>
 
     </div>
   );
