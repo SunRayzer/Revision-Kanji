@@ -120,7 +120,7 @@ const DATA = [
   { id: "会", meaningFR: "réunion; rencontrer; association; parti", meaningEN: "", onyomi: ["カイ","エ"], kunyomi: ["あ"] },
 ];
 
-/** Pool de lectures (pour générer des distracteurs) */
+/** Pool de lectures (pour génèr. de distracteurs) */
 const READING_POOL = Array.from(new Set(DATA.flatMap(k => [...(k.kunyomi||[]), ...(k.onyomi||[])])));
 
 /** ================== Utils ================== */
@@ -217,7 +217,7 @@ function getReadingsBothByType(k) {
   return { kunKana, onKana, kunRoma, onRoma };
 }
 
-/** Pastilles colorées : KUN = bleu, ON = orange (prend kana ou romaji selon ce qu'on lui passe) */
+/** Pastilles colorées : KUN = bleu, ON = orange */
 function ReadingChips({ kun = [], on = [], className = "" }) {
   return (
     <span className={`inline-flex flex-wrap gap-2 ${className}`}>
@@ -291,7 +291,6 @@ function AllSelectable({ selectedIds, setSelectedIds }) {
       </div>
       <div className="grid sm:grid-cols-3 gap-3">
         {DATA.map(k => {
-          // on homogénéise en hiragana pour l'affichage
           const kunKana = (k.kunyomi ?? []).map(normalizeKana);
           const onKana  = (k.onyomi  ?? []).map(normalizeKana);
           return (
@@ -463,20 +462,26 @@ function QuizTradToKanji({ picked, onBack, title }) {
   );
 }
 
-/** ================== Quiz Kanji → Traduction (une bonne réponse suffit) ================== */
+/** ================== Quiz Kanji → Traduction (UNE seule bonne réponse suffit) ================== */
 function QuizKanjiTrad({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [order, setOrder] = useState([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState<"idle"|"hit"|"miss"|"complete">("idle");
-  const autoNext = useRef<number | null>(null);
-  const results = useRef<Array<{ id:string; ok:boolean; user:string; accepted?:string; expected:string[]; pretty:string[] }>>([]);
+  const [status, setStatus] = useState("idle"); // idle | hit | miss | complete
+  const autoNext = useRef(null);
+  const results = useRef([]);
 
-  // normalisation pour comparer les traductions FR
-  const normalizeFR = (s: string) =>
-    stripAccents(s).toLowerCase().replace(/\s+/g," ").trim();
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (started && !finished) {
+      const t = setTimeout(() => inputRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    }
+  }, [started, finished, idx, status]);
+
+  const normalizeFR = (s) => stripAccents(s).toLowerCase().replace(/\s+/g," ").trim();
 
   const start = () => {
     setOrder(shuffle(picked));
@@ -486,6 +491,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
     results.current = [];
     setFinished(false);
     setStarted(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const currentQ = useMemo(() => {
@@ -501,7 +507,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
 
   useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
 
-  const goNext = (ok: boolean, accepted?: string) => {
+  const goNext = (ok, accepted) => {
     if (!currentQ) return;
     results.current.push({
       id: currentQ.id,
@@ -516,6 +522,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
       setIdx(idx + 1);
       setInput("");
       setStatus("idle");
+      setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
       setStatus("complete");
@@ -527,26 +534,19 @@ function QuizKanjiTrad({ picked, onBack, title }) {
     const val = normalizeFR(input);
     if (!val) return;
 
-    // si l'une des traductions attendues correspond → validé
     const ok = currentQ.expected.includes(val);
 
     if (ok) {
       setStatus("hit");
-      // on enregistre et on passe au suivant après 0.5s
       if (autoNext.current) clearTimeout(autoNext.current);
-      autoNext.current = window.setTimeout(() => goNext(true, val), 500);
+      autoNext.current = setTimeout(() => goNext(true, val), 500); // 0.5s
     } else {
       setStatus("miss");
-      // on peut laisser retaper (ne vide pas forcément l’input, à toi de voir)
-      // ici on vide pour encourager une nouvelle tentative
       setInput("");
     }
   };
 
-  const skip = () => {
-    // passage au suivant sans bonne réponse
-    goNext(false);
-  };
+  const skip = () => goNext(false);
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
@@ -577,6 +577,7 @@ function QuizKanjiTrad({ picked, onBack, title }) {
           </div>
 
           <input
+            ref={inputRef}
             autoFocus
             type="text"
             className={`w-full max-w-md p-3 rounded-xl border text-lg ${
@@ -634,7 +635,6 @@ function QuizKanjiTrad({ picked, onBack, title }) {
   );
 }
 
-
 /** ================== Quiz Kanji → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
 function QuizKanjiLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
@@ -647,7 +647,15 @@ function QuizKanjiLecture({ picked, onBack, title }) {
   const autoNext = useRef(null);
   const results = useRef([]);
   const foundRef = useRef(new Set());
+
+  const inputRef = useRef(null);
   useEffect(() => { foundRef.current = found; }, [found]);
+  useEffect(() => {
+    if (started && !finished) {
+      const t = setTimeout(() => inputRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    }
+  }, [started, finished, idx, status]);
 
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
@@ -666,6 +674,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
     results.current = [];
     setFinished(false);
     setStarted(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const total = order.length;
@@ -682,7 +691,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
       found: foundNow,
       kun: currentQ.kunRoma,
       on: currentQ.onRoma,
-      kunKana: currentQ.kunKana,   // KANA sauvés pour affichage
+      kunKana: currentQ.kunKana,
       onKana: currentQ.onKana,
     });
     if (idx + 1 < total) {
@@ -690,6 +699,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
       setInput("");
       setFound(new Set());
       setStatus("idle");
+      setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
       setStatus("complete");
@@ -701,7 +711,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
     const raw = input;
     if (!raw.trim()) return;
 
-    let key = null; // clé de comparaison en rōmaji normalisé
+    let key = null; // clé de comparaison en rōmaji
 
     if (isKana(raw)) {
       const hira = normalizeKana(raw);
@@ -744,6 +754,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
           <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">{currentQ?.id}</div>
           <input
+            ref={inputRef}
             autoFocus
             type="text"
             className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
@@ -761,7 +772,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
           <div className="flex items-center gap-2 w-full max-w-md">
             <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim()? "bg-pink-400":"bg-gray-300"}`}>Valider</button>
             <button onClick={goNext} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
-            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {Math.max(0, (order.length - idx - 1))}</span>
           </div>
           {status==='miss' && (<div className="text-sm text-red-600">Non attendu ou déjà saisi.</div>)}
           {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
@@ -771,21 +782,17 @@ function QuizKanjiLecture({ picked, onBack, title }) {
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
-            const foundSet = new Set(r.found); // romaji normalisés saisis
+            const foundSet = new Set(r.found);
 
-            // Lier romaji <-> kana par index
             const pairsKun = r.kun.map((roma, idx) => ({ roma, kana: r.kunKana[idx] }));
             const pairsOn  = r.on.map((roma, idx)  => ({ roma, kana: r.onKana[idx]  }));
 
-            // Kana trouvés
             const foundKunKana = pairsKun.filter(p => foundSet.has(p.roma)).map(p => p.kana);
             const foundOnKana  = pairsOn .filter(p => foundSet.has(p.roma)).map(p => p.kana);
 
-            // Attendues (kana)
             const expKunKana = r.kunKana;
             const expOnKana  = r.onKana;
 
-            // Manquantes (kana)
             const missKunKana = pairsKun.filter(p => !foundSet.has(p.roma)).map(p => p.kana);
             const missOnKana  = pairsOn .filter(p => !foundSet.has(p.roma)).map(p => p.kana);
 
@@ -841,7 +848,15 @@ function QuizTradLecture({ picked, onBack, title }) {
   const autoNext = useRef(null);
   const results = useRef([]);
   const foundRef = useRef(new Set());
+
+  const inputRef = useRef(null);
   useEffect(() => { foundRef.current = found; }, [found]);
+  useEffect(() => {
+    if (started && !finished) {
+      const t = setTimeout(() => inputRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    }
+  }, [started, finished, idx, status]);
 
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
@@ -861,6 +876,7 @@ function QuizTradLecture({ picked, onBack, title }) {
     results.current = [];
     setFinished(false);
     setStarted(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
@@ -886,6 +902,7 @@ function QuizTradLecture({ picked, onBack, title }) {
       setInput("");
       setFound(new Set());
       setStatus("idle");
+      setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
       setStatus("complete");
@@ -943,6 +960,7 @@ function QuizTradLecture({ picked, onBack, title }) {
             <div className="text-2xl font-semibold">{currentQ?.meaningPretty.join(" ／ ")}</div>
           </div>
           <input
+            ref={inputRef}
             autoFocus
             type="text"
             className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
