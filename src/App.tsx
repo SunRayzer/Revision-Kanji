@@ -1367,12 +1367,12 @@ function QuizMenu({ setQuizMode }) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
-      <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Général</button>
-      <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Kanji</button>
+      <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Général QCM</button>
+      <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Kanji QCM</button>
+      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
+      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Saisie Kanji</button>
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
-      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
-      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Dessin/Saisie Kanji</button>
 
     </div>
   );
@@ -1428,6 +1428,14 @@ export default function App() {
           <QuizTradToKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Kanji" />
         )}
 
+        {route === "quiz" && quizMode === "tradLecture" && (
+          <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
+        )}
+        
+        {route === "quiz" && quizMode === "drawKanji" && (
+          <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Dessin/Saisie Kanji" />
+        )}
+
         {route === "quiz" && quizMode === "kanjiTrad" && (
           <QuizKanjiTrad picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Traduction" />
         )}
@@ -1436,13 +1444,7 @@ export default function App() {
           <QuizKanjiLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Lecture" />
         )}
 
-        {route === "quiz" && quizMode === "tradLecture" && (
-          <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
-        )}
-        
-        {route === "quiz" && quizMode === "drawKanji" && (
-          <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Dessin/Saisie Kanji" />
-        )}
+
       </main>
     </div>
   );
