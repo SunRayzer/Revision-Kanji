@@ -1435,7 +1435,8 @@ export default function App() {
 
         {route === "quiz" && quizMode === "tradLecture" && (
           <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
-
+        )}
+        
         {route === "quiz" && quizMode === "drawKanji" && (
           <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Dessin/Saisie Kanji" />
         )}
