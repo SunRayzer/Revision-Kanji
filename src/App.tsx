@@ -1261,8 +1261,9 @@ function QuizDrawKanji({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Astuce : active le clavier japonais et choisis le mode <b>手書き</b> pour dessiner
-            le kanji ; l’IME insérera le caractère ici ↓
+            Astuce : Téléphone : active le clavier japonais et choisis le mode <b>手書き</b> pour dessiner
+            le kanji ; 
+            Ordinateur : Sélectionne le <b>Pavé IME</b>
           </div>
         </div>
       ) : !finished ? (
