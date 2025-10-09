@@ -1261,11 +1261,11 @@ function QuizDrawKanji({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Astuce Téléphone : active le clavier japonais et choisis le mode <b>手書き</b> pour dessiner
+            Astuce Téléphone : Active le clavier japonais et sélectionne le mode <b>手書き</b> pour dessiner
             le kanji
           </div>
           <div className="text-sm text-gray-600">
-            Astuce Ordinateur : Sélectionne le <b>Pavé IME</b> pour dessiner le kanji
+            Astuce Windows PC : Active le clavier japonais et sélectionne le <b>Pavé IME</b> pour dessiner le kanji
           </div>
         </div>
       ) : !finished ? (
