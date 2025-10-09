@@ -1041,6 +1041,250 @@ function QuizTradLecture({ picked, onBack, title }) {
   );
 }
 
+/** ================== Quiz Traduction → Dessin/Saisie Kanji (IME 手書き ou frappe directe) ================== */
+function DrawingPad({ onChangeStroke }) {
+  const canvasRef = React.useRef(null);
+  const [drawing, setDrawing] = useState(false);
+
+  // redimensionne en DPR pour netteté
+  useEffect(() => {
+    const cvs = canvasRef.current;
+    if (!cvs) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = cvs.getBoundingClientRect();
+    cvs.width = Math.floor(rect.width * dpr);
+    cvs.height = Math.floor(rect.height * dpr);
+    const ctx = cvs.getContext("2d");
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "#111827";
+  }, []);
+
+  const getPos = (e) => {
+    const cvs = canvasRef.current;
+    const rect = cvs.getBoundingClientRect();
+    if (e.touches && e.touches[0]) {
+      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    }
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  };
+
+  const start = (e) => {
+    e.preventDefault();
+    const ctx = canvasRef.current.getContext("2d");
+    const { x, y } = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    setDrawing(true);
+    onChangeStroke?.();
+  };
+  const move = (e) => {
+    if (!drawing) return;
+    e.preventDefault();
+    const ctx = canvasRef.current.getContext("2d");
+    const { x, y } = getPos(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
+  const end = (e) => {
+    if (!drawing) return;
+    e.preventDefault();
+    setDrawing(false);
+  };
+
+  const clear = () => {
+    const cvs = canvasRef.current;
+    const ctx = cvs.getContext("2d");
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+  };
+
+  return (
+    <div className="w-full max-w-md">
+      <div className="text-xs text-gray-500 mb-1">Espace d’entraînement (non utilisé pour la validation)</div>
+      <div className="border rounded-xl bg-white">
+        <canvas
+          ref={canvasRef}
+          className="w-full h-48 touch-none"
+          onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
+          onTouchStart={start} onTouchMove={move} onTouchEnd={end}
+        />
+      </div>
+      <div className="mt-2 text-right">
+        <button onClick={clear} className="px-3 py-1 rounded bg-gray-100">Effacer</button>
+      </div>
+    </div>
+  );
+}
+
+function QuizDrawKanji({ picked, onBack, title }) {
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [order, setOrder] = useState([]);
+  const [idx, setIdx] = useState(0);
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | hit | miss
+  const autoNext = useRef(null);
+  const results = useRef([]);
+
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (started && !finished) {
+      const t = setTimeout(() => inputRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    }
+  }, [started, finished, idx, status]);
+
+  const start = () => {
+    setOrder(shuffle(picked));
+    setIdx(0);
+    setInput("");
+    setStatus("idle");
+    results.current = [];
+    setFinished(false);
+    setStarted(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null;
+    const k = order[idx];
+    const fr = splitFR(k.meaningFR);
+    return { id: k.id, meaningFRTokens: fr, meaningFull: k.meaningFR };
+  }, [started, idx, order]);
+
+  const total = order.length;
+  const remaining = Math.max(0, total - idx - 1);
+
+  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
+
+  const goNext = (ok) => {
+    if (!currentQ) return;
+    results.current.push({
+      id: currentQ.id,
+      ok,
+      user: input.trim(),
+      meaning: currentQ.meaningFull
+    });
+
+    if (idx + 1 < total) {
+      setIdx(idx + 1);
+      setInput("");
+      setStatus("idle");
+      setTimeout(() => inputRef.current?.focus(), 0);
+    } else {
+      setFinished(true);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!currentQ) return;
+    const val = input.trim();
+    if (!val) return;
+
+    // on valide si le premier caractère non-espace contient le kanji attendu
+    const firstKanji = Array.from(val).find(ch => /\S/.test(ch));
+    const ok = firstKanji === currentQ.id;
+
+    if (ok) {
+      setStatus("hit");
+      if (autoNext.current) clearTimeout(autoNext.current);
+      autoNext.current = setTimeout(() => goNext(true), 500); // auto-next en 0.5s
+    } else {
+      setStatus("miss");
+      // on ne vide pas, pour laisser corriger
+    }
+  };
+
+  const skip = () => goNext(false);
+
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
+        <span className="font-semibold">{title}</span>
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        {finished && (
+          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+            Score: {results.current.filter(r=>r.ok).length}/{results.current.length}
+          </span>
+        )}
+      </div>
+
+      {!started ? (
+        <div className="space-y-3">
+          <button onClick={start} disabled={picked.length===0} className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>
+            Commencer le {title}
+          </button>
+          <div className="text-sm text-gray-600">
+            Astuce : active le clavier japonais et choisis le mode <b>手書き</b> (handwriting) pour dessiner le kanji, il sera inséré ici ⤵︎
+          </div>
+        </div>
+      ) : !finished ? (
+        <div className="flex flex-col items-center gap-5 p-4">
+          <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
+
+          <div className="text-center">
+            <div className="text-sm text-gray-500 mb-1">Traduction(s) :</div>
+            <div className="text-2xl font-semibold">{currentQ?.meaningFRTokens.join(" ／ ")}</div>
+          </div>
+
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            inputMode="text"
+            className={`w-full max-w-md p-3 rounded-xl border text-3xl tracking-wider text-center font-[system-ui] ${
+              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
+            }`}
+            style={{ fontFamily: `"Hiragino Mincho ProN","Yu Mincho", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Noto Serif JP","Noto Sans JP", system-ui, sans-serif` }}
+            placeholder="Dessine/tape le kanji ici puis Entrée"
+            value={input}
+            onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
+            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
+          />
+
+          <DrawingPad onChangeStroke={()=>{/* juste pour l'UX */}} />
+
+          <div className="flex items-center gap-2 w-full max-w-md">
+            <button onClick={handleSubmit} disabled={!input.trim() || status==='hit'} className={`flex-1 p-3 rounded-xl text-white ${input.trim() && status!=='hit' ? 'bg-pink-400' : 'bg-gray-300'}`}>Valider</button>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+          </div>
+
+          {status==='miss' && (<div className="text-sm text-red-600">Ce caractère ne correspond pas. Corrige et réessaie.</div>)}
+          {status==='hit' && (<div className="text-sm text-green-600">Correct !</div>)}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {results.current.map((r,i)=>(
+            <div key={i} className="p-3 rounded-xl bg-gray-50">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm text-gray-500">{r.meaning}</div>
+                <div className={r.ok ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                  {r.ok ? "Correct" : "Faux"}
+                </div>
+              </div>
+              <div className="text-2xl">
+                <span className="text-gray-500 mr-2">Saisi :</span> {r.user || "—"}
+              </div>
+              <div className="text-2xl">
+                <span className="text-gray-500 mr-2">Attendu :</span> {r.id}
+              </div>
+            </div>
+          ))}
+          <div className="flex gap-2">
+            <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">Recommencer</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 /** ================== Menu Quiz ================== */
 function QuizMenu({ setQuizMode }) {
   return (
@@ -1051,6 +1295,9 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
       <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
+      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Dessin/Saisie Kanji
+</button>
+
     </div>
   );
 }
@@ -1115,6 +1362,11 @@ export default function App() {
 
         {route === "quiz" && quizMode === "tradLecture" && (
           <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
+
+        {route === "quiz" && quizMode === "drawKanji" && (
+          <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Dessin/Saisie Kanji" />
+        )}
+
         )}
       </main>
     </div>
