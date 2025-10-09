@@ -1421,11 +1421,11 @@ export default function App() {
         )}
 
         {route === "quiz" && quizMode === "general" && (
-          <QuizGeneral picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Général" />
+          <QuizGeneral picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Général QCM" />
         )}
 
         {route === "quiz" && quizMode === "tradToKanji" && (
-          <QuizTradToKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Kanji" />
+          <QuizTradToKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Kanji QCM" />
         )}
 
         {route === "quiz" && quizMode === "tradLecture" && (
@@ -1433,7 +1433,7 @@ export default function App() {
         )}
         
         {route === "quiz" && quizMode === "drawKanji" && (
-          <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Dessin/Saisie Kanji" />
+          <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Saisie Kanji" />
         )}
 
         {route === "quiz" && quizMode === "kanjiTrad" && (
