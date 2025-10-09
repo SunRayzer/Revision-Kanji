@@ -1261,7 +1261,7 @@ function QuizDrawKanji({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Astuce : Téléphone : active le clavier japonais et choisis le mode <b>手書き</b> pour dessiner
+            Astuce Téléphone : active le clavier japonais et choisis le mode <b>手書き</b> pour dessiner
             le kanji
           </div>
           <div className="text-sm text-gray-600">
