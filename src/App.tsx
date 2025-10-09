@@ -1360,6 +1360,269 @@ function QuizDrawKanji({
   );
 }
 
+/** ================== Quiz Lecture KUN → Dessin/Saisie Kanji (multi-kanji si KUN partagé) ================== */
+function QuizKunToDraw({
+  picked,
+  onBack,
+  title,
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+}) {
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
+
+  // Questions construites par lecture KUN distincte
+  const [order, setOrder] = useState<{ kun: string; expectedIds: string[] }[]>([]);
+  const [idx, setIdx] = useState(0);
+
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
+  const [foundIds, setFoundIds] = useState<Set<string>>(new Set()); // kanji déjà fournis pour la KUN courante
+
+  const autoNext = useRef<number | null>(null);
+  const results = useRef<
+    { kun: string; expectedIds: string[]; foundIds: string[] }[]
+  >([]);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const normalizeKana = (s: string) =>
+    Array.from(s).map(ch => {
+      const code = ch.charCodeAt(0);
+      return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
+    }).join("").trim();
+
+  useEffect(() => {
+    if (started && !finished) {
+      const t = window.setTimeout(() => inputRef.current?.focus(), 0);
+      return () => window.clearTimeout(t);
+    }
+    return;
+  }, [started, finished, idx, status]);
+
+  useEffect(() => {
+    return () => { if (autoNext.current) window.clearTimeout(autoNext.current); };
+  }, []);
+
+  // Construit les questions : 1 question = 1 KUN (kana) → N kanji attendus
+  const buildQuestions = (pool: any[]) => {
+    const byKun = new Map<string, Set<string>>();
+    pool.forEach(k => {
+      const kuns = (k.kunyomi ?? []).map(normalizeKana).filter(Boolean);
+      kuns.forEach(r => {
+        if (!byKun.has(r)) byKun.set(r, new Set());
+        byKun.get(r)!.add(k.id);
+      });
+    });
+    const questions = Array.from(byKun.entries())
+      .map(([kun, set]) => ({ kun, expectedIds: Array.from(set) }))
+      // Retire les KUN qui ne mènent à aucun kanji (sécurité)
+      .filter(q => q.expectedIds.length > 0);
+    return shuffle(questions);
+  };
+
+  const start = () => {
+    const qs = buildQuestions(picked);
+    setOrder(qs);
+    setIdx(0);
+    setInput("");
+    setStatus("idle");
+    setFoundIds(new Set());
+    results.current = [];
+    setFinished(false);
+    setStarted(true);
+    window.setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null as { kun: string; expectedIds: string[] } | null;
+    return order[idx];
+  }, [started, idx, order]);
+
+  const total = order.length;
+  const remaining = Math.max(0, total - idx - 1);
+
+  const goNext = () => {
+    if (!currentQ) return;
+    results.current.push({
+      kun: currentQ.kun,
+      expectedIds: currentQ.expectedIds,
+      foundIds: Array.from(foundIds),
+    });
+
+    if (idx + 1 < total) {
+      setIdx(idx + 1);
+      setInput("");
+      setStatus("idle");
+      setFoundIds(new Set());
+      window.setTimeout(() => inputRef.current?.focus(), 0);
+    } else {
+      setFinished(true);
+      setStatus("complete");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!currentQ) return;
+    const val = input.trim();
+    if (!val) return;
+
+    // On lit le premier caractère non-blanc saisi → doit être un kanji attendu
+    const firstChar = Array.from(val).find(ch => /\S/.test(ch)) ?? "";
+    const isExpected = currentQ.expectedIds.includes(firstChar);
+    const already = foundIds.has(firstChar);
+
+    if (isExpected && !already) {
+      const nxt = new Set(foundIds); nxt.add(firstChar);
+      setFoundIds(nxt);
+      setStatus("hit");
+      setInput(""); // prêt pour saisir le/les suivants
+
+      const done = nxt.size === currentQ.expectedIds.length;
+      if (done) {
+        setStatus("complete");
+        if (autoNext.current) window.clearTimeout(autoNext.current);
+        autoNext.current = window.setTimeout(goNext, 500); // 0.5s
+      }
+    } else {
+      setStatus("miss");
+      // ne vide pas pour corriger si besoin (au choix)
+    }
+  };
+
+  const skip = () => goNext();
+
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
+        <span className="font-semibold">{title}</span>
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        {finished && (
+          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+            Quiz terminé
+          </span>
+        )}
+      </div>
+
+      {!started ? (
+        <div className="space-y-3">
+          <button
+            onClick={start}
+            disabled={picked.length===0}
+            className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}
+          >
+            Commencer le {title}
+          </button>
+          <div className="text-sm text-gray-600">
+            Objectif : pour une <b>lecture KUN</b> donnée, saisis <b>tous les kanji</b> correspondants (via IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
+          </div>
+        </div>
+      ) : !finished ? (
+        <div className="flex flex-col items-center gap-5 p-4">
+          <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
+
+          <div className="text-center">
+            <div className="text-sm text-gray-500 mb-1">Lecture <b>KUN</b> :</div>
+            <div className="text-3xl font-extrabold tracking-wide select-none">{currentQ?.kun || "—"}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              Attendus : {foundIds.size}/{currentQ?.expectedIds.length ?? 0}
+            </div>
+          </div>
+
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            inputMode="text"
+            className={`w-full max-w-md p-3 rounded-xl border text-3xl tracking-wider text-center ${
+              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
+            }`}
+            style={{ fontFamily: `"Hiragino Mincho ProN","Yu Mincho","Yu Gothic","Hiragino Kaku Gothic ProN","Noto Serif JP","Noto Sans JP",system-ui,sans-serif` }}
+            placeholder="Saisis un kanji correspondant puis Entrée"
+            value={input}
+            onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
+            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
+          />
+
+          {/* Facultatif : pad de dessin libre */}
+          <DrawingPad onChangeStroke={()=>{}} />
+
+          <div className="flex flex-wrap gap-2 max-w-md">
+            {Array.from(foundIds).map(k => (
+              <span key={k} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-lg">{k}</span>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 w-full max-w-md">
+            <button
+              onClick={handleSubmit}
+              disabled={!input.trim() || status==='complete'}
+              className={`flex-1 p-3 rounded-xl text-white ${input.trim() && status!=='complete' ? 'bg-pink-400' : 'bg-gray-300'}`}
+            >
+              Valider
+            </button>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+          </div>
+
+          {status==='miss' && (<div className="text-sm text-red-600">Pas attendu, déjà saisi, ou caractère invalide.</div>)}
+          {status==='hit' && (<div className="text-sm text-green-600">Bien — continue.</div>)}
+          {status==='complete' && (<div className="text-sm text-green-600">Tous les kanji pour cette lecture ont été saisis !</div>)}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {results.current.map((r,i)=>{
+            const foundSet = new Set(r.foundIds);
+            const miss = r.expectedIds.filter(id => !foundSet.has(id));
+            return (
+              <div key={i} className="p-3 rounded-xl bg-gray-50">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm">
+                    <span className="text-gray-500 mr-1">KUN :</span>
+                    <span className="px-2 py-1 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">{r.kun}</span>
+                  </div>
+                  <div className={(miss.length===0) ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {r.foundIds.length}/{r.expectedIds.length}
+                  </div>
+                </div>
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Trouvés :</span>{" "}
+                  {r.foundIds.length>0 ? r.foundIds.map(id=>(
+                    <span key={id} className="inline-block mx-1 text-lg">{id}</span>
+                  )) : "—"}
+                </div>
+
+                <div className="text-sm">
+                  <span className="text-gray-500">Attendues :</span>{" "}
+                  {r.expectedIds.map(id=>(
+                    <span key={id} className="inline-block mx-1 text-lg">{id}</span>
+                  ))}
+                </div>
+
+                {miss.length>0 && (
+                  <div className="text-sm mt-1">
+                    <span className="text-gray-500">Manquantes :</span>{" "}
+                    {miss.map(id=>(
+                      <span key={id} className="inline-block mx-1 text-lg">{id}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          <div className="flex gap-2">
+            <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">Recommencer</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 
 /** ================== Menu Quiz ================== */
@@ -1373,6 +1636,7 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Saisie Kanji</button>
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
+      <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-x1 text-white bg-oink-400">Quiz Lecture KUN/Kanji (dessin/saisie)</button>
 
     </div>
   );
@@ -1442,6 +1706,10 @@ export default function App() {
 
         {route === "quiz" && quizMode === "kanjiLecture" && (
           <QuizKanjiLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Lecture" />
+        )}
+
+        {route === "quiz" && quizMode === "kunToDraw" && (
+          <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture KUN → Dessin/Saisie du Kanji" />
         )}
 
 
