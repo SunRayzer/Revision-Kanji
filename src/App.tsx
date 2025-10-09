@@ -1301,7 +1301,7 @@ function QuizMenu({ setQuizMode }) {
     </div>
   );
 }
-
+ 
 /** ================== App ================== */
 export default function App() {
   const [route, setRoute] = useState("select");
