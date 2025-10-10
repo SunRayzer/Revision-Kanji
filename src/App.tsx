@@ -1361,65 +1361,154 @@ function QuizDrawKanji({
 }
 
 /** ================== Quiz Lecture KUN → Dessin/Saisie Kanji (multi-kanji si KUN partagé) ================== */
+/** Utilise de préférence les lectures KUN de `aSavoir` (si présentes), sinon `kunyomi`. */
+function toHiragana(s: string) {
+  return Array.from(s).map(ch => {
+    const code = ch.charCodeAt(0);
+    return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
+  }).join("");
+}
+const shuffle = <T,>(arr: T[]) => [...arr].sort(() => Math.random() - 0.5);
+
+function DrawingPad({ onChangeStroke }: { onChangeStroke?: () => void }) {
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const [drawing, setDrawing] = React.useState(false);
+
+  React.useEffect(() => {
+    const cvs = canvasRef.current;
+    if (!cvs) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = cvs.getBoundingClientRect();
+    cvs.width = Math.max(1, Math.floor(rect.width * dpr));
+    cvs.height = Math.max(1, Math.floor(rect.height * dpr));
+    const ctx = cvs.getContext("2d");
+    if (!ctx) return;
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = "#111827";
+  }, []);
+
+  const getPos = (e: React.MouseEvent | React.TouchEvent) => {
+    const cvs = canvasRef.current!;
+    const rect = cvs.getBoundingClientRect();
+    if ("touches" in e && e.touches[0]) {
+      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    }
+    const me = e as React.MouseEvent;
+    return { x: me.clientX - rect.left, y: me.clientY - rect.top };
+  };
+
+  const start = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    const ctx = canvasRef.current!.getContext("2d");
+    if (!ctx) return;
+    const { x, y } = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    setDrawing(true);
+    onChangeStroke?.();
+  };
+  const move = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!drawing) return;
+    e.preventDefault();
+    const ctx = canvasRef.current!.getContext("2d");
+    if (!ctx) return;
+    const { x, y } = getPos(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
+  const end = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!drawing) return;
+    e.preventDefault();
+    setDrawing(false);
+  };
+
+  const clear = () => {
+    const cvs = canvasRef.current!;
+    const ctx = cvs.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+  };
+
+  return (
+    <div className="w-full max-w-md">
+      <div className="text-xs text-gray-500 mb-1">Espace d’entraînement (non utilisé pour la validation)</div>
+      <div className="border rounded-xl bg-white">
+        <canvas
+          ref={canvasRef}
+          className="w-full h-48 touch-none"
+          onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
+          onTouchStart={start} onTouchMove={move} onTouchEnd={end}
+        />
+      </div>
+      <div className="mt-2 text-right">
+        <button onClick={clear} className="px-3 py-1 rounded bg-gray-100">Effacer</button>
+      </div>
+    </div>
+  );
+}
+
 function QuizKunToDraw({
   picked,
   onBack,
   title,
 }: {
-  picked: any[];
+  picked: Array<{ id: string; kunyomi?: string[]; aSavoir?: string[] }>;
   onBack: () => void;
   title: string;
 }) {
-  const [started, setStarted] = useState(false);
-  const [finished, setFinished] = useState(false);
+  const [started, setStarted] = React.useState(false);
+  const [finished, setFinished] = React.useState(false);
 
-  // Questions construites par lecture KUN distincte
-  const [order, setOrder] = useState<{ kun: string; expectedIds: string[] }[]>([]);
-  const [idx, setIdx] = useState(0);
+  // 1 question = 1 lecture KUN (hiragana) → N kanji attendus
+  const [order, setOrder] = React.useState<{ kun: string; expectedIds: string[]; fromASavoir: boolean }[]>([]);
+  const [idx, setIdx] = React.useState(0);
 
-  const [input, setInput] = useState("");
-  const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
-  const [foundIds, setFoundIds] = useState<Set<string>>(new Set()); // kanji déjà fournis pour la KUN courante
+  const [input, setInput] = React.useState("");
+  const [status, setStatus] = React.useState<"idle" | "hit" | "miss" | "complete">("idle");
+  const [foundIds, setFoundIds] = React.useState<Set<string>>(new Set());
 
-  const autoNext = useRef<number | null>(null);
-  const results = useRef<
-    { kun: string; expectedIds: string[]; foundIds: string[] }[]
-  >([]);
+  const autoNext = React.useRef<number | null>(null);
+  const results = React.useRef<{ kun: string; expectedIds: string[]; foundIds: string[] }[]>([]);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const normalizeKana = (s: string) =>
-    Array.from(s).map(ch => {
-      const code = ch.charCodeAt(0);
-      return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
-    }).join("").trim();
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (started && !finished) {
       const t = window.setTimeout(() => inputRef.current?.focus(), 0);
       return () => window.clearTimeout(t);
     }
-    return;
   }, [started, finished, idx, status]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => { if (autoNext.current) window.clearTimeout(autoNext.current); };
   }, []);
 
-  // Construit les questions : 1 question = 1 KUN (kana) → N kanji attendus
-  const buildQuestions = (pool: any[]) => {
-    const byKun = new Map<string, Set<string>>();
+  /** Construit les questions à partir de picked : priorité à aSavoir, sinon kunyomi */
+  const buildQuestions = (pool: typeof picked) => {
+    const byKun = new Map<string, { set: Set<string>; fromASavoir: boolean }>();
+
     pool.forEach(k => {
-      const kuns = (k.kunyomi ?? []).map(normalizeKana).filter(Boolean);
-      kuns.forEach(r => {
-        if (!byKun.has(r)) byKun.set(r, new Set());
-        byKun.get(r)!.add(k.id);
+      const src = (k.aSavoir && k.aSavoir.length > 0)
+        ? { list: k.aSavoir, flag: true }
+        : { list: (k.kunyomi ?? []), flag: false };
+
+      const kuns = src.list.map(toHiragana).map(s => s.trim()).filter(Boolean);
+
+      kuns.forEach(kun => {
+        if (!byKun.has(kun)) byKun.set(kun, { set: new Set<string>(), fromASavoir: src.flag });
+        byKun.get(kun)!.set.add(k.id);
+        if (src.flag) byKun.get(kun)!.fromASavoir = true;
       });
     });
-    const questions = Array.from(byKun.entries())
-      .map(([kun, set]) => ({ kun, expectedIds: Array.from(set) }))
-      // Retire les KUN qui ne mènent à aucun kanji (sécurité)
-      .filter(q => q.expectedIds.length > 0);
+
+    const questions = Array.from(byKun.entries()).map(([kun, obj]) => ({
+      kun,
+      expectedIds: Array.from(obj.set),
+      fromASavoir: obj.fromASavoir,
+    })).filter(q => q.expectedIds.length > 0);
+
     return shuffle(questions);
   };
 
@@ -1436,8 +1525,8 @@ function QuizKunToDraw({
     window.setTimeout(() => inputRef.current?.focus(), 0);
   };
 
-  const currentQ = useMemo(() => {
-    if (!started || idx >= order.length) return null as { kun: string; expectedIds: string[] } | null;
+  const currentQ = React.useMemo(() => {
+    if (!started || idx >= order.length) return null as { kun: string; expectedIds: string[]; fromASavoir: boolean } | null;
     return order[idx];
   }, [started, idx, order]);
 
@@ -1469,26 +1558,25 @@ function QuizKunToDraw({
     const val = input.trim();
     if (!val) return;
 
-    // On lit le premier caractère non-blanc saisi → doit être un kanji attendu
+    // 1er caractère non blanc doit être un kanji attendu
     const firstChar = Array.from(val).find(ch => /\S/.test(ch)) ?? "";
     const isExpected = currentQ.expectedIds.includes(firstChar);
     const already = foundIds.has(firstChar);
 
     if (isExpected && !already) {
-      const nxt = new Set(foundIds); nxt.add(firstChar);
+      const nxt = new Set(foundIds);
+      nxt.add(firstChar);
       setFoundIds(nxt);
       setStatus("hit");
-      setInput(""); // prêt pour saisir le/les suivants
+      setInput(""); // on enchaîne les autres si besoin
 
-      const done = nxt.size === currentQ.expectedIds.length;
-      if (done) {
+      if (nxt.size === currentQ.expectedIds.length) {
         setStatus("complete");
         if (autoNext.current) window.clearTimeout(autoNext.current);
         autoNext.current = window.setTimeout(goNext, 500); // 0.5s
       }
     } else {
       setStatus("miss");
-      // ne vide pas pour corriger si besoin (au choix)
     }
   };
 
@@ -1500,11 +1588,7 @@ function QuizKunToDraw({
         <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
-        {finished && (
-          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-            Quiz terminé
-          </span>
-        )}
+        {finished && <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>}
       </div>
 
       {!started ? (
@@ -1517,7 +1601,8 @@ function QuizKunToDraw({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Objectif : pour une <b>lecture KUN</b> donnée, saisis <b>tous les kanji</b> correspondants (via IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
+            Objectif : pour une <b>lecture KUN</b> donnée, saisis <b>tous les kanji</b> correspondants
+            (via IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
           </div>
         </div>
       ) : !finished ? (
@@ -1527,6 +1612,9 @@ function QuizKunToDraw({
           <div className="text-center">
             <div className="text-sm text-gray-500 mb-1">Lecture <b>KUN</b> :</div>
             <div className="text-3xl font-extrabold tracking-wide select-none">{currentQ?.kun || "—"}</div>
+            {currentQ?.fromASavoir && (
+              <div className="text-xs text-blue-500 mt-1">Liste “à savoir”</div>
+            )}
             <div className="text-xs text-gray-500 mt-1">
               Attendus : {foundIds.size}/{currentQ?.expectedIds.length ?? 0}
             </div>
@@ -1547,7 +1635,6 @@ function QuizKunToDraw({
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
 
-          {/* Facultatif : pad de dessin libre */}
           <DrawingPad onChangeStroke={()=>{}} />
 
           <div className="flex flex-wrap gap-2 max-w-md">
@@ -1565,7 +1652,7 @@ function QuizKunToDraw({
               Valider
             </button>
             <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
-            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {Math.max(0, total - idx - 1)}</span>
           </div>
 
           {status==='miss' && (<div className="text-sm text-red-600">Pas attendu, déjà saisi, ou caractère invalide.</div>)}
@@ -1623,6 +1710,7 @@ function QuizKunToDraw({
     </div>
   );
 }
+
 
 
 /** ================== Menu Quiz ================== */
