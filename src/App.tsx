@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useMemo, useState, useEffect, useRef } from "react";
 
-{ id: "人", meaningFR: "personne; humain", meaningEN: "person; human", onyomi: ["ジン","ニン"], kunyomi: ["ひと"], aSavoir: ["ひと"] },
 { id: "子", meaningFR: "enfant", meaningEN: "child", onyomi: ["シ","ツ","ス"], kunyomi: ["こ"], aSavoir: ["ご"] },
 { id: "女", meaningFR: "femme; fille; féminin", meaningEN: "woman", onyomi: ["ジョ","ニョ","ニョウ"], kunyomi: ["おんな","め"], aSavoir: ["おんな"] },
 { id: "男", meaningFR: "homme; garçon; masculin", meaningEN: "man", onyomi: ["ダン","ナン"], kunyomi: ["おとこ"], aSavoir: ["おとこ"] },
