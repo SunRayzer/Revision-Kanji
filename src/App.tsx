@@ -882,7 +882,6 @@ function QuizTradLecture({ picked, onBack, title }) {
   const autoNext = useRef(null);
   const results = useRef([]);
   const foundRef = useRef(new Set());
-
   const inputRef = useRef(null);
   useEffect(() => { foundRef.current = found; }, [found]);
   useEffect(() => {
@@ -892,7 +891,7 @@ function QuizTradLecture({ picked, onBack, title }) {
     }
   }, [started, finished, idx, status]);
 
-const currentQ = useMemo(() => {
+ const currentQ = useMemo(() => {
   if (!started || idx >= order.length) return null;
   const k = order[idx];
 
@@ -910,7 +909,7 @@ const currentQ = useMemo(() => {
     expectedKana,
     expectedRoma, // pour comparer avec saisie rōmaji le cas échéant
   };
-}, [started, idx, order, readingScope]);
+ }, [started, idx, order, readingScope]);
 
 
   const start = () => {
@@ -955,7 +954,7 @@ const currentQ = useMemo(() => {
     }
   };
 
-const okKana = isKana(input)
+ const okKana = isKana(input)
   ? expectedKana.some(e => normalizeKana(e) === normalizeKana(input))
   : expectedRoma.some(e => norm(e) === norm(input));
 
@@ -986,7 +985,6 @@ const okKana = isKana(input)
     } else {
       setStatus("miss"); setInput("");
     }
-  };
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
@@ -1086,7 +1084,7 @@ const okKana = isKana(input)
       )}
     </div>
   );
-
+}
 
 /** ================== Quiz Traduction → Dessin/Saisie Kanji (IME 手書き ou frappe) ================== */
 function DrawingPad({ onChangeStroke }: { onChangeStroke?: () => void }) {
