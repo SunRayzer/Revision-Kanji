@@ -1917,7 +1917,11 @@ function QuizMenu({ setQuizMode }) {
 
 /** ================== Menu Quiz Complet ================== */
 
-
+ <p className="text-sm text-gray-600">
+        Ici, tu pourras lancer des parcours de révision en “version complète”. 
+        (Il faudra renseigner l'ensemble des Lectures et des Kanjis demandés)
+      </p>
+    
 function QuizCompletMenu({
   onBack,
   onStartTradLectureComplete,
