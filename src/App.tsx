@@ -1908,12 +1908,12 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
       <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture / Kanji </button>
 
+      <button onClick={() => { setRoute("quizAll"); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">trad/lecture</button>
 
 
     </div>
   );
 }
-
 
 /** ================== Menu Quiz Complet ================== */
 
@@ -1921,8 +1921,36 @@ function QuizCompletMenu({ setQuizAllMode }) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
-      <button onClick={()=>setQuizAllMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
+      <button onClick={()=>setQuizAllMode("tradLectureComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
 
+    </div>
+  );
+}
+
+/** ================== Menu Quiz Complet ================== */ (en attente) 
+
+
+function QuizCompletMenu({
+  onBack,
+  onStartTradLectureComplete,
+}: {
+  onBack: () => void;
+  onStartTradLectureComplete: () => void;
+}) {
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-4">
+      <div className="flex items-center gap-2">
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
+        <span className="font-semibold">Quiz Complet</span>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+        <button onClick={()=>onStartTradLectureComplete("Traduction → Lecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction → Lecture</button>
+
+    
+
+        {/* Tu pourras ajouter d'autres entrées ici */}
+      </div>
     </div>
   );
 }
@@ -1993,8 +2021,8 @@ export default function App() {
         )}
 
         {route === "quizAll" && !quizAllMode && (
-         <QuizCompletMenu onBack={() => setRoute("select")} onStartTradLectureComplete={() => setQuizAllMode("tradLectureComplete")} />
-        )}
+         <QuizCompletMenu setQuizAllMode={setQuizAllMode} />
+        )}        
 
         {route === "quizAll" && quizAllMode === "tradLectureComplete" && (
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
