@@ -1917,32 +1917,12 @@ function QuizMenu({ setQuizMode }) {
 
 /** ================== Menu Quiz Complet ================== */
 
- <p className="text-sm text-gray-600">
-        Ici, tu pourras lancer des parcours de révision en “version complète”. 
-        (Il faudra renseigner l'ensemble des Lectures et des Kanjis demandés)
-      </p>
-    
-function QuizCompletMenu({
-  onBack,
-  onStartTradLectureComplete,
-}: {
-  onBack: () => void;
-  onStartTradLectureComplete: () => void;
-}) {
+function QuizCompletMenu({ setQuizAllMode }) {
   return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-4">
-      <div className="flex items-center gap-2">
-        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
-        <span className="font-semibold">Quiz Complet</span>
-      </div>
+    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
+      <button onClick={()=>setQuizAllMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
 
-      <div className="grid sm:grid-cols-2 gap-3">
-        <button onClick={()=>onStartTradLectureComplete("Traduction → Lecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction → Lecture</button>
-
-    
-
-        {/* Tu pourras ajouter d'autres entrées ici */}
-      </div>
     </div>
   );
 }
