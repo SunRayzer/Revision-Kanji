@@ -123,6 +123,9 @@ const DATA = [
 const READING_POOL = Array.from(new Set(DATA.flatMap(k => [...(k.kunyomi||[]), ...(k.onyomi||[])])));
 
 /** ================== Utils ================== */
+
+
+
 const unique = (arr) => Array.from(new Set(arr));
 const splitFR = (s) => (s||"").split(/[;、,]/).map(t=>t.trim()).filter(Boolean);
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
@@ -675,25 +678,18 @@ function QuizKanjiLecture({ picked, onBack, title }) {
     }
   }, [started, finished, idx, status]);
 
+// Si ton composant reçoit readingScope, garde-le dans la signature : ({ picked, onBack, title, readingScope })
 const currentQ = useMemo(() => {
   if (!started || idx >= order.length) return null;
+
   const k = order[idx];
+  // Si ton composant reçoit readingScope, passe-le ici ; sinon remplace par "complete"
+  const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k, (readingScope ?? "complete") as QuizScope);
+  const expected = Array.from(new Set([...kunRoma, ...onRoma]));
 
-  // 1) Les KANA attendus selon la portée
-  const kanaList = readingsFor(k, readingScope ?? "complete");  // essential = aSavoir, complete = kun+on
-  // 2) Pour tolérer rōmaji en saisie, on prépare aussi la version romaji
-  const romaList = kanaList.map(kanaToRomaji); // réutilise ta fonction existante
-
-  // On évite les doublons (ex: variations)
-  const expectedKana = Array.from(new Set(kanaList));
-  const expectedRoma = Array.from(new Set(romaList));
-
-  return {
-    id: k.id,
-    expectedKana,
-    expectedRoma, // pour comparer avec saisie rōmaji le cas échéant
-  };
+  return { id: k.id, kunKana, onKana, kunRoma, onRoma, expected };
 }, [started, idx, order, readingScope]);
+
 
   const start = () => {
     setOrder(shuffle(picked));
@@ -736,42 +732,42 @@ const currentQ = useMemo(() => {
     }
   };
 
-  const handleSubmit = () => {
-    if (!currentQ) return;
-    const raw = input;
-    if (!raw.trim()) return;
-    
-const okKana = isKana(input)
-  ? expectedKana.some(e => normalizeKana(e) === normalizeKana(input))
-  : expectedRoma.some(e => norm(e) === norm(input));
+ const handleSubmit = () => {
+  if (!currentQ) return;
+  const raw = input;
+  if (!raw.trim()) return;
 
-    let key = null; // clé de comparaison en rōmaji
+  let key: string | null = null; // clé de comparaison (toujours en romaji)
 
-    if (isKana(raw)) {
-      const hira = normalizeKana(raw);
-      const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
-      if (matchKana) key = norm(kanaToRomaji(hira));
-    } else {
-      key = norm(raw);
+  if (isKana(raw)) {
+    const hira = normalizeKana(raw);
+    // valide seulement si la lecture kana existe pour ce kanji
+    const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
+    if (matchKana) key = norm(kanaToRomaji(hira));
+  } else {
+    // saisi en romaji
+    key = norm(raw);
+  }
+
+  if (!key) { setStatus("miss"); setInput(""); return; }
+
+  const ok = currentQ.expected.includes(key);
+  const already = (found as Set<string>).has(key);
+
+  if (ok && !already) {
+    const nxt = new Set(found as Set<string>); nxt.add(key);
+    setFound(nxt); setInput(""); setStatus("hit");
+
+    if (nxt.size === currentQ.expected.length) {
+      setStatus("complete");
+      if (autoNext.current) clearTimeout(autoNext.current);
+      autoNext.current = setTimeout(goNext, 500);
     }
+  } else {
+    setStatus("miss"); setInput("");
+  }
+};
 
-    if (!key) { setStatus("miss"); setInput(""); return; }
-
-    const ok = currentQ.expected.includes(key);
-    const already = foundRef.current.has(key);
-
-    if (ok && !already) {
-      const nxt = new Set(foundRef.current); nxt.add(key);
-      setFound(nxt); setInput(""); setStatus("hit");
-      if (nxt.size === currentQ.expected.length) {
-        setStatus("complete");
-        if (autoNext.current) clearTimeout(autoNext.current);
-        autoNext.current = setTimeout(goNext, 500);
-      }
-    } else {
-      setStatus("miss"); setInput("");
-    }
-  };
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
@@ -954,9 +950,6 @@ function QuizTradLecture({ picked, onBack, title }) {
     }
   };
 
- const okKana = isKana(input)
-  ? expectedKana.some(e => normalizeKana(e) === normalizeKana(input))
-  : expectedRoma.some(e => norm(e) === norm(input));
 
 
     let key = null;
