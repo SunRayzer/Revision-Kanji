@@ -1408,6 +1408,7 @@ function QuizDrawKanji({
 }
 
 /** ================== Quiz Lecture → Kanji (portée Essentiel/Complet, multi-kanji si lecture partagée) ================== */
+/** ================== Quiz Lecture → Kanji (Essentiel = aSavoir, Complet = toutes les lectures) ================== */
 function QuizKunToDraw({
   picked,
   onBack,
@@ -1430,12 +1431,18 @@ function QuizKunToDraw({
   const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
   const [foundIds, setFoundIds] = useState<Set<string>>(new Set()); // kanji déjà saisis pour la lecture courante
 
-  const autoNext = useRef<number | null>(null);
+  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
   const results = useRef<any[]>([]);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  useEffect(() => { if (started && !finished) setTimeout(() => inputRef.current?.focus(), 0); }, [started, finished, idx, status]);
-  useEffect(() => () => { if (autoNext.current) window.clearTimeout(autoNext.current); }, []);
+  useEffect(() => {
+    if (started && !finished) {
+      const t = setTimeout(() => inputRef.current?.focus(), 0);
+      return () => clearTimeout(t);
+    }
+  }, [started, finished, idx, status]);
+
+  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
 
   // Normalise en hiragana (fusionne katakana → hiragana) et nettoie
   const normalizeKana = (s: string) =>
@@ -1448,7 +1455,7 @@ function QuizKunToDraw({
   const buildQuestions = (pool: any[], scope: QuizScope) => {
     const byReading = new Map<string, Set<string>>();
     pool.forEach(k => {
-      const readings = readingsFor(k, scope)       // <<— utilise ta fonction portée (aSavoir / KUN+ON)
+      const readings = readingsFor(k, scope)   // <<— utilise ta fonction portée (aSavoir / KUN+ON)
         .map(normalizeKana)
         .filter(Boolean);
       readings.forEach(r => {
@@ -1459,7 +1466,7 @@ function QuizKunToDraw({
     const questions = Array.from(byReading.entries())
       .map(([reading, set]) => ({ reading, expectedIds: Array.from(set) }))
       .filter(q => q.expectedIds.length > 0);
-    return shuffle(questions);
+    return [...questions].sort(() => Math.random() - 0.5);
   };
 
   const start = () => {
@@ -1473,7 +1480,7 @@ function QuizKunToDraw({
     results.current = [];
     setFinished(false);
     setStarted(true);
-    window.setTimeout(() => inputRef.current?.focus(), 0);
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const currentQ = useMemo(() => {
@@ -1497,7 +1504,7 @@ function QuizKunToDraw({
       setInput("");
       setStatus("idle");
       setFoundIds(new Set());
-      window.setTimeout(() => inputRef.current?.focus(), 0);
+      setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
       setStatus("complete");
@@ -1523,12 +1530,12 @@ function QuizKunToDraw({
       const done = nxt.size === currentQ.expectedIds.length;
       if (done) {
         setStatus("complete");
-        if (autoNext.current) window.clearTimeout(autoNext.current);
-        autoNext.current = window.setTimeout(goNext, 500); // 0.5s
+        if (autoNext.current) clearTimeout(autoNext.current);
+        autoNext.current = setTimeout(goNext, 500); // 0.5s
       }
     } else {
       setStatus("miss");
-      // On peut laisser l'input pour corriger sans le vider
+      // On peut laisser l'input pour corriger
     }
   };
 
@@ -1553,7 +1560,7 @@ function QuizKunToDraw({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Objectif : pour une <b>lecture</b> (kana) donnée, saisis <b>tous les kanji</b> correspondants (via IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
+            Objectif : pour une <b>lecture</b> (kana) donnée, saisis <b>tous les kanji</b> correspondants (IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
             <br/>Portée : <i>Essentiel</i> = uniquement <code>aSavoir</code> ; <i>Complet</i> = toutes les lectures.
           </div>
         </div>
