@@ -1908,7 +1908,6 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
       <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture / Kanji </button>
 
-      <button onClick={() => { setRoute("quizAll"); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">trad/lecture</button>
 
 
     </div>
