@@ -1793,7 +1793,7 @@ function QuizTradLectureComplete({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Objectif : tape <b>toutes</b> les lectures <b>KUN + ON</b> (en <b>kana</b> ou en <b>rōmaji</b>) pour le kanji affiché, puis Entrée à chaque lecture.
+            Objectif : tape <b>la</b> lecture "à savoir" (en <b>kana</b> ou en <b>rōmaji</b>) pour la traduction affichée, puis Entrée à chaque lecture.
           </div>
         </div>
       ) : !finished ? (
@@ -1907,9 +1907,6 @@ function QuizMenu({ setQuizMode }) {
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
       <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
       <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture / Kanji </button>
-
-      <button onClick={() => { setRoute("quizAll"); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">trad/lecture</button>
-
 
     </div>
   );
