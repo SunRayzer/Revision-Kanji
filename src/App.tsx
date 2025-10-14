@@ -123,33 +123,11 @@ const DATA = [
 const READING_POOL = Array.from(new Set(DATA.flatMap(k => [...(k.kunyomi||[]), ...(k.onyomi||[])])));
 
 /** ================== Utils ================== */
-
-
-
 const unique = (arr) => Array.from(new Set(arr));
 const splitFR = (s) => (s||"").split(/[;、,]/).map(t=>t.trim()).filter(Boolean);
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const stripAccents = (s) => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const normalize = (s) => stripAccents(s).trim().toLowerCase();
-
-type QuizScope = "essential" | "complete";
-
-/** Retourne la/les lectures à utiliser selon la portée :
- *  - essential  : uniquement k.aSavoir (si vide ⇒ rien)
- *  - complete   : toutes les kana (kunyomi + onyomi)
- */
-function readingsFor(
-  k: { aSavoir?: string[]; kunyomi?: string[]; onyomi?: string[] },
-  scope: QuizScope
-): string[] {
-  if (scope === "essential") {
-    return (k.aSavoir ?? []).filter(Boolean);
-  }
-  const kun = k.kunyomi ?? [];
-  const on  = k.onyomi ?? [];
-  return Array.from(new Set([...kun, ...on])).filter(Boolean);
-}
-
 
 /** Kana -> rōmaji (Hepburn simplifié) */
 function kanaToRomaji(input){
@@ -657,29 +635,19 @@ function QuizKanjiTrad({ picked, onBack, title }) {
 }
 
 /** ================== Quiz Kanji → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
-function QuizKanjiLecture({
-  picked,
-  onBack,
-  title,
-  readingScope,               // <— AJOUT
-}: {
-  picked: any[];
-  onBack: () => void;
-  title: string;
-  readingScope: QuizScope | null;  // <— AJOUT
-}) {
+function QuizKanjiLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [order, setOrder] = useState<any[]>([]);
+  const [order, setOrder] = useState([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [found, setFound] = useState<Set<string>>(new Set());
-  const [status, setStatus] = useState<"idle"|"hit"|"miss"|"complete">("idle");
-  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const results = useRef<any[]>([]);
-  const foundRef = useRef<Set<string>>(new Set());
-  const inputRef = useRef<HTMLInputElement|null>(null);
+  const [found, setFound] = useState(new Set());
+  const [status, setStatus] = useState("idle");
+  const autoNext = useRef(null);
+  const results = useRef([]);
+  const foundRef = useRef(new Set());
 
+  const inputRef = useRef(null);
   useEffect(() => { foundRef.current = found; }, [found]);
   useEffect(() => {
     if (started && !finished) {
@@ -688,22 +656,13 @@ function QuizKanjiLecture({
     }
   }, [started, finished, idx, status]);
 
-  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
-
   const currentQ = useMemo(() => {
     if (!started || idx >= order.length) return null;
-
     const k = order[idx];
-    // Portée : essential = aSavoir, complete = toutes les lectures
-    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(
-      k,
-      (readingScope ?? "complete") as QuizScope
-    );
+    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k);
     const expected = Array.from(new Set([...kunRoma, ...onRoma]));
-
     return { id: k.id, kunKana, onKana, kunRoma, onRoma, expected };
-  }, [started, idx, order, readingScope]);
-
+  }, [started, idx, order]);
 
   const start = () => {
     setOrder(shuffle(picked));
@@ -746,42 +705,38 @@ function QuizKanjiLecture({
     }
   };
 
- const handleSubmit = () => {
-  if (!currentQ) return;
-  const raw = input;
-  if (!raw.trim()) return;
+  const handleSubmit = () => {
+    if (!currentQ) return;
+    const raw = input;
+    if (!raw.trim()) return;
 
-  let key: string | null = null; // clé de comparaison (toujours en romaji)
+    let key = null; // clé de comparaison en rōmaji
 
-  if (isKana(raw)) {
-    const hira = normalizeKana(raw);
-    // valide seulement si la lecture kana existe pour ce kanji
-    const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
-    if (matchKana) key = norm(kanaToRomaji(hira));
-  } else {
-    // saisi en romaji
-    key = norm(raw);
-  }
-
-  if (!key) { setStatus("miss"); setInput(""); return; }
-
-  const ok = currentQ.expected.includes(key);
-  const already = (found as Set<string>).has(key);
-
-  if (ok && !already) {
-    const nxt = new Set(found as Set<string>); nxt.add(key);
-    setFound(nxt); setInput(""); setStatus("hit");
-
-    if (nxt.size === currentQ.expected.length) {
-      setStatus("complete");
-      if (autoNext.current) clearTimeout(autoNext.current);
-      autoNext.current = setTimeout(goNext, 500);
+    if (isKana(raw)) {
+      const hira = normalizeKana(raw);
+      const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
+      if (matchKana) key = norm(kanaToRomaji(hira));
+    } else {
+      key = norm(raw);
     }
-  } else {
-    setStatus("miss"); setInput("");
-  }
-};
 
+    if (!key) { setStatus("miss"); setInput(""); return; }
+
+    const ok = currentQ.expected.includes(key);
+    const already = foundRef.current.has(key);
+
+    if (ok && !already) {
+      const nxt = new Set(foundRef.current); nxt.add(key);
+      setFound(nxt); setInput(""); setStatus("hit");
+      if (nxt.size === currentQ.expected.length) {
+        setStatus("complete");
+        if (autoNext.current) clearTimeout(autoNext.current);
+        autoNext.current = setTimeout(goNext, 500);
+      }
+    } else {
+      setStatus("miss"); setInput("");
+    }
+  };
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
@@ -881,17 +836,7 @@ function QuizKanjiLecture({
 }
 
 /** ================== Quiz Traduction → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
-function QuizTradLecture({
-  picked,
-  onBack,
-  title,
-  readingScope,                  // <— AJOUT
-}: {
-  picked: any[];
-  onBack: () => void;
-  title: string;
-  readingScope?: QuizScope | null;  // <— AJOUT
-}) {
+function QuizTradLecture({ picked, onBack, title }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [order, setOrder] = useState([]);
@@ -902,6 +847,7 @@ function QuizTradLecture({
   const autoNext = useRef(null);
   const results = useRef([]);
   const foundRef = useRef(new Set());
+
   const inputRef = useRef(null);
   useEffect(() => { foundRef.current = found; }, [found]);
   useEffect(() => {
@@ -911,26 +857,14 @@ function QuizTradLecture({
     }
   }, [started, finished, idx, status]);
 
- const currentQ = useMemo(() => {
-  if (!started || idx >= order.length) return null;
-  const k = order[idx];
-
-  // 1) Les KANA attendus selon la portée
-  const kanaList = readingsFor(k, Scope ?? "complete");  // essential = aSavoir, complete = kun+on
-  // 2) Pour tolérer rōmaji en saisie, on prépare aussi la version romaji
-  const romaList = kanaList.map(kanaToRomaji); // réutilise ta fonction existante
-
-  // On évite les doublons (ex: variations)
-  const expectedKana = Array.from(new Set(kanaList));
-  const expectedRoma = Array.from(new Set(romaList));
-
-  return {
-    id: k.id,
-    expectedKana,
-    expectedRoma, // pour comparer avec saisie rōmaji le cas échéant
-  };
- }, [started, idx, order, readingScope]);
-
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null;
+    const k = order[idx];
+    const meaningPretty = splitFR(k.meaningFR);
+    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k);
+    const expected = Array.from(new Set([...kunRoma, ...onRoma]));
+    return { id: k.id, meaningPretty, kunKana, onKana, kunRoma, onRoma, expected };
+  }, [started, idx, order]);
 
   const start = () => {
     setOrder(shuffle(picked));
@@ -974,7 +908,10 @@ function QuizTradLecture({
     }
   };
 
-
+  const handleSubmit = () => {
+    if (!currentQ) return;
+    const raw = input;
+    if (!raw.trim()) return;
 
     let key = null;
 
@@ -1002,6 +939,7 @@ function QuizTradLecture({
     } else {
       setStatus("miss"); setInput("");
     }
+  };
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
@@ -1422,71 +1360,71 @@ function QuizDrawKanji({
   );
 }
 
-/** ================== Quiz Lecture → Kanji (portée Essentiel/Complet, multi-kanji si lecture partagée) ================== */
-/** ================== Quiz Lecture → Kanji (Essentiel = aSavoir, Complet = toutes les lectures) ================== */
+/** ================== Quiz Lecture KUN → Dessin/Saisie Kanji (multi-kanji si KUN partagé) ================== */
 function QuizKunToDraw({
   picked,
   onBack,
   title,
-  readingScope,
 }: {
   picked: any[];
   onBack: () => void;
   title: string;
-  readingScope: QuizScope | null; // "essential" | "complete"
 }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
 
-  // 1 question = 1 lecture (kana) → N kanji attendus
-  const [order, setOrder] = useState<{ reading: string; expectedIds: string[] }[]>([]);
+  // Questions construites par lecture KUN distincte
+  const [order, setOrder] = useState<{ kun: string; expectedIds: string[] }[]>([]);
   const [idx, setIdx] = useState(0);
 
   const [input, setInput] = useState("");
   const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
-  const [foundIds, setFoundIds] = useState<Set<string>>(new Set()); // kanji déjà saisis pour la lecture courante
+  const [foundIds, setFoundIds] = useState<Set<string>>(new Set()); // kanji déjà fournis pour la KUN courante
 
-  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const results = useRef<any[]>([]);
+  const autoNext = useRef<number | null>(null);
+  const results = useRef<
+    { kun: string; expectedIds: string[]; foundIds: string[] }[]
+  >([]);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  useEffect(() => {
-    if (started && !finished) {
-      const t = setTimeout(() => inputRef.current?.focus(), 0);
-      return () => clearTimeout(t);
-    }
-  }, [started, finished, idx, status]);
 
-  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
-
-  // Normalise en hiragana (fusionne katakana → hiragana) et nettoie
   const normalizeKana = (s: string) =>
     Array.from(s).map(ch => {
       const code = ch.charCodeAt(0);
       return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
     }).join("").trim();
 
-  // Construit les questions à partir de la portée demandée (essential: aSavoir, complete: toutes)
-  const buildQuestions = (pool: any[], scope: QuizScope) => {
-    const byReading = new Map<string, Set<string>>();
+  useEffect(() => {
+    if (started && !finished) {
+      const t = window.setTimeout(() => inputRef.current?.focus(), 0);
+      return () => window.clearTimeout(t);
+    }
+    return;
+  }, [started, finished, idx, status]);
+
+  useEffect(() => {
+    return () => { if (autoNext.current) window.clearTimeout(autoNext.current); };
+  }, []);
+
+  // Construit les questions : 1 question = 1 KUN (kana) → N kanji attendus
+  const buildQuestions = (pool: any[]) => {
+    const byKun = new Map<string, Set<string>>();
     pool.forEach(k => {
-      const readings = readingsFor(k, scope)   // <<— utilise ta fonction portée (aSavoir / KUN+ON)
-        .map(normalizeKana)
-        .filter(Boolean);
-      readings.forEach(r => {
-        if (!byReading.has(r)) byReading.set(r, new Set());
-        byReading.get(r)!.add(k.id);
+      const kuns = (k.kunyomi ?? []).map(normalizeKana).filter(Boolean);
+      kuns.forEach(r => {
+        if (!byKun.has(r)) byKun.set(r, new Set());
+        byKun.get(r)!.add(k.id);
       });
     });
-    const questions = Array.from(byReading.entries())
-      .map(([reading, set]) => ({ reading, expectedIds: Array.from(set) }))
+    const questions = Array.from(byKun.entries())
+      .map(([kun, set]) => ({ kun, expectedIds: Array.from(set) }))
+      // Retire les KUN qui ne mènent à aucun kanji (sécurité)
       .filter(q => q.expectedIds.length > 0);
-    return [...questions].sort(() => Math.random() - 0.5);
+    return shuffle(questions);
   };
 
   const start = () => {
-    const scope = readingScope ?? "complete";
-    const qs = buildQuestions(picked, scope);
+    const qs = buildQuestions(picked);
     setOrder(qs);
     setIdx(0);
     setInput("");
@@ -1495,11 +1433,11 @@ function QuizKunToDraw({
     results.current = [];
     setFinished(false);
     setStarted(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
+    window.setTimeout(() => inputRef.current?.focus(), 0);
   };
 
   const currentQ = useMemo(() => {
-    if (!started || idx >= order.length) return null as { reading: string; expectedIds: string[] } | null;
+    if (!started || idx >= order.length) return null as { kun: string; expectedIds: string[] } | null;
     return order[idx];
   }, [started, idx, order]);
 
@@ -1509,7 +1447,7 @@ function QuizKunToDraw({
   const goNext = () => {
     if (!currentQ) return;
     results.current.push({
-      reading: currentQ.reading,
+      kun: currentQ.kun,
       expectedIds: currentQ.expectedIds,
       foundIds: Array.from(foundIds),
     });
@@ -1519,7 +1457,7 @@ function QuizKunToDraw({
       setInput("");
       setStatus("idle");
       setFoundIds(new Set());
-      setTimeout(() => inputRef.current?.focus(), 0);
+      window.setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
       setStatus("complete");
@@ -1531,7 +1469,7 @@ function QuizKunToDraw({
     const val = input.trim();
     if (!val) return;
 
-    // On prend le premier caractère non-blanc saisi → doit être un kanji attendu
+    // On lit le premier caractère non-blanc saisi → doit être un kanji attendu
     const firstChar = Array.from(val).find(ch => /\S/.test(ch)) ?? "";
     const isExpected = currentQ.expectedIds.includes(firstChar);
     const already = foundIds.has(firstChar);
@@ -1540,17 +1478,17 @@ function QuizKunToDraw({
       const nxt = new Set(foundIds); nxt.add(firstChar);
       setFoundIds(nxt);
       setStatus("hit");
-      setInput(""); // prêt à saisir le suivant
+      setInput(""); // prêt pour saisir le/les suivants
 
       const done = nxt.size === currentQ.expectedIds.length;
       if (done) {
         setStatus("complete");
-        if (autoNext.current) clearTimeout(autoNext.current);
-        autoNext.current = setTimeout(goNext, 500); // 0.5s
+        if (autoNext.current) window.clearTimeout(autoNext.current);
+        autoNext.current = window.setTimeout(goNext, 500); // 0.5s
       }
     } else {
       setStatus("miss");
-      // On peut laisser l'input pour corriger
+      // ne vide pas pour corriger si besoin (au choix)
     }
   };
 
@@ -1562,7 +1500,11 @@ function QuizKunToDraw({
         <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
-        {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
+        {finished && (
+          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+            Quiz terminé
+          </span>
+        )}
       </div>
 
       {!started ? (
@@ -1575,8 +1517,7 @@ function QuizKunToDraw({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Objectif : pour une <b>lecture</b> (kana) donnée, saisis <b>tous les kanji</b> correspondants (IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
-            <br/>Portée : <i>Essentiel</i> = uniquement <code>aSavoir</code> ; <i>Complet</i> = toutes les lectures.
+            Objectif : pour une <b>lecture KUN</b> donnée, saisis <b>tous les kanji</b> correspondants (via IME <b>手書き</b> ou frappe), puis Entrée à chaque kanji.
           </div>
         </div>
       ) : !finished ? (
@@ -1584,8 +1525,8 @@ function QuizKunToDraw({
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
 
           <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">Lecture :</div>
-            <div className="text-3xl font-extrabold tracking-wide select-none">{currentQ?.reading || "—"}</div>
+            <div className="text-sm text-gray-500 mb-1">Lecture <b>KUN</b> :</div>
+            <div className="text-3xl font-extrabold tracking-wide select-none">{currentQ?.kun || "—"}</div>
             <div className="text-xs text-gray-500 mt-1">
               Attendus : {foundIds.size}/{currentQ?.expectedIds.length ?? 0}
             </div>
@@ -1624,7 +1565,7 @@ function QuizKunToDraw({
               Valider
             </button>
             <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
-            <span className="px-3 py-3 text-sm text-gray-500">Restants: {Math.max(0, total - idx - 1)}</span>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
           </div>
 
           {status==='miss' && (<div className="text-sm text-red-600">Pas attendu, déjà saisi, ou caractère invalide.</div>)}
@@ -1636,13 +1577,13 @@ function QuizKunToDraw({
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.foundIds);
-            const miss = r.expectedIds.filter((id: string) => !foundSet.has(id));
+            const miss = r.expectedIds.filter(id => !foundSet.has(id));
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-2">
                   <div className="text-sm">
-                    <span className="text-gray-500 mr-1">Lecture :</span>
-                    <span className="px-2 py-1 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">{r.reading}</span>
+                    <span className="text-gray-500 mr-1">KUN :</span>
+                    <span className="px-2 py-1 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">{r.kun}</span>
                   </div>
                   <div className={(miss.length===0) ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
                     {r.foundIds.length}/{r.expectedIds.length}
@@ -1651,14 +1592,14 @@ function QuizKunToDraw({
 
                 <div className="text-sm mb-1">
                   <span className="text-gray-500">Trouvés :</span>{" "}
-                  {r.foundIds.length>0 ? r.foundIds.map((id:string)=>(
+                  {r.foundIds.length>0 ? r.foundIds.map(id=>(
                     <span key={id} className="inline-block mx-1 text-lg">{id}</span>
                   )) : "—"}
                 </div>
 
                 <div className="text-sm">
                   <span className="text-gray-500">Attendues :</span>{" "}
-                  {r.expectedIds.map((id:string)=>(
+                  {r.expectedIds.map(id=>(
                     <span key={id} className="inline-block mx-1 text-lg">{id}</span>
                   ))}
                 </div>
@@ -1666,7 +1607,7 @@ function QuizKunToDraw({
                 {miss.length>0 && (
                   <div className="text-sm mt-1">
                     <span className="text-gray-500">Manquantes :</span>{" "}
-                    {miss.map((id:string)=>(
+                    {miss.map(id=>(
                       <span key={id} className="inline-block mx-1 text-lg">{id}</span>
                     ))}
                   </div>
@@ -1683,30 +1624,21 @@ function QuizKunToDraw({
   );
 }
 
+
 /** ================== Menu Quiz ================== */
-
-
-function QuizMenu({
-  setQuizMode,
-  setPendingQuiz,
-}: {
-  setQuizMode: (m: string|null) => void;
-  setPendingQuiz: (m: string|null) => void;
-}) {
+function QuizMenu({ setQuizMode }) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
+      <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Général QCM</button>
+      <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Kanji QCM</button>
+      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
+      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Saisie Kanji</button>
+      <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
+      <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
+      <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture KUN → Kanji (dessin/saisie)</button>
 
-      {/* Ceux qui ne nécessitent PAS de portée */}
-      <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Général QCM </button>
-      <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Traduction / Kanji (QCM) </button>
-      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Traduction / Saisie Kanji </button>
-      <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Kanji / Traduction </button>
 
-      {/* Ceux qui OUVRENT le sous-menu Essentiel/Complet */}
-      <button onClick={()=>setPendingQuiz("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-500"> Quiz Traduction / Lecture </button>
-      <button onClick={()=>setPendingQuiz("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-500"> Quiz Kanji / Lecture </button>
-      <button onClick={()=>setPendingQuiz("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-500"> Quiz Lecture / Kanji (dessin/saisie) </button>
     </div>
   );
 }
@@ -1725,9 +1657,6 @@ export default function App() {
     } catch {}
     return new Set(DATA.map(k=>k.id)); // par défaut: tout sélectionné
   });
-  const [quizScope, setQuizScope] = useState<QuizScope | null>(null);
-  const [pendingQuiz, setPendingQuiz] = useState<string | null>(null);
-
 
   useEffect(() => {
     try { localStorage.setItem("jlpt_selected_ids", JSON.stringify(Array.from(selectedIds))); } catch {}
@@ -1752,12 +1681,8 @@ export default function App() {
           <AllSelectable selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
         )}
 
-        {route === "quiz" && !quizMode && !pendingQuiz && (
-          <QuizMenu setQuizMode={setQuizMode} setPendingQuiz={setPendingQuiz} />
-        )}
-
-        {route === "quiz" && pendingQuiz && !quizMode && (
-          <ScopePicker onPick={(scope) => { setQuizScope(scope); setQuizMode(pendingQuiz); setPendingQuiz(null); }} onCancel={() => setPendingQuiz(null)} />
+        {route === "quiz" && !quizMode && (
+          <QuizMenu setQuizMode={setQuizMode} />
         )}
 
         {route === "quiz" && quizMode === "general" && (
@@ -1769,7 +1694,7 @@ export default function App() {
         )}
 
         {route === "quiz" && quizMode === "tradLecture" && (
-          <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" readingScope={quizScope} />
+          <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
         )}
         
         {route === "quiz" && quizMode === "drawKanji" && (
@@ -1781,11 +1706,11 @@ export default function App() {
         )}
 
         {route === "quiz" && quizMode === "kanjiLecture" && (
-          <QuizKanjiLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Lecture" readingScope={quizScope} />
+          <QuizKanjiLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Kanji → Lecture" />
         )}
 
         {route === "quiz" && quizMode === "kunToDraw" && (
-          <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture  → Saisie du Kanji" readingScope={quizScope} />
+          <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture KUN → Dessin/Saisie du Kanji" />
         )}
 
 
