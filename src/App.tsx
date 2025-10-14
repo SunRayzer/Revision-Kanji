@@ -1937,12 +1937,10 @@ function QuizCompletMenu({
       </div>
 
       <div className="grid sm:grid-cols-2 gap-3">
-        <button
-          onClick={onStartTradLectureComplete}
-          className="w-full p-3 rounded-xl text-white bg-pink-500"
-        >
-          Traduction → Lecture (KUN + ON)
-        </button>
+        <button onClick={()=>onStartTradLectureComplete("Traduction → Lecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction → Lecture</button>
+
+    
+
         {/* Tu pourras ajouter d'autres entrées ici */}
       </div>
     </div>
