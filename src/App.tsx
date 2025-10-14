@@ -1927,33 +1927,7 @@ function QuizCompletMenu({ setQuizAllMode }) {
   );
 }
 
-/** ================== Menu Quiz Complet ================== */ (en attente) 
 
-
-function QuizCompletMenu({
-  onBack,
-  onStartTradLectureComplete,
-}: {
-  onBack: () => void;
-  onStartTradLectureComplete: () => void;
-}) {
-  return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-4">
-      <div className="flex items-center gap-2">
-        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
-        <span className="font-semibold">Quiz Complet</span>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-3">
-        <button onClick={()=>onStartTradLectureComplete("Traduction → Lecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction → Lecture</button>
-
-    
-
-        {/* Tu pourras ajouter d'autres entrées ici */}
-      </div>
-    </div>
-  );
-}
  
 /** ================== App ================== */
 export default function App() {
