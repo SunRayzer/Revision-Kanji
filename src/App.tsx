@@ -762,7 +762,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
             onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
-          <div className="text-sm text-gray-700">Trouvées {found.size}/{currentQ?.expected.length ?? 0}</div>
+          <div className="text-sm text-gray-700">Trouvées {foundRef.current.size}/{currentQ?.expected.length ?? 0}</div>
           <div className="flex flex-wrap gap-2 max-w-md">
             {Array.from(found).map(r => (
               <span key={r} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-xs">{r}</span>
@@ -796,7 +796,7 @@ function QuizKanjiLecture({ picked, onBack, title }) {
             const missOnKana  = pairsOn .filter(p => !foundSet.has(p.roma)).map(p => p.kana);
 
             const totalExp = r.expected.length;
-            const totalFound = totalExp - (missKunKana.length + missOnKana.length);
+            const totalFound = new Set(r.found).size;
 
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
@@ -968,7 +968,7 @@ function QuizTradLecture({ picked, onBack, title }) {
             onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
-          <div className="text-sm text-gray-700">Trouvées {found.size}/{currentQ?.expected.length ?? 0}</div>
+          <div className="text-sm text-gray-700">Trouvées {foundRef.current.size}/{currentQ?.expected.length ?? 0}</div>
           <div className="flex flex-wrap gap-2 max-w-md">
             {Array.from(found).map(r => (
               <span key={r} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-xs">{r}</span>
@@ -1002,7 +1002,7 @@ function QuizTradLecture({ picked, onBack, title }) {
             const missOnKana  = pairsOn .filter(p => !foundSet.has(p.roma)).map(p => p.kana);
 
             const totalExp = r.expected.length;
-            const totalFound = totalExp - (missKunKana.length + missOnKana.length);
+            const totalFound = new Set(r.found).size;
 
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
