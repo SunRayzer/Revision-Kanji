@@ -1902,6 +1902,8 @@ function QuizMenu({ setQuizMode }) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
+        <p className="text-sm text-gray-600">Ici, tu pourras lancer des parcours de révision en “version essentielle”. 
+        (Il faudra alors rentrer les Lectures et Kanjis présent dans la partie "à savoir" des fiches Kanji) </p>
       <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
       <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Saisie Kanji</button>
       <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
@@ -1914,27 +1916,18 @@ function QuizMenu({ setQuizMode }) {
 
 /** ================== Menu Quiz Complet ================== */
 
-
-
-
-
 function QuizCompletMenu({ setQuizAllMode }) {
-  return (
-
-
-      
+  return (      
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
             <p className="text-sm text-gray-600">
         Ici, tu pourras lancer des parcours de révision en “version complète”. 
-        (On peut ensuite y enchaîner plusieurs quiz, ou forcer l’utilisation de toutes les lectures, etc.)
+        (Il faudra alors rentrer toutes les Lectures et Kanjis demandés)
       </p>
       <button onClick={()=>setQuizAllMode("tradLectureComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
     </div>
   );
 }
-
-
  
 /** ================== App ================== */
 export default function App() {
