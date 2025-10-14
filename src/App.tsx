@@ -1086,7 +1086,7 @@ const okKana = isKana(input)
       )}
     </div>
   );
-}
+
 
 /** ================== Quiz Traduction → Dessin/Saisie Kanji (IME 手書き ou frappe) ================== */
 function DrawingPad({ onChangeStroke }: { onChangeStroke?: () => void }) {
