@@ -657,19 +657,29 @@ function QuizKanjiTrad({ picked, onBack, title }) {
 }
 
 /** ================== Quiz Kanji → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
-function QuizKanjiLecture({ picked, onBack, title }) {
+function QuizKanjiLecture({
+  picked,
+  onBack,
+  title,
+  readingScope,               // <— AJOUT
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+  readingScope: QuizScope | null;  // <— AJOUT
+}) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState<any[]>([]);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
-  const [found, setFound] = useState(new Set());
-  const [status, setStatus] = useState("idle");
-  const autoNext = useRef(null);
-  const results = useRef([]);
-  const foundRef = useRef(new Set());
+  const [found, setFound] = useState<Set<string>>(new Set());
+  const [status, setStatus] = useState<"idle"|"hit"|"miss"|"complete">("idle");
+  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const results = useRef<any[]>([]);
+  const foundRef = useRef<Set<string>>(new Set());
+  const inputRef = useRef<HTMLInputElement|null>(null);
 
-  const inputRef = useRef(null);
   useEffect(() => { foundRef.current = found; }, [found]);
   useEffect(() => {
     if (started && !finished) {
@@ -678,17 +688,21 @@ function QuizKanjiLecture({ picked, onBack, title }) {
     }
   }, [started, finished, idx, status]);
 
-// Si ton composant reçoit readingScope, garde-le dans la signature : ({ picked, onBack, title, readingScope })
-const currentQ = useMemo(() => {
-  if (!started || idx >= order.length) return null;
+  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
 
-  const k = order[idx];
-  // Si ton composant reçoit readingScope, passe-le ici ; sinon remplace par "complete"
-  const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k, (readingScope ?? "complete") as QuizScope);
-  const expected = Array.from(new Set([...kunRoma, ...onRoma]));
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null;
 
-  return { id: k.id, kunKana, onKana, kunRoma, onRoma, expected };
-}, [started, idx, order, readingScope]);
+    const k = order[idx];
+    // Portée : essential = aSavoir, complete = toutes les lectures
+    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(
+      k,
+      (readingScope ?? "complete") as QuizScope
+    );
+    const expected = Array.from(new Set([...kunRoma, ...onRoma]));
+
+    return { id: k.id, kunKana, onKana, kunRoma, onRoma, expected };
+  }, [started, idx, order, readingScope]);
 
 
   const start = () => {
@@ -867,7 +881,17 @@ const currentQ = useMemo(() => {
 }
 
 /** ================== Quiz Traduction → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
-function QuizTradLecture({ picked, onBack, title }) {
+function QuizTradLecture({
+  picked,
+  onBack,
+  title,
+  readingScope,                  // <— AJOUT
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+  readingScope?: QuizScope | null;  // <— AJOUT
+}) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [order, setOrder] = useState([]);
@@ -1660,19 +1684,29 @@ function QuizKunToDraw({
 }
 
 /** ================== Menu Quiz ================== */
-function QuizMenu({ setQuizMode, setPendingQuiz }) {
+
+
+function QuizMenu({
+  setQuizMode,
+  setPendingQuiz,
+}: {
+  setQuizMode: (m: string|null) => void;
+  setPendingQuiz: (m: string|null) => void;
+}) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
-      <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Général QCM</button>
-      <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction / Kanji QCM</button>
-      <button onClick={()=>setPendingQuiz("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction / Lecture</button>
-      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction / Saisie Kanji</button>
-      <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji / Traduction</button>
-      <button onClick={()=>setPendingQuiz("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji / Lecture</button>
-      <button onClick={()=>setPendingQuiz("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture / Kanji (dessin/saisie)</button>
 
+      {/* Ceux qui ne nécessitent PAS de portée */}
+      <button onClick={()=>setQuizMode("general")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Général QCM </button>
+      <button onClick={()=>setQuizMode("tradToKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Traduction / Kanji (QCM) </button>
+      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Traduction / Saisie Kanji </button>
+      <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400"> Quiz Kanji / Traduction </button>
 
+      {/* Ceux qui OUVRENT le sous-menu Essentiel/Complet */}
+      <button onClick={()=>setPendingQuiz("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-500"> Quiz Traduction / Lecture </button>
+      <button onClick={()=>setPendingQuiz("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-500"> Quiz Kanji / Lecture </button>
+      <button onClick={()=>setPendingQuiz("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-500"> Quiz Lecture / Kanji (dessin/saisie) </button>
     </div>
   );
 }
