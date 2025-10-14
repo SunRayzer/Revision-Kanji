@@ -927,7 +927,7 @@ function QuizTradLecture({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Objectif : tape <b>toutes</b> les lectures de la liste <code>aSavoir</code> (en <b>kana</b> ou en <b>rōmaji</b>), puis Entrée.
+            Objectif : tape <b>les</b> lectures de la liste <code>"à savoir"</code> (en <b>kana</b> ou en <b>rōmaji</b>), puis Entrée.
           </div>
         </div>
       ) : !finished ? (
@@ -1793,7 +1793,7 @@ function QuizTradLectureComplete({
             Commencer le {title}
           </button>
           <div className="text-sm text-gray-600">
-            Objectif : tape <b>la</b> lecture "à savoir" (en <b>kana</b> ou en <b>rōmaji</b>) pour la traduction affichée, puis Entrée à chaque lecture.
+            Objectif : tape <b>toutes</b> les lectures (en <b>kana</b> ou en <b>rōmaji</b>) pour la traduction affichée, puis Entrée à chaque lecture.
           </div>
         </div>
       ) : !finished ? (
@@ -1914,12 +1914,22 @@ function QuizMenu({ setQuizMode }) {
 
 /** ================== Menu Quiz Complet ================== */
 
+
+
+
+
 function QuizCompletMenu({ setQuizAllMode }) {
   return (
+
+
+      
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
+            <p className="text-sm text-gray-600">
+        Ici, tu pourras lancer des parcours de révision en “version complète”. 
+        (On peut ensuite y enchaîner plusieurs quiz, ou forcer l’utilisation de toutes les lectures, etc.)
+      </p>
       <button onClick={()=>setQuizAllMode("tradLectureComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
-
     </div>
   );
 }
