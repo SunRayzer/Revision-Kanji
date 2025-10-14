@@ -4,7 +4,7 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 /** ================== Données JLPT N5 (kanji) ================== */
 const DATA = [
   { id: "人", meaningFR: "personne; humain", meaningEN: "person; human", onyomi: ["ジン","ニン"], kunyomi: ["ひと"], aSavoir: ["ひと"] },
-  { id: "子", meaningFR: "enfant", meaningEN: "child", onyomi: ["シ"], kunyomi: ["こ"], aSavoir: ["ご"] },
+  { id: "子", meaningFR: "enfant", meaningEN: "child", onyomi: ["シ"], kunyomi: ["こ"], aSavoir: ["こ"] },
   { id: "女", meaningFR: "femme; fille; féminin", meaningEN: "woman", onyomi: ["ジョ","ニョ"], kunyomi: ["おんな","め"], aSavoir: ["おんな"] },
   { id: "男", meaningFR: "homme; garçon; masculin", meaningEN: "man", onyomi: ["ダン","ナン"], kunyomi: ["おとこ"], aSavoir: ["おとこ"] },
   { id: "一", meaningFR: "un", meaningEN: "one", onyomi: ["イチ","イツ"], kunyomi: ["ひと","ひとつ"], aSavoir: ["いち"] },
@@ -635,20 +635,44 @@ function QuizKanjiTrad({ picked, onBack, title }) {
 }
 
 /** ================== Quiz Kanji → Lecture (kana OU rōmaji, récap KUN/ON en kana) ================== */
-function QuizKanjiLecture({ picked, onBack, title }) {
+/** ================== Quiz Kanji → Lecture (uniquement aSavoir) ================== */
+function QuizKanjiLecture({
+  picked,
+  onBack,
+  title,
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+}) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [order, setOrder] = useState([]);
-  const [idx, setIdx] = useState(0);
-  const [input, setInput] = useState("");
-  const [found, setFound] = useState(new Set());
-  const [status, setStatus] = useState("idle");
-  const autoNext = useRef(null);
-  const results = useRef([]);
-  const foundRef = useRef(new Set());
 
-  const inputRef = useRef(null);
+  // 1 question = 1 kanji → entrer TOUTES les lectures de aSavoir (kana OU rōmaji)
+  const [order, setOrder] = useState<any[]>([]);
+  const [idx, setIdx] = useState(0);
+
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
+
+  // on stocke les réponses correctes trouvées sous forme de "clé" = rōmaji normalisé
+  const [found, setFound] = useState<Set<string>>(new Set());
+  const foundRef = useRef<Set<string>>(new Set());
+
+  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const results = useRef<
+    Array<{
+      id: string;
+      expectedRoma: string[];  // romaji normalisés attendus (référence de comparaison)
+      expectedKana: string[];  // mêmes lectures en kana (hiragana) pour affichage
+      found: string[];         // romaji normalisés réellement trouvés
+    }>
+  >([]);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   useEffect(() => { foundRef.current = found; }, [found]);
+
   useEffect(() => {
     if (started && !finished) {
       const t = setTimeout(() => inputRef.current?.focus(), 0);
@@ -656,48 +680,65 @@ function QuizKanjiLecture({ picked, onBack, title }) {
     }
   }, [started, finished, idx, status]);
 
-  const currentQ = useMemo(() => {
-    if (!started || idx >= order.length) return null;
-    const k = order[idx];
-    const { kunKana, onKana, kunRoma, onRoma } = getReadingsBothByType(k);
-    const expected = Array.from(new Set([...kunRoma, ...onRoma]));
-    return { id: k.id, kunKana, onKana, kunRoma, onRoma, expected };
-  }, [started, idx, order]);
+  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
+
+  // Helpers locaux (si déjà en utils, tu peux supprimer ces définitions et utiliser celles des utils)
+  const onlyASavoirKana = (k: any) =>
+    Array.from(new Set((k.aSavoir ?? []).filter(Boolean).map((x: string) => normalizeKana(x))));
+
+  const buildOrder = (pool: any[]) => {
+    // garde seulement les kanji qui ont aSavoir non vide
+    const list = pool.filter(k => Array.isArray(k.aSavoir) && k.aSavoir.length > 0);
+    return [...list].sort(() => Math.random() - 0.5);
+  };
 
   const start = () => {
-    setOrder(shuffle(picked));
+    const qs = buildOrder(picked);
+    setOrder(qs);
     setIdx(0);
     setInput("");
-    setFound(new Set());
     setStatus("idle");
+    setFound(new Set());
     results.current = [];
     setFinished(false);
     setStarted(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
   };
+
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null as null | {
+      id: string;
+      expectedRoma: string[];
+      expectedKana: string[];
+    };
+    const k = order[idx];
+
+    // UNIQUEMENT aSavoir
+    const expectedKana = onlyASavoirKana(k);
+    const expectedRoma = Array.from(
+      new Set(expectedKana.map((kana: string) => norm(kanaToRomaji(kana))))
+    );
+
+    return { id: k.id, expectedRoma, expectedKana };
+  }, [started, idx, order]);
 
   const total = order.length;
   const remaining = Math.max(0, total - idx - 1);
 
-  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
-
   const goNext = () => {
     if (!currentQ) return;
-    const foundNow = Array.from(foundRef.current);
+
     results.current.push({
       id: currentQ.id,
-      expected: currentQ.expected,
-      found: foundNow,
-      kun: currentQ.kunRoma,
-      on: currentQ.onRoma,
-      kunKana: currentQ.kunKana,
-      onKana: currentQ.onKana,
+      expectedRoma: currentQ.expectedRoma,
+      expectedKana: currentQ.expectedKana,
+      found: Array.from(foundRef.current),
     });
+
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
-      setFound(new Set());
       setStatus("idle");
+      setFound(new Set());
       setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
@@ -707,36 +748,45 @@ function QuizKanjiLecture({ picked, onBack, title }) {
 
   const handleSubmit = () => {
     if (!currentQ) return;
-    const raw = input;
-    if (!raw.trim()) return;
+    const raw = input.trim();
+    if (!raw) return;
 
-    let key = null; // clé de comparaison en rōmaji
+    // Clé de comparaison = romaji normalisé
+    let key: string | null = null;
 
     if (isKana(raw)) {
       const hira = normalizeKana(raw);
-      const matchKana = [...currentQ.kunKana, ...currentQ.onKana].includes(hira);
+      // n'accepte en kana que si la lecture est bien dans aSavoir (kana)
+      const matchKana = currentQ.expectedKana.includes(hira);
       if (matchKana) key = norm(kanaToRomaji(hira));
     } else {
+      // romaji saisi
       key = norm(raw);
     }
 
     if (!key) { setStatus("miss"); setInput(""); return; }
 
-    const ok = currentQ.expected.includes(key);
-    const already = foundRef.current.has(key);
+    const ok = currentQ.expectedRoma.includes(key);
+    const already = (foundRef.current).has(key);
 
     if (ok && !already) {
       const nxt = new Set(foundRef.current); nxt.add(key);
-      setFound(nxt); setInput(""); setStatus("hit");
-      if (nxt.size === currentQ.expected.length) {
+      setFound(nxt);
+      setInput("");
+      setStatus("hit");
+
+      if (nxt.size === currentQ.expectedRoma.length) {
         setStatus("complete");
         if (autoNext.current) clearTimeout(autoNext.current);
-        autoNext.current = setTimeout(goNext, 500);
+        autoNext.current = setTimeout(goNext, 500); // 0.5s
       }
     } else {
-      setStatus("miss"); setInput("");
+      setStatus("miss");
+      setInput("");
     }
   };
+
+  const skip = () => goNext();
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
@@ -744,83 +794,98 @@ function QuizKanjiLecture({ picked, onBack, title }) {
         <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
       </div>
 
       {!started ? (
-        <button onClick={start} disabled={picked.length===0} className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}>Commencer le {title}</button>
+        <div className="space-y-3">
+          <button
+            onClick={start}
+            disabled={picked.length===0}
+            className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-400":"bg-gray-300"}`}
+          >
+            Commencer le {title}
+          </button>
+          <div className="text-sm text-gray-600">
+            Objectif : pour le <b>kanji affiché</b>, tape <b>toutes</b> les lectures de la liste <code>aSavoir</code> (en <b>kana</b> ou <b>rōmaji</b>), puis Entrée à chaque fois.
+          </div>
+        </div>
       ) : !finished ? (
-        <div className="flex flex-col items-center gap-4 p-4">
+        <div className="flex flex-col items-center gap-5 p-4">
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
-          <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">{currentQ?.id}</div>
+
+          <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">
+            {currentQ?.id ?? "—"}
+          </div>
+
+          <div className="text-xs text-gray-500 mt-1">
+            Trouvées {foundRef.current.size}/{currentQ?.expectedRoma.length ?? 0}
+          </div>
+
           <input
             ref={inputRef}
             autoFocus
             type="text"
-            className={`w-full max-w-md p-3 rounded-xl border text-lg ${status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''}`}
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
+              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
+            }`}
             placeholder="Écris une lecture (kana OU rōmaji), puis Entrée"
             value={input}
             onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
             onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
           />
-          <div className="text-sm text-gray-700">Trouvées {foundRef.current.size}/{currentQ?.expected.length ?? 0}</div>
-          <div className="flex flex-wrap gap-2 max-w-md">
-            {Array.from(found).map(r => (
-              <span key={r} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-xs">{r}</span>
-            ))}
-          </div>
+
           <div className="flex items-center gap-2 w-full max-w-md">
             <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim()? "bg-pink-400":"bg-gray-300"}`}>Valider</button>
-            <button onClick={goNext} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
-            <span className="px-3 py-3 text-sm text-gray-500">Restants: {Math.max(0, (order.length - idx - 1))}</span>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
           </div>
+
           {status==='miss' && (<div className="text-sm text-red-600">Non attendu ou déjà saisi.</div>)}
           {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
-          {status==='complete' && (<div className="text-sm text-green-600">Toutes les lectures trouvées !</div>)}
+          {status==='complete' && (<div className="text-sm text-green-600">Toutes les lectures aSavoir trouvées !</div>)}
         </div>
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
-
-            const pairsKun = r.kun.map((roma, idx) => ({ roma, kana: r.kunKana[idx] }));
-            const pairsOn  = r.on.map((roma, idx)  => ({ roma, kana: r.onKana[idx]  }));
-
-            const foundKunKana = pairsKun.filter(p => foundSet.has(p.roma)).map(p => p.kana);
-            const foundOnKana  = pairsOn .filter(p => foundSet.has(p.roma)).map(p => p.kana);
-
-            const expKunKana = r.kunKana;
-            const expOnKana  = r.onKana;
-
-            const missKunKana = pairsKun.filter(p => !foundSet.has(p.roma)).map(p => p.kana);
-            const missOnKana  = pairsOn .filter(p => !foundSet.has(p.roma)).map(p => p.kana);
-
-            const totalExp = r.expected.length;
-            const totalFound = new Set(r.found).size;
+            const missKana = r.expectedKana.filter(k => !foundSet.has(norm(kanaToRomaji(k))));
+            const totalFound = foundSet.size;
+            const totalExp = r.expectedRoma.length;
 
             return (
               <div key={i} className="p-3 rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-2xl font-bold">{r.id}</div>
-                  <div className={totalFound===totalExp ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                  <div className="text-sm">
+                    <span className="text-gray-500 mr-1">Kanji :</span>
+                    <span className="text-xl font-bold">{r.id}</span>
+                  </div>
+                  <div className={(missKana.length===0) ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
                     {totalFound}/{totalExp}
                   </div>
                 </div>
 
                 <div className="text-sm mb-1">
-                  <span className="text-gray-500">Trouvées :</span>{" "}
-                  <ReadingChips kun={foundKunKana} on={foundOnKana} />
+                  <span className="text-gray-500">Lectures attendues (aSavoir, kana) :</span>{" "}
+                  {r.expectedKana.map(k => (
+                    <span key={k} className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">{k}</span>
+                  ))}
                 </div>
 
-                <div className="text-sm mb-1">
-                  <span className="text-gray-500">Attendues :</span>{" "}
-                  <ReadingChips kun={expKunKana} on={expOnKana} />
+                <div className="text-sm">
+                  <span className="text-gray-500">Trouvées (romaji normalisés) :</span>{" "}
+                  {r.found.length>0 ? r.found.map(rr => (
+                    <span key={rr} className="inline-block mx-1 px-2 py-0.5 rounded-full bg-green-100 border border-green-300 text-xs">{rr}</span>
+                  )) : "—"}
                 </div>
 
-                {(missKunKana.length>0 || missOnKana.length>0) && (
-                  <div className="text-sm">
+                {missKana.length>0 && (
+                  <div className="text-sm mt-1">
                     <span className="text-gray-500">Manquantes :</span>{" "}
-                    <ReadingChips kun={missKunKana} on={missOnKana} />
+                    {missKana.map(k => (
+                      <span key={k} className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-red-300 bg-red-50 text-red-700">{k}</span>
+                    ))}
                   </div>
                 )}
               </div>
