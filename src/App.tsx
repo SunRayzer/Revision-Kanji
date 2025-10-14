@@ -1917,41 +1917,6 @@ function QuizMenu({ setQuizMode }) {
 
 
 /** ================== Menu Quiz Complet ================== */
-function QuizCompletMenu({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-4">
-      <div className="flex items-center gap-2 mb-1">
-        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
-        <span className="font-semibold">Quiz Complet</span>
-      </div>
-
-      <p className="text-sm text-gray-600">
-        Ici, tu pourras lancer des parcours de révision en “version complète”. 
-        (On peut ensuite y enchaîner plusieurs quiz, ou forcer l’utilisation de toutes les lectures, etc.)
-      </p>
-
-      {/* Boutons de départ — pour l’instant placeholders, tu pourras les relier à tes quiz */}
-      <div className="grid sm:grid-cols-2 gap-3">
-        <button className="w-full p-3 rounded-xl text-white bg-pink-500">
-          Démarrer tout (bientôt)
-        </button>
-        <button className="w-full p-3 rounded-xl text-white bg-gray-800">
-          Personnaliser (bientôt)
-        </button>
-      </div>
-
-      <div className="p-3 rounded-xl bg-gray-50">
-        <div className="text-sm font-medium mb-2">Idées à brancher ici (plus tard) :</div>
-        <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
-          <li>Lancer “Traduction → Lecture” (portée complète).</li>
-          <li>Lancer “Kanji → Lecture” (portée complète).</li>
-          <li>Enchaîner plusieurs quiz automatiquement.</li>
-          <li>Statistiques globales sur les kanji sélectionnés.</li>
-        </ul>
-      </div>
-    </div>
-  );
-}
 
 
 function QuizCompletMenu({
@@ -2044,11 +2009,6 @@ export default function App() {
 
         {route === "quiz" && quizMode === "kunToDraw" && (
           <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture → Saisie du Kanji" />
-        )}
-
-
-        {route === "quizAll" && (
-         <QuizCompletMenu onBack={() => setRoute("select")} />
         )}
 
         {route === "quizAll" && !quizAllMode && (
