@@ -2494,7 +2494,7 @@ export default function App() {
           <div className="ml-auto flex gap-2">
             <button onClick={()=>{ setRoute("select"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Kanji</button>
             <button onClick={()=>{ setRoute("quiz"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
-            <button onClick={()=>{ setRoute("quizAll"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
+            <button onClick={()=>{ setRoute("quizAll"); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
 
           </div>
         </div>
