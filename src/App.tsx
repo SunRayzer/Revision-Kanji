@@ -2540,11 +2540,11 @@ export default function App() {
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
         )}
 
-        {route === "quizAll" && quizAllMode === "kanjilectureComplete" && (
+        {route === "quizAll" && quizAllMode === "KanjiLectureComplete" && (
          <QuizKanjiLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Kanji → Lecture" />
         )}
 
-        {route === "quizAll" && quizAllMode === "LecturekanjiComplete" && (
+        {route === "quizAll" && quizAllMode === "LectureKanjiComplete" && (
          <QuizLectureKanjiComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Kanji → Lecture" />
         )}
 
