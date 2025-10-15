@@ -1497,7 +1497,7 @@ function QuizKunToDraw({
           <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
 
           <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">Lecture (aSavoir) :</div>
+            <div className="text-sm text-gray-500 mb-1">Lecture (à savoir) :</div>
             <div className="text-3xl font-extrabold tracking-wide select-none">
               {currentQ?.reading || "—"}
             </div>
@@ -1897,6 +1897,535 @@ function QuizTradLectureComplete({
 }
 
 
+/** ================== Quiz Kanji → Lecture (KUN + ON, complet) ================== */
+function QuizKanjiLectureComplete({
+  picked,
+  onBack,
+  title,
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+}) {
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
+
+  const [order, setOrder] = useState<any[]>([]);
+  const [idx, setIdx] = useState(0);
+
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
+
+  const [found, setFound] = useState<Set<string>>(new Set()); // clés en rōmaji normalisé
+  const foundRef = useRef<Set<string>>(new Set());
+
+  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const results = useRef<Array<{
+    id: string;
+    expectedRoma: string[];
+    expectedKana: string[];
+    kunKana: string[];
+    onKana: string[];
+    found: string[];
+  }>>([]);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => { foundRef.current = found; }, [found]);
+  useEffect(() => { if (started && !finished) { const t = setTimeout(()=>inputRef.current?.focus(), 0); return () => clearTimeout(t); } }, [started, finished, idx, status]);
+  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
+
+  // Helpers locaux légers (si tu as déjà les mêmes en utils, remplace-les par tes imports)
+  const isKanaLocal = (s: string) => /[\u3040-\u309F\u30A0-\u30FF]/.test((s||"").trim());
+  const kataToHira = (s: string) =>
+    Array.from(s).map(ch => {
+      const code = ch.charCodeAt(0);
+      return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
+    }).join("");
+  const normalizeKanaLocal = (s: string) => kataToHira(s).replace(/\s+/g, "").trim();
+  const uniqueLocal = <T,>(arr: T[]) => Array.from(new Set(arr));
+
+  const buildOrder = (pool: any[]) => {
+    const list = pool.filter(k =>
+      (Array.isArray(k.kunyomi) && k.kunyomi.length) ||
+      (Array.isArray(k.onyomi)  && k.onyomi.length)
+    );
+    return [...list].sort(() => Math.random() - 0.5);
+  };
+
+  const start = () => {
+    const qs = buildOrder(picked);
+    setOrder(qs);
+    setIdx(0);
+    setInput("");
+    setStatus("idle");
+    setFound(new Set());
+    results.current = [];
+    setFinished(false);
+    setStarted(true);
+  };
+
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null as null | {
+      id: string;
+      expectedRoma: string[];
+      expectedKana: string[];
+      kunKana: string[];
+      onKana: string[];
+    };
+    const k = order[idx];
+
+    const kunKana = uniqueLocal((k.kunyomi ?? []).filter(Boolean).map((x: string) => normalizeKanaLocal(x)));
+    const onKana  = uniqueLocal((k.onyomi  ?? []).filter(Boolean).map((x: string) => normalizeKanaLocal(x)));
+    const expectedKana = uniqueLocal([...kunKana, ...onKana]);
+    const expectedRoma = uniqueLocal(expectedKana.map((kana: string) => norm(kanaToRomaji(kana))));
+
+    return { id: k.id, expectedRoma, expectedKana, kunKana, onKana };
+  }, [started, idx, order]);
+
+  const total = order.length;
+  const remaining = Math.max(0, total - idx - 1);
+
+  const goNext = () => {
+    if (!currentQ) return;
+    results.current.push({
+      id: currentQ.id,
+      expectedRoma: currentQ.expectedRoma,
+      expectedKana: currentQ.expectedKana,
+      kunKana: currentQ.kunKana,
+      onKana: currentQ.onKana,
+      found: Array.from(foundRef.current),
+    });
+
+    if (idx + 1 < total) {
+      setIdx(idx + 1);
+      setInput("");
+      setStatus("idle");
+      setFound(new Set());
+      setTimeout(() => inputRef.current?.focus(), 0);
+    } else {
+      setFinished(true);
+      setStatus("complete");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!currentQ) return;
+    const raw = input.trim();
+    if (!raw) return;
+
+    let key: string | null = null; // romaji normalisé
+    if (isKanaLocal(raw)) {
+      const hira = normalizeKanaLocal(raw);
+      const matchKana = currentQ.expectedKana.includes(hira);
+      if (matchKana) key = norm(kanaToRomaji(hira));
+    } else {
+      key = norm(raw);
+    }
+
+    if (!key) { setStatus("miss"); setInput(""); return; }
+
+    const ok = currentQ.expectedRoma.includes(key);
+    const already = foundRef.current.has(key);
+
+    if (ok && !already) {
+      const nxt = new Set(foundRef.current); nxt.add(key);
+      setFound(nxt);
+      setInput("");
+      setStatus("hit");
+
+      if (nxt.size === currentQ.expectedRoma.length) {
+        setStatus("complete");
+        if (autoNext.current) clearTimeout(autoNext.current);
+        autoNext.current = setTimeout(goNext, 500);
+      }
+    } else {
+      setStatus("miss");
+      setInput("");
+    }
+  };
+
+  const skip = () => goNext();
+
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
+        <span className="font-semibold">{title}</span>
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
+      </div>
+
+      {!started ? (
+        <div className="space-y-3">
+          <button
+            onClick={start}
+            disabled={picked.length===0}
+            className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-500":"bg-gray-300"}`}
+          >
+            Commencer le {title}
+          </button>
+          <div className="text-sm text-gray-600">
+            Objectif : pour le <b>kanji affiché</b>, tape <b>toutes</b> les lectures <b>KUN + ON</b> (en <b>kana</b> ou en <b>rōmaji</b>), puis Entrée à chaque lecture.
+          </div>
+        </div>
+      ) : !finished ? (
+        <div className="flex flex-col items-center gap-5 p-4">
+          <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
+
+          <div className="text-6xl sm:text-7xl font-extrabold tracking-wide select-none">
+            {currentQ?.id ?? "—"}
+          </div>
+
+          <div className="text-xs text-gray-500 mt-1">
+            Trouvées {foundRef.current.size}/{currentQ?.expectedRoma.length ?? 0}
+          </div>
+
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
+              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
+            }`}
+            placeholder="Écris une lecture (kana OU rōmaji), puis Entrée"
+            value={input}
+            onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
+            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
+          />
+
+          <div className="flex items-center gap-2 w-full max-w-md">
+            <button onClick={handleSubmit} disabled={!input.trim()} className={`flex-1 p-3 rounded-xl text-white ${input.trim()? "bg-pink-500":"bg-gray-300"}`}>Valider</button>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+          </div>
+
+          {status==='miss' && (<div className="text-sm text-red-600">Non attendu ou déjà saisi.</div>)}
+          {status==='hit' && (<div className="text-sm text-green-600">Bien ! Continue…</div>)}
+          {status==='complete' && (<div className="text-sm text-green-600">Toutes les lectures trouvées !</div>)}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="p-3 rounded-2xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {results.current.map((r,i)=>{
+            const foundSet = new Set(r.found);
+            const missKana = r.expectedKana.filter(k => !foundSet.has(norm(kanaToRomaji(k))));
+            const totalFound = foundSet.size;
+            const totalExp = r.expectedRoma.length;
+
+            return (
+              <div key={i} className="p-3 rounded-2xl bg-gray-50">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm">
+                    <span className="text-gray-500 mr-1">Kanji :</span>
+                    <span className="text-xl font-bold">{r.id}</span>
+                  </div>
+                  <div className={(missKana.length===0) ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {totalFound}/{totalExp}
+                  </div>
+                </div>
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Lectures KUN (kana) :</span>{" "}
+                  {r.kunKana.length ? r.kunKana.map(k => (
+                    <span key={`kun-${k}`} className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">{k}</span>
+                  )) : "—"}
+                </div>
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Lectures ON (kana) :</span>{" "}
+                  {r.onKana.length ? r.onKana.map(k => (
+                    <span key={`on-${k}`} className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-orange-300 bg-orange-50 text-orange-700">{k}</span>
+                  )) : "—"}
+                </div>
+
+                <div className="text-sm">
+                  <span className="text-gray-500">Trouvées (romaji normalisés) :</span>{" "}
+                  {r.found.length>0 ? r.found.map(rr => (
+                    <span key={rr} className="inline-block mx-1 px-2 py-0.5 rounded-full bg-green-100 border border-green-300 text-xs">{rr}</span>
+                  )) : "—"}
+                </div>
+
+                {missKana.length>0 && (
+                  <div className="text-sm mt-1">
+                    <span className="text-gray-500">Manquantes :</span>{" "}
+                    {missKana.map(k => (
+                      <span key={k} className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-red-300 bg-red-50 text-red-700">{k}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          <div className="flex gap-2">
+            <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">Recommencer</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** ================== Quiz Lecture → Kanji (KUN + ON, complet) ================== */
+function QuizLectureKanjiComplete({
+  picked,
+  onBack,
+  title,
+}: {
+  picked: any[];
+  onBack: () => void;
+  title: string;
+}) {
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
+
+  // 1 question = 1 lecture (kana) → N kanji attendus
+  const [order, setOrder] = useState<{ reading: string; expectedIds: string[] }[]>([]);
+  const [idx, setIdx] = useState(0);
+
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState<"idle" | "hit" | "miss" | "complete">("idle");
+  const [foundIds, setFoundIds] = useState<Set<string>>(new Set());
+  const foundIdsRef = useRef<Set<string>>(new Set());
+
+  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const results = useRef<Array<{ reading: string; expectedIds: string[]; foundIds: string[] }>>([]);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => { foundIdsRef.current = foundIds; }, [foundIds]);
+  useEffect(() => { if (started && !finished) { const t = setTimeout(()=>inputRef.current?.focus(), 0); return () => clearTimeout(t); } }, [started, finished, idx, status]);
+  useEffect(() => () => { if (autoNext.current) clearTimeout(autoNext.current); }, []);
+
+  // Helpers locaux (si tu as déjà ces utils globaux, tu peux enlever ces définitions)
+  const isKanaLocal = (s: string) => /[\u3040-\u309F\u30A0-\u30FF]/.test((s||"").trim());
+  const kataToHira = (s: string) =>
+    Array.from(s).map(ch => {
+      const code = ch.charCodeAt(0);
+      return (code >= 0x30A1 && code <= 0x30F6) ? String.fromCharCode(code - 0x60) : ch;
+    }).join("");
+  const normalizeKanaLocal = (s: string) => kataToHira(s).replace(/\s+/g, "").trim();
+
+  const uniqueLocal = <T,>(arr: T[]) => Array.from(new Set(arr));
+  const shuffleLocal = <T,>(arr: T[]) => [...arr].sort(() => Math.random() - 0.5);
+
+  // Construit: lecture kana (KUN+ON) → set de kanji ayant cette lecture parmi "picked"
+  const buildQuestions = (pool: any[]) => {
+    const byReading = new Map<string, Set<string>>();
+    pool.forEach(k => {
+      const kuns = uniqueLocal((k.kunyomi ?? []).filter(Boolean).map((x: string) => normalizeKanaLocal(x)));
+      const ons  = uniqueLocal((k.onyomi  ?? []).filter(Boolean).map((x: string) => normalizeKanaLocal(x)));
+      const all  = uniqueLocal([...kuns, ...ons]);
+      all.forEach(r => {
+        if (!byReading.has(r)) byReading.set(r, new Set());
+        byReading.get(r)!.add(k.id);
+      });
+    });
+    return shuffleLocal(
+      Array.from(byReading.entries())
+        .map(([reading, set]) => ({ reading, expectedIds: Array.from(set) }))
+        .filter(q => q.expectedIds.length > 0)
+    );
+  };
+
+  const start = () => {
+    const qs = buildQuestions(picked);
+    setOrder(qs);
+    setIdx(0);
+    setInput("");
+    setStatus("idle");
+    setFoundIds(new Set());
+    results.current = [];
+    setFinished(false);
+    setStarted(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null as { reading: string; expectedIds: string[] } | null;
+    return order[idx];
+  }, [started, idx, order]);
+
+  const total = order.length;
+  const remaining = Math.max(0, total - idx - 1);
+
+  const goNext = () => {
+    if (!currentQ) return;
+    results.current.push({
+      reading: currentQ.reading,
+      expectedIds: currentQ.expectedIds,
+      foundIds: Array.from(foundIdsRef.current),
+    });
+    if (idx + 1 < total) {
+      setIdx(idx + 1);
+      setInput("");
+      setStatus("idle");
+      setFoundIds(new Set());
+      setTimeout(() => inputRef.current?.focus(), 0);
+    } else {
+      setFinished(true);
+      setStatus("complete");
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!currentQ) return;
+    const raw = input.trim();
+    if (!raw) return;
+
+    // On lit 1 caractère kanji (premier non-espace)
+    const firstChar = Array.from(raw).find(ch => /\S/.test(ch)) ?? "";
+    const isExpected = currentQ.expectedIds.includes(firstChar);
+    const already = foundIdsRef.current.has(firstChar);
+
+    if (isExpected && !already) {
+      const nxt = new Set(foundIdsRef.current); nxt.add(firstChar);
+      setFoundIds(nxt);
+      setStatus("hit");
+      setInput("");
+
+      if (nxt.size === currentQ.expectedIds.length) {
+        setStatus("complete");
+        if (autoNext.current) clearTimeout(autoNext.current);
+        autoNext.current = setTimeout(goNext, 500); // 0.5s
+      }
+    } else {
+      setStatus("miss");
+      // on laisse l’input pour corriger, ou vide si tu préfères:
+      // setInput("");
+    }
+  };
+
+  const skip = () => goNext();
+
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">← Retour</button>
+        <span className="font-semibold">{title}</span>
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
+        {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
+      </div>
+
+      {!started ? (
+        <div className="space-y-3">
+          <button
+            onClick={start}
+            disabled={picked.length===0}
+            className={`w-full p-3 rounded-xl text-white ${picked.length>0?"bg-pink-500":"bg-gray-300"}`}
+          >
+            Commencer le {title}
+          </button>
+          <div className="text-sm text-gray-600">
+            Objectif : pour une <b>lecture</b> (kana) affichée, saisis <b>tous les kanji</b> qui portent cette lecture (KUN ou ON) parmi ta sélection. Tape un kanji et appuie sur Entrée.
+          </div>
+        </div>
+      ) : !finished ? (
+        <div className="flex flex-col items-center gap-5 p-4">
+          <div className="text-sm text-gray-600">Question {idx+1} / {total}</div>
+
+          <div className="text-center">
+            <div className="text-sm text-gray-500 mb-1">Lecture (kana) :</div>
+            <div className="text-3xl font-extrabold tracking-wide select-none">{currentQ?.reading || "—"}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              Attendus : {foundIdsRef.current.size}/{currentQ?.expectedIds.length ?? 0}
+            </div>
+          </div>
+
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            inputMode="text"
+            className={`w-full max-w-md p-3 rounded-xl border text-3xl tracking-wider text-center ${
+              status==='miss' ? 'border-red-400' : status==='hit' ? 'border-green-500' : ''
+            }`}
+            style={{ fontFamily: `"Hiragino Mincho ProN","Yu Mincho","Yu Gothic","Hiragino Kaku Gothic ProN","Noto Serif JP","Noto Sans JP",system-ui,sans-serif` }}
+            placeholder="Saisis un kanji correspondant puis Entrée"
+            value={input}
+            onChange={e => { setInput(e.target.value); if (status!=='idle') setStatus('idle'); }}
+            onKeyDown={e => { if (e.key === 'Enter' && input.trim()) { e.preventDefault(); handleSubmit(); } }}
+          />
+
+          <div className="flex flex-wrap gap-2 max-w-md">
+            {Array.from(foundIds).map(k => (
+              <span key={k} className="px-2 py-1 rounded-full bg-green-100 border border-green-300 text-lg">{k}</span>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 w-full max-w-md">
+            <button
+              onClick={handleSubmit}
+              disabled={!input.trim() || status==='complete'}
+              className={`flex-1 p-3 rounded-xl text-white ${input.trim() && status!=='complete' ? 'bg-pink-500' : 'bg-gray-300'}`}
+            >
+              Valider
+            </button>
+            <button onClick={skip} className="px-4 py-3 rounded-xl bg-gray-100">Suivant</button>
+            <span className="px-3 py-3 text-sm text-gray-500">Restants: {remaining}</span>
+          </div>
+
+          {status==='miss' && (<div className="text-sm text-red-600">Pas attendu, déjà saisi, ou caractère invalide.</div>)}
+          {status==='hit' && (<div className="text-sm text-green-600">Bien — continue.</div>)}
+          {status==='complete' && (<div className="text-sm text-green-600">Tous les kanji pour cette lecture ont été saisis !</div>)}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {results.current.map((r,i)=>{
+            const foundSet = new Set(r.foundIds);
+            const miss = r.expectedIds.filter(id => !foundSet.has(id));
+            const totalFound = foundSet.size;
+            const totalExp = r.expectedIds.length;
+
+            return (
+              <div key={i} className="p-3 rounded-xl bg-gray-50">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-sm">
+                    <span className="text-gray-500 mr-1">Lecture :</span>
+                    <span className="px-2 py-1 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">{r.reading}</span>
+                  </div>
+                  <div className={(miss.length===0) ? "text-green-600 font-bold" : "text-red-600 font-bold"}>
+                    {totalFound}/{totalExp}
+                  </div>
+                </div>
+
+                <div className="text-sm mb-1">
+                  <span className="text-gray-500">Trouvés :</span>{" "}
+                  {r.foundIds.length>0 ? r.foundIds.map(id=>(
+                    <span key={id} className="inline-block mx-1 text-lg">{id}</span>
+                  )) : "—"}
+                </div>
+
+                <div className="text-sm">
+                  <span className="text-gray-500">Attendues :</span>{" "}
+                  {r.expectedIds.map(id=>(
+                    <span key={id} className="inline-block mx-1 text-lg">{id}</span>
+                  ))}
+                </div>
+
+                {miss.length>0 && (
+                  <div className="text-sm mt-1">
+                    <span className="text-gray-500">Manquantes :</span>{" "}
+                    {miss.map(id=>(
+                      <span key={id} className="inline-block mx-1 text-lg">{id}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          <div className="flex gap-2">
+            <button onClick={start} className="flex-1 p-3 rounded-xl bg-gray-100">Recommencer</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+
 /** ================== Menu Quiz ================== */
 function QuizMenu({ setQuizMode }) {
   return (
@@ -1904,10 +2433,10 @@ function QuizMenu({ setQuizMode }) {
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
         <p className="text-sm text-gray-600">Ici, tu pourras lancer des parcours de révision en “version essentielle”. 
         (Il faudra alors rentrer les Lectures et Kanjis présent dans la partie "à savoir" des fiches Kanji) </p>
-      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
-      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Saisie Kanji</button>
-      <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Traduction</button>
-      <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji/Lecture</button>
+      <button onClick={()=>setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction / Lecture</button>
+      <button onClick={()=>setQuizMode("drawKanji")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction / Saisie Kanji</button>
+      <button onClick={()=>setQuizMode("kanjiTrad")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji / Traduction</button>
+      <button onClick={()=>setQuizMode("kanjiLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji / Lecture</button>
       <button onClick={()=>setQuizMode("kunToDraw")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture / Kanji </button>
 
     </div>
@@ -1924,10 +2453,16 @@ function QuizCompletMenu({ setQuizAllMode }) {
         Ici, tu pourras lancer des parcours de révision en “version complète”. 
         (Il faudra alors rentrer toutes les Lectures et Kanjis demandés)
       </p>
-      <button onClick={()=>setQuizAllMode("tradLectureComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction/Lecture</button>
+      <button onClick={()=>setQuizAllMode("tradLectureComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Traduction / Lecture</button>
+      <button onClick={()=>setQuizAllMode("KanjiLectureComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Kanji / Lecture</button>
+      <button onClick={()=>setQuizAllMode("LectureKanjiComplete")} className="w-full p-3 rounded-xl text-white bg-pink-400">Quiz Lecture / Kanji</button>
+
+
     </div>
   );
 }
+
+
  
 /** ================== App ================== */
 export default function App() {
@@ -1994,12 +2529,23 @@ export default function App() {
           <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture → Saisie du Kanji" />
         )}
 
+
+
+
         {route === "quizAll" && !quizAllMode && (
          <QuizCompletMenu setQuizAllMode={setQuizAllMode} />
         )}        
 
         {route === "quizAll" && quizAllMode === "tradLectureComplete" && (
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
+        )}
+
+        {route === "quizAll" && quizAllMode === "" && (
+         <QuizKanjiLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Kanji → Lecture" />
+        )}
+
+        {route === "quizAll" && quizAllMode === "" && (
+         <QuizLectureKanjiComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Kanji → Lecture" />
         )}
 
 
