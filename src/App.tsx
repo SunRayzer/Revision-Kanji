@@ -463,6 +463,19 @@ function QuizKanjiTrad({ picked, onBack, title }) {
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i) => (
             <div key={i} className="p-3 rounded-xl bg-gray-50">
               <div className="flex items-center justify-between mb-2">
@@ -702,6 +715,19 @@ function QuizKanjiLecture({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
             const missKana = r.expectedKana.filter(k => !foundSet.has(norm(kanaToRomaji(k))));
@@ -969,6 +995,19 @@ function QuizTradLecture({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
             const missKana = r.expectedKana.filter(k => !foundSet.has(norm(kanaToRomaji(k))));
@@ -1307,6 +1346,19 @@ function QuizDrawKanji({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r, i) => (
             <div key={i} className="p-3 rounded-xl bg-gray-50">
               <div className="flex items-center justify-between mb-2">
@@ -1851,6 +1903,19 @@ function QuizTradLectureComplete({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
             const missKana = r.expectedKana.filter(k => !foundSet.has(norm(kanaToRomaji(k))));
@@ -2121,6 +2186,19 @@ function QuizKanjiLectureComplete({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-2xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.found);
             const missKana = r.expectedKana.filter(k => !foundSet.has(norm(kanaToRomaji(k))));
@@ -2386,6 +2464,19 @@ function QuizLectureKanjiComplete({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.foundIds);
             const miss = r.expectedIds.filter(id => !foundSet.has(id));
