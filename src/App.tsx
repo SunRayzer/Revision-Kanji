@@ -673,7 +673,7 @@ function QuizKanjiLecture({
           </div>
 
           <div className="text-xs text-gray-500 mt-1">
-            Trouvées {foundRef.current.size}/{currentQ?.expectedRoma.length ?? 0}
+            Trouvées {foundIds.size}/{currentQ?.expectedRoma.length ?? 0}
           </div>
 
           <input
@@ -939,7 +939,7 @@ function QuizTradLecture({
             <div className="text-sm text-gray-500 mb-1">Traduction(s) :</div>
             <div className="text-2xl font-semibold">{currentQ?.meaningPretty.join(" ／ ")}</div>
             <div className="text-xs text-gray-500 mt-1">
-              Trouvées {foundRef.current.size}/{currentQ?.expectedRoma.length ?? 0}
+              Trouvées {foundIds.size}/{currentQ?.expectedRoma.length ?? 0}
             </div>
           </div>
 
@@ -1822,7 +1822,7 @@ function QuizTradLectureComplete({
           </div>
 
           <div className="text-xs text-gray-500 mt-1">
-            Trouvées {foundRef.current.size}/{currentQ?.expectedRoma.length ?? 0}
+            Trouvées {foundIds.size}/{currentQ?.expectedRoma.length ?? 0}
           </div>
 
           <input
@@ -2092,7 +2092,7 @@ function QuizKanjiLectureComplete({
           </div>
 
           <div className="text-xs text-gray-500 mt-1">
-            Trouvées {foundRef.current.size}/{currentQ?.expectedRoma.length ?? 0}
+            Trouvées {foundIds.size}/{currentQ?.expectedRoma.length ?? 0}
           </div>
 
           <input
@@ -2342,7 +2342,7 @@ function QuizLectureKanjiComplete({
             <div className="text-sm text-gray-500 mb-1">Lecture (kana) :</div>
             <div className="text-3xl font-extrabold tracking-wide select-none">{currentQ?.reading || "—"}</div>
             <div className="text-xs text-gray-500 mt-1">
-              Attendus : {foundIdsRef.current.size}/{currentQ?.expectedIds.length ?? 0}
+              Attendus : {foundIds.size}/{currentQ?.expectedIds.length ?? 0}
             </div>
           </div>
 
