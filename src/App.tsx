@@ -1478,18 +1478,6 @@ function QuizKunToDraw({
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
         {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
-        {(() => {
-        const score = results.current.reduce((acc, r) => {
-        const foundSet = new Set(r.foundIds);
-         const ok = r.expectedIds.every(id => foundSet.has(id));
-    return acc + (ok ? 1 : 0);
-  }, 0);
-  return (
-    <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-      Score: {score}/{results.current.length}
-    </span>
-  );
-})()}
       </div>
 
       {!started ? (
@@ -1560,6 +1548,19 @@ function QuizKunToDraw({
       ) : (
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>    
+          {(() => {
+  const totalQuestions = results.current.length;
+  const totalGood = results.current.reduce((acc, r) => {
+    const foundSet = new Set(r.foundIds);
+    const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <div className="p-3 rounded-xl bg-pink-50 text-center font-semibold text-gray-800">
+      Score global : {totalGood}/{totalQuestions}
+    </div>
+  );
+})()}
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.foundIds);
             const miss = r.expectedIds.filter(id => !foundSet.has(id));
