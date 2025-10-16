@@ -1478,7 +1478,18 @@ function QuizKunToDraw({
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
         {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
-        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Score: {results.current.filter(r=>r.ok).length}/{results.current.length}</span>
+        {(() => {
+        const score = results.current.reduce((acc, r) => {
+        const foundSet = new Set(r.foundIds);
+         const ok = r.expectedIds.every(id => foundSet.has(id));
+    return acc + (ok ? 1 : 0);
+  }, 0);
+  return (
+    <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+      Score: {score}/{results.current.length}
+    </span>
+  );
+})()}
       </div>
 
       {!started ? (
