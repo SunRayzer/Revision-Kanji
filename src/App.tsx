@@ -4,7 +4,7 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 /** ================== Données JLPT N5 (kanji) ================== */
 const DATA = [
   { id: "人", meaningFR: "personne; humain", meaningEN: "person; human", onyomi: ["ジン","ニン"], kunyomi: ["ひと"], aSavoir: ["ひと"] },
-  { id: "子", meaningFR: "enfant", meaningEN: "child", onyomi: ["シ","ツ","ス"], kunyomi: ["こ"], aSavoir: ["ご"] },
+  { id: "子", meaningFR: "enfant", meaningEN: "child", onyomi: ["シ","ツ","ス"], kunyomi: ["こ"], aSavoir: ["こ"] },
   { id: "女", meaningFR: "femme; fille; féminin", meaningEN: "woman", onyomi: ["ジョ","ニョ","ニョウ"], kunyomi: ["おんな","め"], aSavoir: ["おんな"] },
   { id: "男", meaningFR: "homme; garçon; masculin", meaningEN: "man", onyomi: ["ダン","ナン"], kunyomi: ["おとこ"], aSavoir: ["おとこ"] },
   { id: "一", meaningFR: "un", meaningEN: "one", onyomi: ["イチ","イツ"], kunyomi: ["ひと","ひとつ"], aSavoir: ["いち"] },
@@ -107,7 +107,7 @@ const DATA = [
   { id: "森", meaningFR: "forêt", meaningEN: "forest", onyomi: ["シン"], kunyomi: ["もり"], aSavoir: [""] },
   { id: "林", meaningFR: "bois; bosquet", meaningEN: "grove", onyomi: ["リン"], kunyomi: ["はやし"], aSavoir: [""] },
   { id: "石", meaningFR: "pierre", meaningEN: "stone", onyomi: ["セキ"], kunyomi: ["いし"], aSavoir: [""] },
-  { id: "社", meaningFR: "sanctuaire; société", meaningEN: "shrine; company", onyomi: ["シャ"], kunyomi: [], aSavoir: [""] },
+  { id: "社", meaningFR: "sanctuaire; société", meaningEN: "shrine; company", onyomi: ["シャ"], kunyomi: [], aSavoir: ["しゃかい"] },
   { id: "白", meaningFR: "blanc", meaningEN: "white", onyomi: ["ハク","ビャク"], kunyomi: ["しろ","しろい"], aSavoir: [""] },
   { id: "目", meaningFR: "œil; oeil", meaningEN: "eye", onyomi: ["モク"], kunyomi: ["め"], aSavoir: [""] },
   { id: "口", meaningFR: "bouche", meaningEN: "mouth", onyomi: ["コウ","ク"], kunyomi: ["くち"], aSavoir: [""] },
@@ -117,6 +117,7 @@ const DATA = [
   { id: "魚", meaningFR: "poisson", meaningEN: "fish", onyomi: ["ギョ"], kunyomi: ["さかな"], aSavoir: [""] },
   { id: "犬", meaningFR: "chien", meaningEN: "dog", onyomi: ["ケン"], kunyomi: ["いぬ"], aSavoir: [""] },
   { id: "立", meaningFR: "se lever; être debout; se dresser", meaningEN: "", onyomi: ["リツ"], kunyomi: ["た"], aSavoir: [""] },
+
 ];
 
 /** Pool de lectures (pour génèr. de distracteurs) */
@@ -1477,6 +1478,7 @@ function QuizKunToDraw({
         <span className="font-semibold">{title}</span>
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">{picked.length} sélectionnés</span>
         {finished && (<span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Quiz terminé</span>)}
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">Score: {results.current.filter(r=>r.ok).length}/{results.current.length}</span>
       </div>
 
       {!started ? (
@@ -1546,7 +1548,7 @@ function QuizKunToDraw({
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>
+          <div className="p-3 rounded-xl bg-gray-50 font-semibold">Récapitulatif</div>    
           {results.current.map((r,i)=>{
             const foundSet = new Set(r.foundIds);
             const miss = r.expectedIds.filter(id => !foundSet.has(id));
