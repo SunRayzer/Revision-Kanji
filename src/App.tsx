@@ -1503,7 +1503,7 @@ function QuizKunToDraw({
               {currentQ?.reading || "—"}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              Attendus : {foundIdsRef.current.size}/{currentQ?.expectedIds.length ?? 0}
+              Attendus : {foundIds.size}/{currentQ?.expectedIds.length ?? 0}
             </div>
           </div>
 
