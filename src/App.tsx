@@ -530,6 +530,7 @@ const splitFR = (s) => (s||"").split(/[;、,]/).map(t=>t.trim()).filter(Boolean)
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const stripAccents = (s) => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const normalize = (s) => stripAccents(s).trim().toLowerCase();
+const VOCAB_WORDS = ALL_PACKS.flatMap((pack: any) => pack.items);
 
 /** Kana -> rōmaji (Hepburn simplifié) */
 function kanaToRomaji(input){
@@ -2014,6 +2015,152 @@ function QuizKunToDraw({
   );
 }
 
+/** ================== QUIZ VOCABULAIRE ================== */
+
+/** ================== QUIZ VOC TRAD/LECTURE ================== */
+
+function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
+  // mot actuel
+  const [current, setCurrent] = useState<any>(null);
+
+  // réponse utilisateur
+  const [input, setInput] = useState("");
+  const [checked, setChecked] = useState<null | "good" | "bad">(null);
+
+  // au montage / quand on passe au mot suivant
+  React.useEffect(() => {
+    if (!current) {
+      pickRandomWord();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+
+  function pickRandomWord() {
+    const idx = Math.floor(Math.random() * VOCAB_WORDS.length);
+    const word = VOCAB_WORDS[idx];
+    setCurrent(word);
+    setInput("");
+    setChecked(null);
+  }
+
+  if (!current) {
+    return (
+      <div className="p-4 text-center">
+        <div className="text-lg font-semibold mb-4">Chargement…</div>
+      </div>
+    );
+  }
+
+  // les lectures acceptées pour ce mot
+  const accepted = getAcceptedReadingsForItem(current);
+
+  function checkAnswer() {
+    const normUser = normalizeAnswer(input);
+    if (normUser.length === 0) return;
+
+    if (accepted.includes(normUser)) {
+      setChecked("good");
+    } else {
+      setChecked("bad");
+    }
+  }
+
+  return (
+    <div className="p-4 max-w-xl mx-auto">
+      <div className="text-center mb-6">
+        <div className="text-xl font-bold text-pink-600 mb-1">
+          Traduction → Lecture
+        </div>
+        <div className="text-sm text-gray-600">
+          Écris la lecture japonaise (kana OU romaji)
+        </div>
+      </div>
+
+      {/* Mot à deviner */}
+      <div className="mb-6 rounded-xl border bg-white shadow-sm p-4 text-center">
+        <div className="text-gray-500 text-sm mb-1">Traduction :</div>
+        <div className="text-2xl font-semibold">{current.french}</div>
+      </div>
+
+      {/* Champ de réponse */}
+      <div className="flex flex-col gap-2 mb-4">
+        <input
+          className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
+          placeholder="écris la lecture..."
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            setChecked(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (checked === null) {
+                checkAnswer();
+              } else {
+                pickRandomWord();
+              }
+            }
+          }}
+        />
+
+        {checked === null && (
+          <button
+            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold"
+            onClick={checkAnswer}
+          >
+            Valider
+          </button>
+        )}
+
+        {checked === "good" && (
+          <div className="text-center">
+            <div className="text-green-600 font-semibold text-lg mb-2">
+              ✔ Correct !
+            </div>
+            <button
+              className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold"
+              onClick={pickRandomWord}
+            >
+              Mot suivant →
+            </button>
+          </div>
+        )}
+
+        {checked === "bad" && (
+          <div className="text-center">
+            <div className="text-red-600 font-semibold text-lg mb-1">
+              ✘ Faux
+            </div>
+            <div className="text-sm text-gray-700 mb-3">
+              Réponse attendue :
+              <br />
+              <span className="font-semibold">
+                {current.reading}
+              </span>
+            </div>
+            <button
+              className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold"
+              onClick={pickRandomWord}
+            >
+              Mot suivant →
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* bouton quitter */}
+      <div className="mt-8 flex justify-center">
+        <button
+          onClick={onExit}
+          className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+        >
+          ← Retour
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /** ================== QUIZ COMPLET ================== */
 
 
@@ -2976,7 +3123,34 @@ function QuizCompletMenu({
 }
 
 
+function QuizVocabMenu({
+  onStartTraductionLecture,
+  onBackToTypes,
+}: {
+  onStartTraductionLecture: () => void;
+  onBackToTypes: () => void;
+}) {
+  return (
+    <div className="p-4 max-w-sm mx-auto bg-white rounded-2xl shadow-sm space-y-4">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={onBackToTypes}
+          className="px-3 py-1 rounded bg-gray-100 text-sm"
+        >
+          ← Types
+        </button>
+        <div className="font-semibold text-lg">Quiz Vocabulaire</div>
+      </div>
 
+      <button
+        onClick={onStartTraductionLecture}
+        className="w-full p-3 rounded-xl text-white bg-pink-500 hover:bg-pink-600 font-semibold text-center"
+      >
+        Traduction / Lecture
+      </button>
+    </div>
+  );
+}
 
  
 /** ================== App ================== */
@@ -2986,6 +3160,7 @@ export default function App() {
   const [quizAllMode, setQuizAllMode] = useState<string|null>(null);
   const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
+  const [quizVocabMode, setQuizVocabMode] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState(() => {
     try {
       const raw = localStorage.getItem("jlpt_selected_ids");
@@ -3010,7 +3185,7 @@ export default function App() {
           <span className="text-2xl font-extrabold">Révisions Kanji (JLPT N5)</span>
           <div className="ml-auto flex gap-2">
             <button onClick={()=>{ setRoute("select"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Kanji</button>
-            <button onClick={()=>{ setRoute("quiz"); setQuizSection(null); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
+            <button onClick={()=>{ setRoute("quiz"); setQuizSection(null); setQuizMode(null); setQuizVocabMode(null);}} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
             <button onClick={()=>{ setRoute("quizAll"); setQuizAllSection(null); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
             <button onClick={()=>{ setRoute("vocab"); }} className="px-3 py-1 rounded-lg hover:bg-pink-100 text-pink-600 font-semibold">Vocabulaire</button>
 
