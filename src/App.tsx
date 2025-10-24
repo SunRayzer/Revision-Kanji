@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import vocabQuizzes from "./assets/vocab_quizzes.json";
 
 /** ================== Données JLPT N5 (kanji) ================== */
@@ -123,105 +122,147 @@ const DATA = [
 ];
 
 
-function VocabSection({ onExit }) {
+function VocabSection({ onExit }: { onExit: () => void }) {
+  // subPage = "modules" | "packs" | "words"
   const [subPage, setSubPage] = useState<"modules" | "packs" | "words">("modules");
-  const [selectedModule, setSelectedModule] = useState(null);
-  const [selectedPack, setSelectedPack] = useState(null);
+  const [selectedModule, setSelectedModule] = useState<any>(null);
+  const [selectedPack, setSelectedPack] = useState<any>(null);
 
-  // 1) Écran "modules"
+  // --- PAGE MODULES ---
   if (subPage === "modules") {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.header}>📘 Modules de vocabulaire</Text>
+      <div className="p-4 max-w-3xl mx-auto">
+        <div className="text-center mb-6">
+          <div className="text-2xl font-bold mb-2">📘 Modules de vocabulaire</div>
+          <div className="text-sm text-gray-600">
+            Choisis un module pour voir les packs et les mots.
+          </div>
+        </div>
 
-        <FlatList
-          data={MODULES}
-          keyExtractor={(m) => String(m.moduleNumber)}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.moduleCard}
-              onPress={() => {
-                setSelectedModule(item);
+        <div className="grid gap-4">
+          {MODULES.map((mod) => (
+            <button
+              key={mod.moduleNumber}
+              className="text-left p-4 rounded-xl border bg-white hover:bg-pink-50 shadow-sm"
+              onClick={() => {
+                setSelectedModule(mod);
                 setSubPage("packs");
               }}
             >
-              <Text style={styles.moduleTitle}>{item.label}</Text>
-              <Text style={styles.moduleSub}>
-                {item.packs.length} packs •{" "}
-                {item.packs.reduce((n, p) => n + p.items.length, 0)} mots
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
+              <div className="text-lg font-semibold">{mod.label}</div>
+              <div className="text-sm text-gray-600">
+                {mod.packs.length} packs •{" "}
+                {mod.packs.reduce((n, p) => n + p.items.length, 0)} mots
+              </div>
+            </button>
+          ))}
+        </div>
 
-        <TouchableOpacity style={styles.backButton} onPress={onExit}>
-          <Text style={styles.backButtonText}>← Retour menu</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={onExit}
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+          >
+            ← Retour menu
+          </button>
+        </div>
+      </div>
     );
   }
 
-  // 2) Écran "packs" dans un module
+  // --- PAGE PACKS DANS UN MODULE ---
   if (subPage === "packs" && selectedModule) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.header}>{selectedModule.label}</Text>
+      <div className="p-4 max-w-3xl mx-auto">
+        <div className="text-center mb-6">
+          <div className="text-2xl font-bold mb-2">{selectedModule.label}</div>
+          <div className="text-sm text-gray-600">
+            Choisis un pack pour voir les mots.
+          </div>
+        </div>
 
-        <FlatList
-          data={selectedModule.packs}
-          keyExtractor={(p) => String(p.packNumber)}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.packCard}
-              onPress={() => {
-                setSelectedPack(item);
+        <div className="grid gap-3">
+          {selectedModule.packs.map((pack: any) => (
+            <button
+              key={pack.packNumber}
+              className="text-left p-4 rounded-xl border bg-white hover:bg-pink-50 shadow-sm"
+              onClick={() => {
+                setSelectedPack(pack);
                 setSubPage("words");
               }}
             >
-              <Text style={styles.packTitle}>Pack {item.packNumber}</Text>
-              <Text style={styles.packSub}>{item.items.length} mots</Text>
-            </TouchableOpacity>
-          )}
-        />
+              <div className="font-semibold">
+                Pack {pack.packNumber}
+              </div>
+              <div className="text-sm text-gray-600">
+                {pack.items.length} mots
+              </div>
+            </button>
+          ))}
+        </div>
 
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setSubPage("modules")}
-        >
-          <Text style={styles.backButtonText}>← Retour modules</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+        <div className="mt-6 flex justify-center gap-2">
+          <button
+            onClick={() => setSubPage("modules")}
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+          >
+            ← Retour modules
+          </button>
+
+          <button
+            onClick={onExit}
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+          >
+            Menu principal
+          </button>
+        </div>
+      </div>
     );
   }
 
-  // 3) Écran "words" = liste des mots d’un pack
+  // --- PAGE MOTS D’UN PACK ---
   if (subPage === "words" && selectedPack) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.header}>
-          {selectedPack.title.replace(/^Vocab\s*–\s*/, "")}
-        </Text>
+      <div className="p-4 max-w-3xl mx-auto">
+        <div className="text-center mb-6">
+          <div className="text-xl font-bold mb-1">
+            {selectedPack.title.replace(/^Vocab\s*–\s*/, "")}
+          </div>
+          <div className="text-sm text-gray-600">
+            {selectedPack.items.length} mots
+          </div>
+          <div className="text-xs text-gray-400 mt-1">
+            (Affichage : seulement la traduction FR comme tu as demandé)
+          </div>
+        </div>
 
-        <ScrollView style={{ marginTop: 10 }}>
-          {selectedPack.items.map((it) => (
-            <View key={it.id} style={styles.wordRow}>
-              {/* Affichage demandé : UNIQUEMENT la traduction française */}
-              <Text style={styles.wordText}>{it.french}</Text>
-            </View>
+        <div className="rounded-xl border bg-white shadow-sm divide-y">
+          {selectedPack.items.map((it: any) => (
+            <div key={it.id} className="p-3 text-base font-medium">
+              {it.french}
+            </div>
           ))}
-        </ScrollView>
+        </div>
 
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => setSubPage("packs")}
-        >
-          <Text style={styles.backButtonText}>← Retour packs</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+        <div className="mt-6 flex justify-center gap-2">
+          <button
+            onClick={() => setSubPage("packs")}
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+          >
+            ← Retour packs
+          </button>
+
+          <button
+            onClick={onExit}
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+          >
+            Menu principal
+          </button>
+        </div>
+      </div>
     );
   }
 
-  // fallback
   return null;
 }
 
@@ -231,69 +272,7 @@ function VocabSection({ onExit }) {
 // STYLES
 // --------------------
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 16,
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  menu: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 20,
-  },
-  menuButton: {
-    backgroundColor: "#f2f2f2",
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 10,
-  },
-  menuText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  moduleCard: {
-    backgroundColor: "#f7f7f7",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  moduleTitle: { fontSize: 18, fontWeight: "600" },
-  moduleSub: { fontSize: 14, color: "#555", marginTop: 4 },
-  packCard: {
-    backgroundColor: "#f0f0f0",
-    padding: 14,
-    borderRadius: 10,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  packTitle: { fontSize: 16, fontWeight: "600" },
-  packSub: { fontSize: 13, color: "#666" },
-  wordRow: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  wordText: { fontSize: 16, fontWeight: "500", color: "#111" },
-  backButton: {
-    marginTop: 20,
-    alignSelf: "center",
-    backgroundColor: "#e91e63",
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-  },
-  backButtonText: { color: "#fff", fontWeight: "700" },
-});
+
 
 /** Pool de lectures (pour génèr. de distracteurs) */
 const READING_POOL = Array.from(new Set(DATA.flatMap(k => [...(k.kunyomi||[]), ...(k.onyomi||[])])));
@@ -2802,10 +2781,9 @@ export default function App() {
           <QuizMenu setQuizMode={setQuizMode} onBackToTypes={() => setQuizSection(null)} />
         )}
 
-        {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder pour ta future base) */}
-        {route === "quiz" && quizSection === "vocab" && (
-          <VocabSection onExit={() => setQuizSection(null)} />
-        )}
+        {route === "vocab" && (
+  <VocabSection onExit={() => setRoute("select")} />
+)}
 
         {/* 3.1 — Écran 1 : choix du type de quiz */}
         {route === "quiz" && quizSection === null && (
