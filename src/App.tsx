@@ -172,138 +172,334 @@ const MODULES = MODULE_NUMBERS.map((num) => {
 });
 
 function VocabSection({ onExit }: { onExit: () => void }) {
-  // subPage = "modules" | "packs" | "words"
-  const [subPage, setSubPage] = useState<"modules" | "packs" | "words">("modules");
-  const [selectedModule, setSelectedModule] = useState<any>(null);
-  const [selectedPack, setSelectedPack] = useState<any>(null);
+  // subPage contrôle où on est :
+  // "modules" = vue globale
+  // "packs"   = vue d'un module
+  // "words"   = vue des mots d'un pack
+  const [subPage, setSubPage] = React.useState<"modules" | "packs" | "words">(
+    "modules"
+  );
 
-  // --- PAGE MODULES ---
+  // module qu'on est en train d'explorer (quand on est dans "packs")
+  const [moduleView, setModuleView] = React.useState<any>(null);
+
+  // pack qu'on est en train d'afficher en détail (quand on est dans "words")
+  const [packView, setPackView] = React.useState<any>(null);
+
+  // ✅ Sélections utilisateur
+  // modules cochés (Module 2, Module 3, etc.)
+  const [selectedModules, setSelectedModules] = React.useState<number[]>([]);
+  // packs cochés (pack 1, pack 2, etc.)
+  const [selectedPacks, setSelectedPacks] = React.useState<number[]>([]);
+
+  // --- helpers sélection ------------------------
+
+  function toggleModule(moduleNumber: number) {
+    setSelectedModules((prev) =>
+      prev.includes(moduleNumber)
+        ? prev.filter((m) => m !== moduleNumber)
+        : [...prev, moduleNumber]
+    );
+  }
+
+  function togglePack(packNumber: number) {
+    setSelectedPacks((prev) =>
+      prev.includes(packNumber)
+        ? prev.filter((p) => p !== packNumber)
+        : [...prev, packNumber]
+    );
+  }
+
+  // retourne tous les numéros de packs appartenant aux modules sélectionnés
+  function getPackNumbersFromSelectedModules() {
+    const packsFromModules: number[] = [];
+    MODULES.forEach((m) => {
+      if (selectedModules.includes(m.moduleNumber)) {
+        m.packs.forEach((p: any) => {
+          packsFromModules.push(p.packNumber);
+        });
+      }
+    });
+    return packsFromModules;
+  }
+
+  // packs finaux utilisés pour le quiz :
+  // - si au moins 1 pack est coché => on prend uniquement ceux-là
+  // - sinon => on prend tous les packs des modules cochés
+  function getChosenPackNumbersForQuiz() {
+    if (selectedPacks.length > 0) {
+      return [...new Set(selectedPacks)];
+    }
+    const fromModules = getPackNumbersFromSelectedModules();
+    return [...new Set(fromModules)];
+  }
+
+  // compter le nombre total de mots qui vont être utilisés dans le quiz
+  function getChosenWordCount() {
+    const chosenPackNumbers = getChosenPackNumbersForQuiz();
+    let count = 0;
+    ALL_PACKS.forEach((pack: any) => {
+      if (chosenPackNumbers.includes(pack.packNumber)) {
+        count += pack.items.length;
+      }
+    });
+    return count;
+  }
+
+  // lancer le quiz vocabulaire
+  // (pour l'instant on n'a pas encore fait l'écran quiz vocab
+  // donc je fais juste un alert() avec les packs choisis)
+  function handleStartQuiz() {
+    const chosenPackNumbers = getChosenPackNumbersForQuiz();
+    if (chosenPackNumbers.length === 0) {
+      alert("Sélectionne au moins un module ou un pack 👍");
+      return;
+    }
+
+    alert(
+      "Quiz lancé avec packs : " +
+        chosenPackNumbers.join(", ") +
+        "\nNombre total de mots : " +
+        getChosenWordCount()
+    );
+
+    // ICI plus tard :
+    // -> setRoute("vocabQuiz")
+    // -> tu passes chosenPackNumbers au composant quiz
+  }
+
+  // -------------------------------------------------
+  // 1) PAGE : LISTE DES MODULES
+  // -------------------------------------------------
   if (subPage === "modules") {
     return (
       <div className="p-4 max-w-3xl mx-auto">
         <div className="text-center mb-6">
           <div className="text-2xl font-bold mb-2">📘 Modules de vocabulaire</div>
           <div className="text-sm text-gray-600">
-            Choisis un module pour voir les packs et les mots.
+            Coche un ou plusieurs modules, ou ouvre un module pour choisir des packs.
           </div>
         </div>
 
         <div className="grid gap-4">
-          {MODULES.map((mod) => (
-            <button
-              key={mod.moduleNumber}
-              className="text-left p-4 rounded-xl border bg-white hover:bg-pink-50 shadow-sm"
-              onClick={() => {
-                setSelectedModule(mod);
-                setSubPage("packs");
-              }}
-            >
-              <div className="text-lg font-semibold">{mod.label}</div>
-              <div className="text-sm text-gray-600">
-                {mod.packs.length} packs •{" "}
-                {mod.packs.reduce((n, p) => n + p.items.length, 0)} mots
+          {MODULES.map((mod) => {
+            const isChecked = selectedModules.includes(mod.moduleNumber);
+
+            return (
+              <div
+                key={mod.moduleNumber}
+                className="rounded-xl border bg-white shadow-sm p-4 flex flex-col gap-3"
+              >
+                {/* ligne module + checkbox */}
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-pink-500"
+                    checked={isChecked}
+                    onChange={() => toggleModule(mod.moduleNumber)}
+                  />
+
+                  <div className="flex-1">
+                    <div className="text-lg font-semibold flex items-center gap-2">
+                      <span>{mod.label}</span>
+                      <span className="text-xs text-gray-500 font-normal">
+                        ({mod.packs.length} packs)
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {mod.packs.reduce(
+                        (n: number, p: any) => n + p.items.length,
+                        0
+                      )}{" "}
+                      mots
+                    </div>
+                  </div>
+                </label>
+
+                {/* bouton pour aller voir le détail des packs */}
+                <div className="flex justify-end">
+                  <button
+                    className="px-3 py-1.5 text-sm rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold"
+                    onClick={() => {
+                      setModuleView(mod);
+                      setSubPage("packs");
+                    }}
+                  >
+                    Voir les packs →
+                  </button>
+                </div>
               </div>
-            </button>
-          ))}
+            );
+          })}
         </div>
 
-        <div className="mt-6 flex justify-center">
+        {/* Barre d'action quiz */}
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <div className="text-sm text-gray-600">
+            {getChosenPackNumbersForQuiz().length > 0
+              ? `${getChosenPackNumbersForQuiz().length} pack(s) sélectionné(s) • ${getChosenWordCount()} mots`
+              : "Aucune sélection pour l'instant"}
+          </div>
+
+          <button
+            onClick={handleStartQuiz}
+            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold disabled:opacity-30"
+            disabled={getChosenPackNumbersForQuiz().length === 0}
+          >
+            Lancer le quiz vocabulaire
+          </button>
+
           <button
             onClick={onExit}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+            className="text-sm text-gray-500 hover:text-gray-700 underline"
           >
-            ← Retour menu
+            ← Retour menu principal
           </button>
         </div>
       </div>
     );
   }
 
-  // --- PAGE PACKS DANS UN MODULE ---
-  if (subPage === "packs" && selectedModule) {
+  // -------------------------------------------------
+  // 2) PAGE : PACKS DANS UN MODULE
+  // -------------------------------------------------
+  if (subPage === "packs" && moduleView) {
     return (
       <div className="p-4 max-w-3xl mx-auto">
         <div className="text-center mb-6">
-          <div className="text-2xl font-bold mb-2">{selectedModule.label}</div>
+          <div className="text-2xl font-bold mb-2">
+            {moduleView.label}
+          </div>
           <div className="text-sm text-gray-600">
-            Choisis un pack pour voir les mots.
+            Coche les packs que tu veux inclure dans le quiz.
+          </div>
+          <div className="text-xs text-gray-500 mt-1">
+            Astuce : si tu coches au moins un pack, ce seront SEULEMENT ces packs-là qui seront utilisés (les modules cochés seront ignorés).
           </div>
         </div>
 
-        <div className="grid gap-3">
-          {selectedModule.packs.map((pack: any) => (
-            <button
-              key={pack.packNumber}
-              className="text-left p-4 rounded-xl border bg-white hover:bg-pink-50 shadow-sm"
-              onClick={() => {
-                setSelectedPack(pack);
-                setSubPage("words");
-              }}
-            >
-              <div className="font-semibold">
-                Pack {pack.packNumber}
+        <div className="grid gap-4">
+          {moduleView.packs.map((pack: any) => {
+            const isChecked = selectedPacks.includes(pack.packNumber);
+            return (
+              <div
+                key={pack.packNumber}
+                className="rounded-xl border bg-white shadow-sm p-4 flex flex-col gap-3"
+              >
+                {/* ligne pack + checkbox */}
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-pink-500"
+                    checked={isChecked}
+                    onChange={() => togglePack(pack.packNumber)}
+                  />
+
+                  <div className="flex-1">
+                    <div className="text-base font-semibold flex items-center gap-2">
+                      <span>Pack {pack.packNumber}</span>
+                      <span className="text-xs text-gray-500 font-normal">
+                        ({pack.items.length} mots)
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-600 truncate">
+                      {pack.title.replace(/^Vocab\s*–\s*/, "")}
+                    </div>
+                  </div>
+                </label>
+
+                {/* bouton pour lire les mots du pack */}
+                <div className="flex justify-end">
+                  <button
+                    className="px-3 py-1.5 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 font-medium"
+                    onClick={() => {
+                      setPackView(pack);
+                      setSubPage("words");
+                    }}
+                  >
+                    Voir les mots →
+                  </button>
+                </div>
               </div>
-              <div className="text-sm text-gray-600">
-                {pack.items.length} mots
-              </div>
-            </button>
-          ))}
+            );
+          })}
         </div>
 
-        <div className="mt-6 flex justify-center gap-2">
-          <button
-            onClick={() => setSubPage("modules")}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
-          >
-            ← Retour modules
-          </button>
+        {/* Barre d'action quiz */}
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <div className="text-sm text-gray-600">
+            {getChosenPackNumbersForQuiz().length > 0
+              ? `${getChosenPackNumbersForQuiz().length} pack(s) sélectionné(s) • ${getChosenWordCount()} mots`
+              : "Aucune sélection pour l'instant"}
+          </div>
 
           <button
-            onClick={onExit}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+            onClick={handleStartQuiz}
+            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold disabled:opacity-30"
+            disabled={getChosenPackNumbersForQuiz().length === 0}
           >
-            Menu principal
+            Lancer le quiz vocabulaire
           </button>
+
+          <div className="flex flex-col items-center gap-2 text-sm">
+            <button
+              onClick={() => setSubPage("modules")}
+              className="text-gray-500 hover:text-gray-700 underline"
+            >
+              ← Retour modules
+            </button>
+            <button
+              onClick={onExit}
+              className="text-gray-500 hover:text-gray-700 underline"
+            >
+              Menu principal
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  // --- PAGE MOTS D’UN PACK ---
-  if (subPage === "words" && selectedPack) {
+  // -------------------------------------------------
+  // 3) PAGE : LISTE DES MOTS D’UN PACK
+  // -------------------------------------------------
+  if (subPage === "words" && packView) {
     return (
       <div className="p-4 max-w-3xl mx-auto">
         <div className="text-center mb-6">
           <div className="text-xl font-bold mb-1">
-            {selectedPack.title.replace(/^Vocab\s*–\s*/, "")}
+            {packView.title.replace(/^Vocab\s*–\s*/, "")}
           </div>
           <div className="text-sm text-gray-600">
-            {selectedPack.items.length} mots
+            {packView.items.length} mots
           </div>
           <div className="text-xs text-gray-400 mt-1">
-            (Affichage : seulement la traduction FR comme tu as demandé)
+            (On affiche seulement la traduction FR)
           </div>
         </div>
 
         <div className="rounded-xl border bg-white shadow-sm divide-y">
-          {selectedPack.items.map((it: any) => (
-            <div key={it.id} className="p-3 text-base font-medium">
+          {packView.items.map((it: any) => (
+            <div
+              key={it.id}
+              className="p-3 text-base font-medium text-gray-900"
+            >
               {it.french}
             </div>
           ))}
         </div>
 
-        <div className="mt-6 flex justify-center gap-2">
+        <div className="mt-6 flex flex-col items-center gap-2 text-sm">
           <button
             onClick={() => setSubPage("packs")}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 font-medium"
           >
             ← Retour packs
           </button>
 
           <button
             onClick={onExit}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
+            className="text-gray-500 hover:text-gray-700 underline"
           >
             Menu principal
           </button>
@@ -312,8 +508,10 @@ function VocabSection({ onExit }: { onExit: () => void }) {
     );
   }
 
+  // fallback
   return null;
 }
+
 
 
 
