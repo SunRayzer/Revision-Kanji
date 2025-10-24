@@ -2438,12 +2438,55 @@ function QuizLectureKanjiComplete({
   );
 }
 
+/** ================== Menu Quiz Kanji / Vocabulaire ================== */
+
+/** ================== Menu type de Quiz (Kanji | Vocabulaire) ================== */
+function QuizTypeMenu({ setQuizSection }: { setQuizSection: (s:'kanji'|'vocab')=>void }) {
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="text-lg font-semibold mb-2">Choisis le type de quiz</div>
+      <button onClick={()=>setQuizSection('kanji')} className="w-full p-3 rounded-xl text-white bg-pink-400">
+        Kanji
+      </button>
+      <button onClick={()=>setQuizSection('vocab')} className="w-full p-3 rounded-xl text-white bg-pink-400">
+        Vocabulaire
+      </button>
+    </div>
+  );
+}
+
+/** ================== Sous-menu Vocabulaire (placeholder) ================== */
+function VocabMenu({ onBackToTypes }: { onBackToTypes: ()=>void }) {
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBackToTypes} className="px-3 py-1 rounded bg-gray-100">← Types</button>
+        <span className="font-semibold">Vocabulaire</span>
+      </div>
+      <p className="text-sm text-gray-600">
+        Ici on affichera les quiz de vocabulaire issus de ta nouvelle base (fichiers que tu m’enverras).
+      </p>
+      <button disabled className="w-full p-3 rounded-xl text-white bg-gray-300 cursor-not-allowed">
+        (à venir) Quiz Vocab Liste 1
+      </button>
+    </div>
+  );
+}
+
+
 
 
 /** ================== Menu Quiz ================== */
-function QuizMenu({ setQuizMode }) {
+function QuizMenu({ setQuizMode, onBackToTypes }:{
+  setQuizMode: (m: any)=>void;
+  onBackToTypes: ()=>void;
+}) {
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBackToTypes} className="px-3 py-1 rounded bg-gray-100">← Types</button>
+        <span className="font-semibold">Quiz Kanji</span>
+      </div>
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
         <p className="text-sm text-gray-600">Ici, tu pourras lancer des parcours de révision en “version essentielle”. 
         (Il faudra alors rentrer les Lectures et Kanjis présent dans la partie "à savoir" des fiches Kanji) </p>
@@ -2477,12 +2520,15 @@ function QuizCompletMenu({ setQuizAllMode }) {
 }
 
 
+
+
  
 /** ================== App ================== */
 export default function App() {
   const [route, setRoute] = useState("select");
   const [quizMode, setQuizMode] = useState(null);
   const [quizAllMode, setQuizAllMode] = useState<string|null>(null);
+  const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
   const [selectedIds, setSelectedIds] = useState(() => {
     try {
       const raw = localStorage.getItem("jlpt_selected_ids");
@@ -2507,7 +2553,7 @@ export default function App() {
           <span className="text-2xl font-extrabold">Révisions Kanji (JLPT N5)</span>
           <div className="ml-auto flex gap-2">
             <button onClick={()=>{ setRoute("select"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Kanji</button>
-            <button onClick={()=>{ setRoute("quiz"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
+            <button onClick={()=>{ setRoute("quiz"); setQuizSection(null); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
             <button onClick={()=>{ setRoute("quizAll"); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
 
           </div>
@@ -2519,8 +2565,19 @@ export default function App() {
           <AllSelectable selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
         )}
 
-        {route === "quiz" && !quizMode && (
-          <QuizMenu setQuizMode={setQuizMode} />
+        {/* 3.2 — Écran 2a : sous-menu KANJI (comme avant) */}
+        {route === "quiz" && quizSection === "kanji" && !quizMode && (
+          <QuizMenu setQuizMode={setQuizMode} onBackToTypes={() => setQuizSection(null)} />
+        )}
+
+        {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder pour ta future base) */}
+        {route === "quiz" && quizSection === "vocab" && (
+          <VocabMenu onBackToTypes={() => setQuizSection(null)} />
+        )}
+
+        {/* 3.1 — Écran 1 : choix du type de quiz */}
+        {route === "quiz" && quizSection === null && (
+          <QuizTypeMenu setQuizSection={setQuizSection} />
         )}
 
         {route === "quiz" && quizMode === "tradLecture" && (
@@ -2542,6 +2599,8 @@ export default function App() {
         {route === "quiz" && quizMode === "kunToDraw" && (
           <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture → Saisie du Kanji" />
         )}
+
+    
 
 
 
