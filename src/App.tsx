@@ -2476,7 +2476,7 @@ function VocabMenu({ onBackToTypes }: { onBackToTypes: ()=>void }) {
 
 
 
-/** ================== Menu Quiz ================== */
+/** ================== Menu Quiz Kanji ================== */
 function QuizMenu({ setQuizMode, onBackToTypes }:{
   setQuizMode: (m: any)=>void;
   onBackToTypes: ()=>void;
@@ -2502,9 +2502,64 @@ function QuizMenu({ setQuizMode, onBackToTypes }:{
 
 /** ================== Menu Quiz Complet ================== */
 
-function QuizCompletMenu({ setQuizAllMode }) {
-  return (      
+/** ====== Menu type pour QUIZ COMPLET (Kanji | Vocabulaire) ====== */
+function QuizAllTypeMenu({
+  setQuizAllSection,
+}: {
+  setQuizAllSection: (s: 'kanji' | 'vocab') => void;
+}) {
+  return (
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="text-lg font-semibold mb-2">Quiz Complet</div>
+      <p className="text-sm text-gray-600 mb-1">Choisis le type</p>
+      <button
+        onClick={() => setQuizAllSection('kanji')}
+        className="w-full p-3 rounded-xl text-white bg-pink-400"
+      >
+        Kanji
+      </button>
+      <button
+        onClick={() => setQuizAllSection('vocab')}
+        className="w-full p-3 rounded-xl text-white bg-pink-400"
+      >
+        Vocabulaire
+      </button>
+    </div>
+  );
+}
+
+/** ====== Sous-menu VOCAB pour QUIZ COMPLET (placeholder) ====== */
+function VocabAllMenu({ onBackToTypes }: { onBackToTypes: () => void }) {
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBackToTypes} className="px-3 py-1 rounded bg-gray-100">← Types</button>
+        <span className="font-semibold">Vocabulaire — Quiz Complet</span>
+      </div>
+      <p className="text-sm text-gray-600">
+        Ici on listera les “quiz complet” de vocabulaire depuis ta nouvelle base (fichiers que tu m’enverras).
+      </p>
+      <button disabled className="w-full p-3 rounded-xl text-white bg-gray-300 cursor-not-allowed">
+        (à venir) Vocab — Quiz Complet 1
+      </button>
+    </div>
+  );
+}
+
+
+function QuizCompletMenu({
+  setQuizAllMode,
+  onBackToTypes,
+}: {
+  setQuizAllMode: (m: any) => void;
+  onBackToTypes: () => void;
+}) {
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBackToTypes} className="px-3 py-1 rounded bg-gray-100">← Types</button>
+        <span className="font-semibold">Quiz Complet — Kanji</span>
+      </div>
       <div className="text-lg font-semibold mb-2">Choisis un type de quiz</div>
             <p className="text-sm text-gray-600">
         Ici, tu pourras lancer des parcours de révision en “version complète”. 
@@ -2529,6 +2584,7 @@ export default function App() {
   const [quizMode, setQuizMode] = useState(null);
   const [quizAllMode, setQuizAllMode] = useState<string|null>(null);
   const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
+  const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
   const [selectedIds, setSelectedIds] = useState(() => {
     try {
       const raw = localStorage.getItem("jlpt_selected_ids");
@@ -2554,7 +2610,7 @@ export default function App() {
           <div className="ml-auto flex gap-2">
             <button onClick={()=>{ setRoute("select"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Kanji</button>
             <button onClick={()=>{ setRoute("quiz"); setQuizSection(null); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
-            <button onClick={()=>{ setRoute("quizAll"); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
+            <button onClick={()=>{ setRoute("quizAll"); setQuizAllSection(null); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
 
           </div>
         </div>
@@ -2605,9 +2661,20 @@ export default function App() {
 
 
 
-        {route === "quizAll" && !quizAllMode && (
-         <QuizCompletMenu setQuizAllMode={setQuizAllMode} />
-        )}        
+        {/* 3.1 — Écran 1 : choix du type (Kanji | Vocab) */}
+        {route === "quizAll" && quizAllSection === null && (
+          <QuizAllTypeMenu setQuizAllSection={setQuizAllSection} />
+        )}    
+
+        {/* 3.2 — Écran 2a : sous-menu KANJI (tes anciens modes “complets”) */}
+        {route === "quizAll" && quizAllSection === "kanji" && !quizAllMode && (
+          <QuizCompletMenu setQuizAllMode={setQuizAllMode} onBackToTypes={() => setQuizAllSection(null)} />
+        )}
+
+        {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder) */}
+        {route === "quizAll" && quizAllSection === "vocab" && (
+          <VocabAllMenu onBackToTypes={() => setQuizAllSection(null)} />
+        )}
 
         {route === "quizAll" && quizAllMode === "tradLectureComplete" && (
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
@@ -2620,6 +2687,11 @@ export default function App() {
         {route === "quizAll" && quizAllMode === "LectureKanjiComplete" && (
          <QuizLectureKanjiComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Kanji → Lecture" />
         )}
+
+
+
+
+
 
 
 
