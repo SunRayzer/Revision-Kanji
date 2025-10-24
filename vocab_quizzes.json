@@ -1,0 +1,3992 @@
+[
+  {
+    "id": "bd9a628f-317e-4655-9727-0c914e8f80b4",
+    "title": "Vocab – Pack 01",
+    "items": [
+      {
+        "id": "40a2b78d-0b96-4cba-902b-1e48c9457e6c",
+        "french": "Femme",
+        "reading": "おんな",
+        "kanji": "女"
+      },
+      {
+        "id": "3af6367f-bbcf-4e65-bc0d-e3851cdd0456",
+        "french": "Fille",
+        "reading": "おんなのこ",
+        "kanji": "女の子"
+      },
+      {
+        "id": "f66354c8-93bb-455c-855e-b1a8f3897311",
+        "french": "Homme",
+        "reading": "おとこ",
+        "kanji": "男"
+      },
+      {
+        "id": "a185cd6d-05d3-4336-af1b-25b8cf60f746",
+        "french": "Garçon",
+        "reading": "おとこのこ",
+        "kanji": "男の子"
+      },
+      {
+        "id": "3da50fd7-dccf-4495-8b53-3c5ae240b0b6",
+        "french": "Enfant",
+        "reading": "こ",
+        "kanji": "子"
+      },
+      {
+        "id": "35c94538-4f07-4f5b-93f9-c206e71a9ceb",
+        "french": "Enfant",
+        "reading": "こども",
+        "kanji": "子供"
+      },
+      {
+        "id": "62a8fae3-9425-426f-89fd-4a5e7f74e42f",
+        "french": "Cheval",
+        "reading": "うま",
+        "kanji": "馬"
+      },
+      {
+        "id": "a7dc9203-7b35-4bf9-a184-7e7a2d829453",
+        "french": "Manger",
+        "reading": "たべる",
+        "kanji": "食べる"
+      },
+      {
+        "id": "1c647e90-16d1-4181-9f0a-3edde2c87b6f",
+        "french": "Chat",
+        "reading": "ねこ",
+        "kanji": "猫"
+      },
+      {
+        "id": "b9222224-007c-41a0-99e4-a631ad7040ae",
+        "french": "Chaussure",
+        "reading": "くつ",
+        "kanji": "靴"
+      },
+      {
+        "id": "3d7af5e0-25f4-425f-a467-f2fcea9588ef",
+        "french": "Casquette",
+        "reading": "キャップ",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "8a04cc78-e1c4-41b0-b4bb-5a28dc982a5a",
+    "title": "Vocab – Pack 02",
+    "items": [
+      {
+        "id": "5fe61946-2d6c-4d08-a6b6-d5e714818272",
+        "french": "Chien",
+        "reading": "いぬ",
+        "kanji": "犬"
+      },
+      {
+        "id": "1cde9482-2026-485e-934f-1d56f1cbc9b4",
+        "french": "Je",
+        "reading": "わたし",
+        "kanji": "私"
+      },
+      {
+        "id": "06d91344-954e-41c9-ac14-4fe600b10571",
+        "french": "Gare",
+        "reading": "えき",
+        "kanji": "駅"
+      },
+      {
+        "id": "32909a66-7def-4afa-a76e-6c268c8c3acb",
+        "french": "Aller",
+        "reading": "いく",
+        "kanji": "行く"
+      },
+      {
+        "id": "31c3bf4e-0ebe-4d10-9133-80c3498b0e56",
+        "french": "Heure (lecture de l'heure)",
+        "reading": "じ",
+        "kanji": "時"
+      },
+      {
+        "id": "af612de0-2375-4424-bebd-7c2a384fe180",
+        "french": "Bonjour (matin, poli +)",
+        "reading": "おはようございます",
+        "kanji": null
+      },
+      {
+        "id": "0ae1208b-e724-4e17-ab05-9c94cab71a7b",
+        "french": "Bonjour (matin, moins poli)",
+        "reading": "おはよう",
+        "kanji": null
+      },
+      {
+        "id": "2c4edb5e-79a6-40fb-8ca1-bdfe7c97db14",
+        "french": "Bonjour (après-midi)",
+        "reading": "こんにちは",
+        "kanji": "今日は"
+      },
+      {
+        "id": "f3b4ebcc-74c6-4bca-9f84-de97728a6081",
+        "french": "Bonsoir",
+        "reading": "こんばんは",
+        "kanji": "今晩"
+      },
+      {
+        "id": "0b57a9f1-8b18-4789-88f4-fdc58733dd16",
+        "french": "Enchanté",
+        "reading": "はじめまして",
+        "kanji": "初めまして"
+      },
+      {
+        "id": "1ef653e0-5dc6-4210-98e3-55c53351d37c",
+        "french": "Ravi de faire votre connaissance, je compte sur vous",
+        "reading": "どうぞよろしく",
+        "kanji": null
+      },
+      {
+        "id": "b3f91385-ca11-43d1-83e0-fcbba4a11ba2",
+        "french": "S'il vous plaît / Je compte sur vous",
+        "reading": "おねがいします",
+        "kanji": "お願いします"
+      }
+    ]
+  },
+  {
+    "id": "d0e53beb-d9d5-4111-9b17-b40e4fbe624f",
+    "title": "Vocab – Pack 03",
+    "items": [
+      {
+        "id": "d9a751a8-4393-4e10-8387-c4204a43fcbe",
+        "french": "Œuf",
+        "reading": "たまご",
+        "kanji": "卵"
+      },
+      {
+        "id": "9b367b6f-7679-4896-b353-1bfe28cbedd8",
+        "french": "Médecin",
+        "reading": "いしゃ",
+        "kanji": "医者"
+      },
+      {
+        "id": "7f89d85c-c785-4067-bc72-c2dbefb0b325",
+        "french": "Ami",
+        "reading": "ともだち",
+        "kanji": "友達"
+      },
+      {
+        "id": "541b1923-25b1-4df9-9e8f-ce73281a56f9",
+        "french": "Chapeau",
+        "reading": "ぼうし",
+        "kanji": "帽子"
+      },
+      {
+        "id": "060588d2-5882-4b98-8fdd-cb7ecb80d78e",
+        "french": "Pirate",
+        "reading": "かいぞく",
+        "kanji": "海賊"
+      },
+      {
+        "id": "e06b01c3-eea3-4fdb-8f10-46d369856e26",
+        "french": "Merci pour ce repas (avant manger)",
+        "reading": "いただきます",
+        "kanji": null
+      },
+      {
+        "id": "51eb108b-e6df-477d-9afd-0f3c235f9407",
+        "french": "Merci pour ce repas (après manger)",
+        "reading": "ごちそうさまでした",
+        "kanji": null
+      },
+      {
+        "id": "1eb16f06-e064-424d-b03e-ff581bd7d2b9",
+        "french": "Merci (neutre)",
+        "reading": "どうも",
+        "kanji": null
+      },
+      {
+        "id": "c4be2b99-ed7a-43d5-a707-96e795aba8b1",
+        "french": "Merci (neutre)",
+        "reading": "ありがとう",
+        "kanji": null
+      },
+      {
+        "id": "6db34a73-567a-436e-ab1a-9db052d356d4",
+        "french": "Merci beaucoup (poli)",
+        "reading": "ありがとうございます",
+        "kanji": null
+      },
+      {
+        "id": "0b32f675-50a4-4bcf-8d6f-cab82523e1f5",
+        "french": "Merci beaucoup (poli +)",
+        "reading": "どうもありがとうございます",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "d583da28-9a37-49dc-879e-dfc303cdd59d",
+    "title": "Vocab – Pack 04 (Couleurs & Adjectifs)",
+    "items": [
+      {
+        "id": "288264ee-a81d-4bd2-b01e-8fd4ff80a3b9",
+        "french": "Élève",
+        "reading": "せいと",
+        "kanji": "生徒"
+      },
+      {
+        "id": "1d834574-6b80-4368-8a62-7562b3705f5a",
+        "french": "Entraînement",
+        "reading": "トレーニング",
+        "kanji": null
+      },
+      {
+        "id": "e5892c9b-35d1-49f5-9634-b948dc50acdc",
+        "french": "Lait",
+        "reading": "ミルク",
+        "kanji": null
+      },
+      {
+        "id": "1519ad75-3296-4c55-bd38-e93c34e05a2d",
+        "french": "Professeur",
+        "reading": "せんせい",
+        "kanji": "先生"
+      },
+      {
+        "id": "65f84d32-01fc-45d4-92d4-06cb3a6ca108",
+        "french": "Bouteille",
+        "reading": "びん",
+        "kanji": "瓶"
+      },
+      {
+        "id": "2a8758a3-d8ef-4224-94e5-7098c593b2a5",
+        "french": "Rapide (vitesse)",
+        "reading": "はやい",
+        "kanji": "速い"
+      },
+      {
+        "id": "9a7b9c20-2e89-43e5-9f72-5ea0945452e1",
+        "french": "Rapide (temps, tôt)",
+        "reading": "はやい",
+        "kanji": "早い"
+      },
+      {
+        "id": "8dfd9f48-bcec-440e-b741-596b613318ed",
+        "french": "Bleu, vert",
+        "reading": "あおい",
+        "kanji": "青い"
+      },
+      {
+        "id": "908f7a45-0d55-40fa-a95a-28c8b029e447",
+        "french": "Rouge",
+        "reading": "あかい",
+        "kanji": "赤い"
+      },
+      {
+        "id": "abb7e571-59d3-4b58-8102-c9fc95bf8f47",
+        "french": "Jaune",
+        "reading": "きいろい",
+        "kanji": "黄色い"
+      },
+      {
+        "id": "cb819303-05b3-4904-a121-4307d9cff6b2",
+        "french": "Noir",
+        "reading": "くろい",
+        "kanji": "黒い"
+      },
+      {
+        "id": "1da0eabf-9491-4df2-b8d5-250254605c31",
+        "french": "Blanc",
+        "reading": "しろい",
+        "kanji": "白い"
+      },
+      {
+        "id": "6d42c9c3-f275-4193-87cb-1f4f01eed36a",
+        "french": "Marron",
+        "reading": "ちゃいろ",
+        "kanji": "茶色"
+      }
+    ]
+  },
+  {
+    "id": "1db8fba4-3fb1-485d-9733-32dfe67f3b7f",
+    "title": "Vocab – Pack 05 (Pays & Personnes)",
+    "items": [
+      {
+        "id": "2f361233-9507-42ec-b757-524375434b62",
+        "french": "Pays, région, province",
+        "reading": "くに",
+        "kanji": "国"
+      },
+      {
+        "id": "a783ea4e-9fc2-4a84-92f2-fdb4e316b9b0",
+        "french": "Île",
+        "reading": "しま",
+        "kanji": "島"
+      },
+      {
+        "id": "393271aa-0a23-44af-a64f-3910564fadc1",
+        "french": "Chine",
+        "reading": "ちゅうごく",
+        "kanji": "中国"
+      },
+      {
+        "id": "7762adbe-7283-46ba-8357-c709000de346",
+        "french": "Corée du Sud",
+        "reading": "かんこく",
+        "kanji": "韓国"
+      },
+      {
+        "id": "74847677-b1a3-409f-8ffc-1d29407392cc",
+        "french": "Asie",
+        "reading": "アジア",
+        "kanji": null
+      },
+      {
+        "id": "633ad779-14d0-4963-99fc-15e4053c93d7",
+        "french": "Une personne, un être humain",
+        "reading": "ひと",
+        "kanji": "人"
+      },
+      {
+        "id": "0cdaea0f-5e8e-49cd-a675-d6f2cc88d68f",
+        "french": "Une personne (poli)",
+        "reading": "かた",
+        "kanji": "方"
+      },
+      {
+        "id": "3e0fa933-9931-42c3-8e71-ff920df901d8",
+        "french": "Nom",
+        "reading": "なまえ",
+        "kanji": "名前"
+      }
+    ]
+  },
+  {
+    "id": "cbb73e5a-e626-499d-a17c-d79a278442bc",
+    "title": "Vocab – Pack 06 (Nombres)",
+    "items": [
+      {
+        "id": "d80b0e18-91b7-4a1b-868a-1414ba969084",
+        "french": "Un",
+        "reading": "いち",
+        "kanji": "一"
+      },
+      {
+        "id": "93b88eda-314b-4202-ab4f-ba025c0057ea",
+        "french": "Deux",
+        "reading": "に",
+        "kanji": "二"
+      },
+      {
+        "id": "ffd475f6-0d46-427b-a9e4-3417e1a717e2",
+        "french": "Trois",
+        "reading": "さん",
+        "kanji": "三"
+      },
+      {
+        "id": "58ed758e-3d9d-4b9a-b5d1-d739bbe04f14",
+        "french": "Quatre",
+        "reading": "よん・し",
+        "kanji": "四"
+      },
+      {
+        "id": "e58b77ef-77e4-493c-9556-5608156e5c43",
+        "french": "Cinq",
+        "reading": "ご",
+        "kanji": "五"
+      },
+      {
+        "id": "131c827d-77d6-4bac-a598-75289e8b4ba8",
+        "french": "Six",
+        "reading": "ろく",
+        "kanji": "六"
+      },
+      {
+        "id": "9f324bca-a23a-4970-a755-d0b795657adb",
+        "french": "Sept",
+        "reading": "なな・しち",
+        "kanji": "七"
+      },
+      {
+        "id": "fbd75341-0299-4634-9994-e2f328173aba",
+        "french": "Huit",
+        "reading": "はち",
+        "kanji": "八"
+      },
+      {
+        "id": "56188c60-66af-4348-aef2-5dde32b4aa9e",
+        "french": "Neuf",
+        "reading": "きゅう",
+        "kanji": "九"
+      },
+      {
+        "id": "eb2af1b2-f74a-4fa5-a9f5-2e40617ddf65",
+        "french": "Dix",
+        "reading": "じゅう",
+        "kanji": "十"
+      },
+      {
+        "id": "10c4dddf-a858-46bc-9756-729eb35f86a0",
+        "french": "Cent",
+        "reading": "ひゃく",
+        "kanji": "百"
+      },
+      {
+        "id": "1b2da93b-560f-41fc-b92a-23bc104d22b7",
+        "french": "Mille",
+        "reading": "せん",
+        "kanji": "千"
+      },
+      {
+        "id": "71dddc48-717a-4f8d-b2d2-46c1824b1929",
+        "french": "Dix-mille",
+        "reading": "いちまん",
+        "kanji": "一万"
+      }
+    ]
+  },
+  {
+    "id": "e4008353-b833-44a1-9578-b744a61e091b",
+    "title": "Vocab – Pack 07 (Temps & Calendrier)",
+    "items": [
+      {
+        "id": "fba65251-d30e-4310-9129-f2cf671b9cff",
+        "french": "Lundi",
+        "reading": "げつようび",
+        "kanji": "月曜日"
+      },
+      {
+        "id": "e015f955-a792-4999-add6-25d56f55416d",
+        "french": "Mardi",
+        "reading": "かようび",
+        "kanji": "火曜日"
+      },
+      {
+        "id": "80e2e109-9d49-4735-a251-5abd54c964b8",
+        "french": "Mercredi",
+        "reading": "すいようび",
+        "kanji": "水曜日"
+      },
+      {
+        "id": "b0b6aa12-3395-42c0-b29c-38f194070672",
+        "french": "Jeudi",
+        "reading": "もくようび",
+        "kanji": "木曜日"
+      },
+      {
+        "id": "dea92d07-756d-4e35-bc35-b75d74beaa59",
+        "french": "Vendredi",
+        "reading": "きんようび",
+        "kanji": "金曜日"
+      },
+      {
+        "id": "9f372a7b-b26e-4e26-a6f7-d38909cdeebb",
+        "french": "Samedi",
+        "reading": "どようび",
+        "kanji": "土曜日"
+      },
+      {
+        "id": "5d471665-83ae-44d5-b41e-79e3b973cb37",
+        "french": "Dimanche",
+        "reading": "にちようび",
+        "kanji": "日曜日"
+      },
+      {
+        "id": "2e50fdec-0869-4a81-b5ef-a45452224b17",
+        "french": "Jour",
+        "reading": "にち",
+        "kanji": "日"
+      },
+      {
+        "id": "28e1b5cf-3b0c-48ab-ae71-38c1f6b8cf99",
+        "french": "Mois",
+        "reading": "げつ・がつ",
+        "kanji": "月"
+      },
+      {
+        "id": "c9c4afa5-1165-4c89-880b-f40040512121",
+        "french": "Année",
+        "reading": "ねん",
+        "kanji": "年"
+      },
+      {
+        "id": "d9698c32-00b6-4d6e-8df4-7aa42bfa7be1",
+        "french": "Heure",
+        "reading": "じ",
+        "kanji": "時"
+      },
+      {
+        "id": "2ac2cb01-2a59-48d6-b67d-72da1afc92b8",
+        "french": "Minute",
+        "reading": "ふん",
+        "kanji": "分"
+      },
+      {
+        "id": "ac4673f7-526a-4e6a-b3b4-9a716c00b944",
+        "french": "Et-demie",
+        "reading": "はん",
+        "kanji": "半"
+      },
+      {
+        "id": "fb0226f1-291e-49c9-8bdf-3adbc739d776",
+        "french": "Avant midi",
+        "reading": "ごぜん",
+        "kanji": "午前"
+      },
+      {
+        "id": "ec7e0694-0aba-4493-b5ff-ed320a4142d3",
+        "french": "Après midi",
+        "reading": "ごご",
+        "kanji": "午後"
+      }
+    ]
+  },
+  {
+    "id": "6270d47f-0d24-48af-af80-10d69b522275",
+    "title": "Vocab – Pack 08 (Mots interrogatifs)",
+    "items": [
+      {
+        "id": "064b6802-e100-4113-8075-dd619fe2a26b",
+        "french": "Anniversaire",
+        "reading": "たんじょうび",
+        "kanji": "誕生日"
+      },
+      {
+        "id": "1cff269d-9af7-43b1-8261-6a2ae801539b",
+        "french": "Âge",
+        "reading": "さい",
+        "kanji": "歳"
+      },
+      {
+        "id": "563a221a-d601-4fe1-9a0d-bb6997d6bb4a",
+        "french": "Idiot, stupide, con",
+        "reading": "ばか",
+        "kanji": "馬鹿"
+      },
+      {
+        "id": "3753f344-e1a0-477d-b47a-8d755aae720e",
+        "french": "Oui",
+        "reading": "はい",
+        "kanji": null
+      },
+      {
+        "id": "0b3ff7c1-8074-4359-b061-a78ddadf2bbf",
+        "french": "Non",
+        "reading": "いいえ・いえ",
+        "kanji": null
+      },
+      {
+        "id": "92ccccb6-4534-4166-b193-8bd208b8fbc7",
+        "french": "Où",
+        "reading": "どこ",
+        "kanji": null
+      },
+      {
+        "id": "8f371ba6-ede9-4ca7-9f8a-0ce87d52fdf2",
+        "french": "Qui",
+        "reading": "だれ",
+        "kanji": "誰"
+      },
+      {
+        "id": "8cd9e91d-d5cf-4389-86f2-28920a24a889",
+        "french": "Qui (+ poli)",
+        "reading": "どなた",
+        "kanji": null
+      },
+      {
+        "id": "8ba8d7fc-027a-4b53-bcc0-8d91a6d1b381",
+        "french": "Quand",
+        "reading": "いつ",
+        "kanji": null
+      },
+      {
+        "id": "c7f54d49-8ef5-4047-8ec2-d8be811f782f",
+        "french": "Quoi, quel",
+        "reading": "なん・なに",
+        "kanji": "何"
+      },
+      {
+        "id": "bf235f8a-876c-477e-8068-6dae5d78c7bf",
+        "french": "Combien",
+        "reading": "いくつ",
+        "kanji": null
+      },
+      {
+        "id": "cbd7650a-5044-4908-bef8-7ddbfd144eee",
+        "french": "Combien (prix)",
+        "reading": "いくら",
+        "kanji": null
+      },
+      {
+        "id": "8ffbb4d0-d361-417a-a616-03a5efa38860",
+        "french": "Comment",
+        "reading": "どう",
+        "kanji": null
+      },
+      {
+        "id": "8c90ba0b-73dd-4783-aad2-228411ecdcca",
+        "french": "Pourquoi",
+        "reading": "どうして・なぜ・なんで",
+        "kanji": null
+      },
+      {
+        "id": "0723e3e7-c8a9-4db5-8f2c-6a39003a48cf",
+        "french": "Yen",
+        "reading": "えん",
+        "kanji": "円"
+      },
+      {
+        "id": "001df8bc-b09f-46e8-b3ba-d0fc2b7bd879",
+        "french": "Maintenant",
+        "reading": "いま",
+        "kanji": "今"
+      }
+    ]
+  },
+  {
+    "id": "508a4e76-57c2-42c6-883e-0dafbae67089",
+    "title": "Vocab – Pack 09 (Objets & Pays/Langues)",
+    "items": [
+      {
+        "id": "53c8f850-c596-46e3-a63b-3df7131edb83",
+        "french": "Couleur",
+        "reading": "いろ",
+        "kanji": "色"
+      },
+      {
+        "id": "5b13f0d1-d779-4927-aa2f-2f5eb888e802",
+        "french": "Peur",
+        "reading": "こわい",
+        "kanji": "怖い"
+      },
+      {
+        "id": "3a492768-fe8d-4bf0-989d-f9a3324aaff6",
+        "french": "Livre",
+        "reading": "ほん",
+        "kanji": "本"
+      },
+      {
+        "id": "897725cc-9cd5-42b9-a3ad-42ca79bf3443",
+        "french": "Fleur",
+        "reading": "はな",
+        "kanji": "花"
+      },
+      {
+        "id": "c53fbb20-294c-4a06-85f8-2b68c4cdcd5a",
+        "french": "Voiture",
+        "reading": "くるま",
+        "kanji": "車"
+      },
+      {
+        "id": "e81d8d22-be67-4157-8b02-6e32750f17e7",
+        "french": "Mignon, adorable",
+        "reading": "かわいい",
+        "kanji": "可愛い"
+      },
+      {
+        "id": "3838c279-0348-4d13-9271-6ec5c82b21e7",
+        "french": "Bon (goût)",
+        "reading": "おいしい",
+        "kanji": "美味しい"
+      },
+      {
+        "id": "c141dd8c-1a2f-477f-962c-dbf8249f47e2",
+        "french": "Gâteau",
+        "reading": "ケーキ",
+        "kanji": null
+      },
+      {
+        "id": "901ae8ea-334f-4a02-8038-9313e5103ff5",
+        "french": "Japon",
+        "reading": "にほん",
+        "kanji": "日本"
+      },
+      {
+        "id": "35e93905-9b02-4ab8-a44f-c226a498b0f1",
+        "french": "Japonais (personne)",
+        "reading": "にほんじん",
+        "kanji": "日本人"
+      },
+      {
+        "id": "d6c80fec-fa2a-46f3-a971-f74505f4a55d",
+        "french": "Japonais (langue)",
+        "reading": "にほんご",
+        "kanji": "日本語"
+      },
+      {
+        "id": "5ad12dc5-4603-414e-9554-46ebde35289a",
+        "french": "France",
+        "reading": "フランス",
+        "kanji": null
+      },
+      {
+        "id": "d63f06c1-897c-424c-a6a3-b4f6192c9c7d",
+        "french": "Français (personne)",
+        "reading": "フランスじん",
+        "kanji": "フランス人"
+      },
+      {
+        "id": "805cc56a-44f2-4ffe-9b74-0283122b64eb",
+        "french": "Français (langue)",
+        "reading": "フランスご",
+        "kanji": "フランス語"
+      },
+      {
+        "id": "826f0646-2ae0-4389-92a3-5bcce685b43e",
+        "french": "Dessin, peinture, image, tableau",
+        "reading": "え",
+        "kanji": "絵"
+      },
+      {
+        "id": "c99d24c1-3b35-4376-aff9-32ec83b554d9",
+        "french": "Soleil",
+        "reading": "たいよう",
+        "kanji": "太陽"
+      }
+    ]
+  },
+  {
+    "id": "4e9acf1c-b297-4340-ac1f-138572c4a422",
+    "title": "Vocab – Pack 10 (Formules & Nationalités)",
+    "items": [
+      {
+        "id": "a7b97f67-9827-4c1e-b48a-d332a196b1bf",
+        "french": "En bonne santé",
+        "reading": "げんき",
+        "kanji": "元気"
+      },
+      {
+        "id": "84189b6b-d4bf-4d3a-ba0c-4bff0f392b45",
+        "french": "Au revoir, adieu",
+        "reading": "さようなら",
+        "kanji": null
+      },
+      {
+        "id": "5e473623-7794-4f26-9042-cadd51584618",
+        "french": "Bonne nuit",
+        "reading": "おやすみ（なさい）",
+        "kanji": "お休み"
+      },
+      {
+        "id": "368be098-200b-483c-ada5-24cfb840f8da",
+        "french": "Pardon / Excusez-moi (formule)",
+        "reading": "しつれいですが",
+        "kanji": "失礼ですが"
+      },
+      {
+        "id": "acf2842f-37ae-433e-b23a-edc7f8d60953",
+        "french": "Désolé / Pardon",
+        "reading": "ごめん（なさい）",
+        "kanji": null
+      },
+      {
+        "id": "ad54c668-6feb-421f-b248-16e8500a90a3",
+        "french": "Excusez-moi",
+        "reading": "すみません",
+        "kanji": null
+      },
+      {
+        "id": "e90e7ce1-e471-4076-83f2-73500472c10e",
+        "french": "Bienvenue (magasin)",
+        "reading": "いらっしゃいませ",
+        "kanji": null
+      },
+      {
+        "id": "a2c1df6b-e880-4606-b4b7-8c6a690d8b52",
+        "french": "Bienvenue",
+        "reading": "ようこそ",
+        "kanji": null
+      },
+      {
+        "id": "48565bda-d618-4989-bd2f-72b00764c684",
+        "french": "S'il-vous-plaît",
+        "reading": "おねがいします",
+        "kanji": "お願いします"
+      },
+      {
+        "id": "c4a705c8-8c04-4f76-89bc-96d7c712b854",
+        "french": "Je vous en prie",
+        "reading": "どうぞ",
+        "kanji": null
+      },
+      {
+        "id": "1420842e-aac4-42f4-93b6-72fac8805f92",
+        "french": "De rien",
+        "reading": "どういたしまして",
+        "kanji": null
+      },
+      {
+        "id": "434be567-db47-46e4-bfa7-66778e0ec476",
+        "french": "Anglais (personne)",
+        "reading": "イギリスじん",
+        "kanji": "イギリス人"
+      },
+      {
+        "id": "fc80d04f-74c4-4991-800c-30195d18a082",
+        "french": "Anglais (langue)",
+        "reading": "えいご",
+        "kanji": "英語"
+      },
+      {
+        "id": "7fe08c88-631d-4b51-bce1-8585867ff1d6",
+        "french": "Américain (personne)",
+        "reading": "アメリカじん",
+        "kanji": "アメリカ人"
+      }
+    ]
+  },
+  {
+    "id": "220c04da-0b54-46db-989d-1771500f2ce5",
+    "title": "Vocab – Pack 11 (Temps & Quotidien)",
+    "items": [
+      {
+        "id": "8490e338-f93b-4222-9eef-664efa13e15f",
+        "french": "Collègue",
+        "reading": "どうりょう",
+        "kanji": "同僚"
+      },
+      {
+        "id": "8b2afb2a-3717-433b-bd6c-a04755ee437e",
+        "french": "Siècle",
+        "reading": "せいき",
+        "kanji": "世紀"
+      },
+      {
+        "id": "fbeb3d03-ae02-4921-9466-6185ba7c3275",
+        "french": "Hier",
+        "reading": "きのう",
+        "kanji": "昨日"
+      },
+      {
+        "id": "ec3afe35-0bf5-45a1-81d0-1364d102dc92",
+        "french": "Aujourd’hui",
+        "reading": "きょう・こんにち",
+        "kanji": "今日"
+      },
+      {
+        "id": "4cff6c29-8112-4579-835a-e52a80e70c01",
+        "french": "Demain",
+        "reading": "あした",
+        "kanji": "明日"
+      },
+      {
+        "id": "e9e3d182-ad56-406f-ae8f-fcee4d661e54",
+        "french": "Matin",
+        "reading": "あさ",
+        "kanji": "朝"
+      },
+      {
+        "id": "da9095b6-dae3-48c8-90c4-55c9058ac9e8",
+        "french": "Soir",
+        "reading": "ばん",
+        "kanji": "晩"
+      },
+      {
+        "id": "ae04bfb8-c970-47ac-ab67-1bfdfcbe49a4",
+        "french": "Environ, vers",
+        "reading": "ごろ",
+        "kanji": "頃"
+      },
+      {
+        "id": "0b2ede3e-c740-449e-b666-de49780365e7",
+        "french": "Environ, vers",
+        "reading": "ぐらい",
+        "kanji": null
+      },
+      {
+        "id": "c9c56065-eb6d-4685-bb99-053e2d0d23ee",
+        "french": "Planning",
+        "reading": "プランニング",
+        "kanji": null
+      },
+      {
+        "id": "be0e0c13-405a-4e9c-a054-562216dc6e7e",
+        "french": "Se lever, se réveiller",
+        "reading": "おきる",
+        "kanji": "起きる"
+      },
+      {
+        "id": "e996c3d1-21d5-4e3a-ae16-d58f7c95677c",
+        "french": "Dormir, se coucher",
+        "reading": "ねる",
+        "kanji": "寝る"
+      },
+      {
+        "id": "41776ef0-3a94-4c4d-b827-c3245b91dac3",
+        "french": "Chaque, tous les",
+        "reading": "まい",
+        "kanji": "毎"
+      },
+      {
+        "id": "739c7763-3187-4669-989d-9f6641c8c115",
+        "french": "Temps",
+        "reading": "とき",
+        "kanji": "時"
+      },
+      {
+        "id": "7bb9e955-0c6f-4b94-9a6e-7a9aacd77a5a",
+        "french": "Heure (période)",
+        "reading": "じかん",
+        "kanji": "時間"
+      }
+    ]
+  },
+  {
+    "id": "780875f4-0587-42d3-9634-0ef235ef4441",
+    "title": "Vocab – Pack 12 (Lieux & Mouvements)",
+    "items": [
+      {
+        "id": "26660aff-f16e-4201-8870-588a63c63d7c",
+        "french": "Restaurant",
+        "reading": "レストラン",
+        "kanji": null
+      },
+      {
+        "id": "be931bc3-21fa-4de0-bdd0-9e85aca8ab90",
+        "french": "Bibliothèque (bâtiment)",
+        "reading": "としょかん",
+        "kanji": "図書館"
+      },
+      {
+        "id": "5141fb1f-c1de-4931-9fc4-a9f65ea07eb0",
+        "french": "Magasin, boutique",
+        "reading": "みせ",
+        "kanji": "店"
+      },
+      {
+        "id": "25c73cfa-7372-49f8-a4c1-a249d184bdb1",
+        "french": "Parc, jardin public",
+        "reading": "こうえん",
+        "kanji": "公園"
+      },
+      {
+        "id": "df1834d2-f4e3-4c63-8e6c-4fd4d44c486d",
+        "french": "Table",
+        "reading": "テーブル",
+        "kanji": null
+      },
+      {
+        "id": "f2d2bfae-1b18-4c03-a989-b4c7564a5bba",
+        "french": "Étudiante, étudiant",
+        "reading": "がくせい",
+        "kanji": "学生"
+      },
+      {
+        "id": "e515ef98-c377-413a-ab59-e97f39cb598e",
+        "french": "Puis, ensuite",
+        "reading": "そして・それから",
+        "kanji": null
+      },
+      {
+        "id": "bea66644-f1b9-46b1-a010-9392c6fdf1c5",
+        "french": "Bus",
+        "reading": "バス",
+        "kanji": null
+      },
+      {
+        "id": "4d8d20a0-3d1b-42f1-874d-2fe8a226e655",
+        "french": "Cinéma (bâtiment)",
+        "reading": "えいがかん",
+        "kanji": "映画館"
+      },
+      {
+        "id": "82c3c4f3-1e7b-4ad6-a482-97ca46e34741",
+        "french": "Maison, chez soi",
+        "reading": "いえ",
+        "kanji": "家"
+      },
+      {
+        "id": "da87cca7-2117-4b5d-baf2-c25a6a0d6fe0",
+        "french": "Venir",
+        "reading": "くる",
+        "kanji": "来る"
+      },
+      {
+        "id": "6f1e8608-7192-4c88-8f78-4dda6bbef936",
+        "french": "Rentrer chez soi",
+        "reading": "かえる",
+        "kanji": "帰る"
+      },
+      {
+        "id": "227e14ef-c909-468d-985c-35e6b899c953",
+        "french": "Retourner, revenir",
+        "reading": "もどる",
+        "kanji": "戻る"
+      },
+      {
+        "id": "c9a4f6f0-52c5-48ed-a72e-3aad37a3a57a",
+        "french": "Se diriger vers",
+        "reading": "むかう",
+        "kanji": "向かう"
+      },
+      {
+        "id": "0a80fca4-b4ce-46f5-9adb-da44bea41bcf",
+        "french": "Avancer, progresser",
+        "reading": "すすむ",
+        "kanji": "進む"
+      }
+    ]
+  },
+  {
+    "id": "6ec574d1-5016-4e7b-8546-06fe7cccd2a5",
+    "title": "Vocab – Pack 13 (Verbes & Transports)",
+    "items": [
+      {
+        "id": "c8163954-810e-4f91-a184-4a4d9e232fb6",
+        "french": "Travail",
+        "reading": "しごと",
+        "kanji": "仕事"
+      },
+      {
+        "id": "79fb5b8c-07c9-4ada-a4cf-47eaad2342bf",
+        "french": "Commencer",
+        "reading": "はじまる",
+        "kanji": "始まる"
+      },
+      {
+        "id": "c1cabb31-efab-4d55-a479-3d1ffd478588",
+        "french": "Travailler",
+        "reading": "はたらく",
+        "kanji": "働く"
+      },
+      {
+        "id": "5376b19b-57bf-45c0-8305-1949856a4d40",
+        "french": "Étudier",
+        "reading": "べんきょうする",
+        "kanji": "勉強する"
+      },
+      {
+        "id": "a7930d1c-8072-41b2-aedb-1ae4c717e57f",
+        "french": "École",
+        "reading": "がっこう",
+        "kanji": "学校"
+      },
+      {
+        "id": "c5fe0242-75b9-4532-9cc8-27bdb9deb519",
+        "french": "Marcher",
+        "reading": "あるく",
+        "kanji": "歩く"
+      },
+      {
+        "id": "dcd04c0a-ddf4-49e5-b494-25451ff34728",
+        "french": "Parler",
+        "reading": "はなす",
+        "kanji": "話す"
+      },
+      {
+        "id": "74c9218e-2bdd-4729-91a6-3631b65e1a8d",
+        "french": "Jouer",
+        "reading": "あそぶ",
+        "kanji": "遊ぶ"
+      },
+      {
+        "id": "6c8ffa6d-67d0-497f-8034-9054684cb687",
+        "french": "Train",
+        "reading": "でんしゃ",
+        "kanji": "電車"
+      },
+      {
+        "id": "23dd8c4f-c536-4774-864c-37d1896e5b00",
+        "french": "Vélo",
+        "reading": "じてんしゃ",
+        "kanji": "自転車"
+      },
+      {
+        "id": "c7f0bfc3-225d-4139-bd02-afa97f19e051",
+        "french": "Lire",
+        "reading": "よむ",
+        "kanji": "読む"
+      },
+      {
+        "id": "1f5f8162-1fde-4750-bb99-38713d196671",
+        "french": "Téléphone",
+        "reading": "でんわ",
+        "kanji": "電話"
+      },
+      {
+        "id": "d7ec8185-a6be-41de-b175-85a79c03feff",
+        "french": "Faire",
+        "reading": "する",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "ae0a5024-aa76-4964-b1a4-a0ba2d2a10e0",
+    "title": "Vocab – Pack 14 (Actions & Loisirs)",
+    "items": [
+      {
+        "id": "3b7f6ecc-6563-452e-912e-c782e8e38afe",
+        "french": "Boire",
+        "reading": "のむ",
+        "kanji": "飲む"
+      },
+      {
+        "id": "437b5e0c-5a26-4539-a58c-4d8b93a3fe63",
+        "french": "Écrire",
+        "reading": "かく",
+        "kanji": "書く"
+      },
+      {
+        "id": "1f7c4f9d-c582-4c4f-9e5c-719d2ffdaa3e",
+        "french": "Lettre",
+        "reading": "てがみ",
+        "kanji": "手紙"
+      },
+      {
+        "id": "0e79d30c-f853-4aae-9694-61147f2483f0",
+        "french": "Acheter",
+        "reading": "かう",
+        "kanji": "買う"
+      },
+      {
+        "id": "a499840a-7aa1-4555-a3f3-b2b22e9fb0a1",
+        "french": "Donner",
+        "reading": "あげる",
+        "kanji": "上げる"
+      },
+      {
+        "id": "991f1847-ab72-4aab-8969-25058ad359ae",
+        "french": "Enseigner",
+        "reading": "おしえる",
+        "kanji": "教える"
+      },
+      {
+        "id": "49ebb647-4610-4fac-8766-bde15591c1aa",
+        "french": "Vendeur",
+        "reading": "てんいん",
+        "kanji": "店員"
+      },
+      {
+        "id": "8b794aaf-bcf9-46ef-83a5-c4558dd54f4e",
+        "french": "Rencontrer, voir une personne",
+        "reading": "あう",
+        "kanji": "会う"
+      },
+      {
+        "id": "39d95c34-f57d-4997-a738-817eebd163e7",
+        "french": "Devenir",
+        "reading": "なる",
+        "kanji": null
+      },
+      {
+        "id": "0645bdf3-a651-40fa-a256-a9dbc49e113e",
+        "french": "Changer",
+        "reading": "かわる",
+        "kanji": "変わる"
+      },
+      {
+        "id": "ae877afb-edab-43e2-a66b-645fa9aa6414",
+        "french": "Banque",
+        "reading": "ぎんこう",
+        "kanji": "銀行"
+      },
+      {
+        "id": "e994e1f9-8a1b-41f7-b9cf-a8f7a72e95c1",
+        "french": "Vacances, congé, repos",
+        "reading": "やすみ",
+        "kanji": "休み"
+      },
+      {
+        "id": "55c40138-b75b-44bd-a651-7889ea2740b1",
+        "french": "Sport",
+        "reading": "スポーツ",
+        "kanji": null
+      },
+      {
+        "id": "6ffbe851-aa99-43e3-8c95-e31ac63e715d",
+        "french": "Regarder, voir",
+        "reading": "みる",
+        "kanji": "見る"
+      },
+      {
+        "id": "c7562995-15a5-44e1-bf38-65c4449c1710",
+        "french": "Film (cinéma, œuvre)",
+        "reading": "えいが",
+        "kanji": "映画"
+      },
+      {
+        "id": "6951db43-bbe9-4366-8090-ba6163d16bfa",
+        "french": "Film (pellicule)",
+        "reading": "フィルム",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "e3f7c654-4ef2-4be4-9342-5989a7555ea6",
+    "title": "Vocab – Pack 15 (Famille)",
+    "items": [
+      {
+        "id": "3c35a8bf-3d3a-4a22-8951-3e3e61ba9f2d",
+        "french": "Espagnol (la langue)",
+        "reading": "スペインご",
+        "kanji": "スペイン語"
+      },
+      {
+        "id": "cdbc5cdb-dd7a-41f2-a2be-6e0c1b3c41c5",
+        "french": "Mère",
+        "reading": "はは",
+        "kanji": "母"
+      },
+      {
+        "id": "2d62df59-3f8d-430f-af2b-a1ea982ce406",
+        "french": "Père",
+        "reading": "ちち",
+        "kanji": "父"
+      },
+      {
+        "id": "822e27dc-529d-4743-9c29-489787a9e926",
+        "french": "Parents (père et mère)",
+        "reading": "りょうしん／ふぼ",
+        "kanji": "両親／父母"
+      },
+      {
+        "id": "b8b6bc18-aaf3-4dae-af57-5275c933d9fe",
+        "french": "Grand frère",
+        "reading": "あに",
+        "kanji": "兄"
+      },
+      {
+        "id": "16191057-2317-46de-8d0f-e703232c6492",
+        "french": "Petit frère",
+        "reading": "おとうと",
+        "kanji": "弟"
+      },
+      {
+        "id": "34b02301-e531-4e78-b9bc-3ffe79f17449",
+        "french": "Grande sœur",
+        "reading": "あね",
+        "kanji": "姉"
+      },
+      {
+        "id": "4ac31777-1ded-4f00-ab59-63ab7f03e0a1",
+        "french": "Petite sœur",
+        "reading": "いもうと",
+        "kanji": "妹"
+      },
+      {
+        "id": "a085a196-d039-4113-988f-64dc9ef25eaa",
+        "french": "Frères et sœurs (même famille)",
+        "reading": "きょうだい",
+        "kanji": "兄弟"
+      },
+      {
+        "id": "a3e686d1-73e2-46af-b74c-b2a363995f02",
+        "french": "Grand frère (poli)",
+        "reading": "おにいさん",
+        "kanji": "お兄さん"
+      },
+      {
+        "id": "5a7363a5-71bb-4bd2-a2b4-c3b7837c0ea4",
+        "french": "Grande sœur (poli)",
+        "reading": "おねえさん",
+        "kanji": "お姉さん"
+      },
+      {
+        "id": "c1602c15-30da-4f96-98b1-f758bcd0c2f9",
+        "french": "Mère (poli)",
+        "reading": "おかあさん",
+        "kanji": "お母さん"
+      },
+      {
+        "id": "e9bb9600-a875-4f78-9a8d-4f06aa45078f",
+        "french": "Père (poli)",
+        "reading": "おとうさん",
+        "kanji": "お父さん"
+      },
+      {
+        "id": "04af201e-b085-4b7a-94b4-2dbaa48002eb",
+        "french": "Grand-mère (poli)",
+        "reading": "おばあさん",
+        "kanji": "お婆さん"
+      },
+      {
+        "id": "a5634ca5-fe8a-4e90-9a15-6ad5634607b8",
+        "french": "Grand-père (poli)",
+        "reading": "おじいさん",
+        "kanji": "お爺さん"
+      }
+    ]
+  },
+  {
+    "id": "9902a28c-d5bc-4f16-9479-17bc6c8f1323",
+    "title": "Vocab – Pack 16 (Saisons & Divers)",
+    "items": [
+      {
+        "id": "5d76733f-a538-46af-a78a-e6e41ab54255",
+        "french": "Recevoir",
+        "reading": "もらう",
+        "kanji": null
+      },
+      {
+        "id": "e38bedcd-a7da-4178-95ef-a2b95c49a6ba",
+        "french": "Prêter, mettre en location",
+        "reading": "かす",
+        "kanji": "貸す"
+      },
+      {
+        "id": "8df4e1cc-6010-411c-b3cd-2fbc5ca29f8c",
+        "french": "Emprunter, louer",
+        "reading": "かりる",
+        "kanji": "借りる"
+      },
+      {
+        "id": "8fda72fe-9fb8-40fd-886d-48762269041a",
+        "french": "Thé",
+        "reading": "ちゃ",
+        "kanji": "茶"
+      },
+      {
+        "id": "9479c574-7eb1-41b5-9e3f-4a0757b27a5d",
+        "french": "Café",
+        "reading": "コーヒー",
+        "kanji": null
+      },
+      {
+        "id": "f0aeb704-3fef-49fe-9b4b-e82afa77605c",
+        "french": "Bar",
+        "reading": "バー",
+        "kanji": null
+      },
+      {
+        "id": "f9e52bb0-da35-40f1-b11c-5d18c0558b0b",
+        "french": "Amoureux・se",
+        "reading": "こいびと",
+        "kanji": "恋人"
+      },
+      {
+        "id": "74b8dd73-90f6-4ba6-b8ab-f221e6bc265b",
+        "french": "Chaud (météo)",
+        "reading": "あつい",
+        "kanji": "暑い"
+      },
+      {
+        "id": "867fae44-18db-4046-ab85-06c20f0608c0",
+        "french": "Maladie",
+        "reading": "びょうき",
+        "kanji": "病気"
+      },
+      {
+        "id": "d1440b03-2961-4b9f-bb60-9e52e4014f5e",
+        "french": "Dur, pénible, grave, sérieux, important",
+        "reading": "たいへん",
+        "kanji": "大変"
+      },
+      {
+        "id": "03f56557-bbe1-489f-b1d8-c8ad34a9ba7b",
+        "french": "Gâteau, friandise, sucrerie",
+        "reading": "かし",
+        "kanji": "菓子"
+      },
+      {
+        "id": "38ded2bb-abae-4c40-9e95-5751808039ca",
+        "french": "Printemps",
+        "reading": "はる",
+        "kanji": "春"
+      },
+      {
+        "id": "512707ee-56a6-44c6-884d-2da5688a61e4",
+        "french": "Été",
+        "reading": "なつ",
+        "kanji": "夏"
+      },
+      {
+        "id": "8fa76ca0-7b91-46f9-b56c-83a856bf1dac",
+        "french": "Automne",
+        "reading": "あき",
+        "kanji": "秋"
+      },
+      {
+        "id": "e2fd82a2-0c95-4e4d-b825-6897377c1f72",
+        "french": "Hiver",
+        "reading": "ふゆ",
+        "kanji": "冬"
+      }
+    ]
+  },
+  {
+    "id": "ef07fc67-f82a-4822-82d8-5b2647a33913",
+    "title": "Vocab – Pack 17 (Adjectifs courants I)",
+    "items": [
+      {
+        "id": "0f3d2159-16fb-439e-991c-fd3fbcc4f9f2",
+        "french": "Difficile, dur, ardu",
+        "reading": "むずかしい",
+        "kanji": "難しい"
+      },
+      {
+        "id": "31afe7fb-98d2-45a3-905e-bafd1266135f",
+        "french": "Simple, facile",
+        "reading": "やさしい",
+        "kanji": "易しい"
+      },
+      {
+        "id": "086d4b53-4489-466e-868c-89066cca606e",
+        "french": "Intéressant, amusant, drôle",
+        "reading": "おもしろい",
+        "kanji": "面白い"
+      },
+      {
+        "id": "c849c994-5575-46ef-8339-1e9822dd5a75",
+        "french": "Ennuyeux, sans intérêt",
+        "reading": "つまらない",
+        "kanji": null
+      },
+      {
+        "id": "72c433d5-e891-47f1-86f8-9d977f9a7484",
+        "french": "Beau, joli, propre",
+        "reading": "きれい",
+        "kanji": "綺麗"
+      },
+      {
+        "id": "4cca3e2a-8d31-4dd7-b996-ae64aa53e834",
+        "french": "Calme, tranquille",
+        "reading": "しずか",
+        "kanji": "静か"
+      },
+      {
+        "id": "8685ab6e-f6c7-4af2-80ad-33f51d54d2d3",
+        "french": "Fréquenté, animé, gai",
+        "reading": "にぎやか",
+        "kanji": "賑やか"
+      },
+      {
+        "id": "59efd6ea-619a-4833-b81f-2564c8f61197",
+        "french": "Célèbre, fameux",
+        "reading": "ゆうめい",
+        "kanji": "有名"
+      },
+      {
+        "id": "41abdeca-3cf2-4e0e-9a79-703b2197bd28",
+        "french": "Gentil, aimable",
+        "reading": "やさしい",
+        "kanji": "優しい"
+      },
+      {
+        "id": "f33357bb-513b-452b-a153-89724872bb24",
+        "french": "Gentil, aimable",
+        "reading": "しんせつ",
+        "kanji": "親切"
+      },
+      {
+        "id": "e6e66738-28fc-4a6f-8811-4a3f95708117",
+        "french": "En bonne santé, en forme",
+        "reading": "げんき",
+        "kanji": "元気"
+      },
+      {
+        "id": "584d034c-40ce-44f2-ba34-e99162e3c224",
+        "french": "Être libre, avoir du temps",
+        "reading": "ひま",
+        "kanji": "暇"
+      },
+      {
+        "id": "a5b75801-91cc-42c4-8d77-8e133d0eae7e",
+        "french": "Pratique, commode, utile",
+        "reading": "べんり",
+        "kanji": "便利"
+      },
+      {
+        "id": "c2dfe599-0475-4eb9-84f9-9876aee9acff",
+        "french": "Formidable",
+        "reading": "すてき",
+        "kanji": "素敵"
+      },
+      {
+        "id": "daab4664-1116-42e8-a49d-1427c245211a",
+        "french": "Vraiment, très, réellement",
+        "reading": "ほんとうに",
+        "kanji": "本当に"
+      }
+    ]
+  },
+  {
+    "id": "a703f51f-39c6-4323-aeeb-4cfb752b7cd8",
+    "title": "Vocab – Pack 18 (Adjectifs courants II)",
+    "items": [
+      {
+        "id": "3a02a27a-84eb-47df-bb49-07677b498575",
+        "french": "Grand, large",
+        "reading": "おおきい",
+        "kanji": "大きい"
+      },
+      {
+        "id": "3a9880ae-8ea2-4c38-9ad2-2594c43f0f69",
+        "french": "Petit",
+        "reading": "ちいさい",
+        "kanji": "小さい"
+      },
+      {
+        "id": "05f866c2-7dc0-4e8c-848f-e24dd9537c32",
+        "french": "Nouveau",
+        "reading": "あたらしい",
+        "kanji": "新しい"
+      },
+      {
+        "id": "deff7378-9c04-44c2-88a5-a08121891574",
+        "french": "Vieux, ancien, âgé (# âge)",
+        "reading": "ふるい",
+        "kanji": "古い"
+      },
+      {
+        "id": "620b0fc5-6962-40fe-bf8b-ed39dc4f8915",
+        "french": "Bon, plaisant, agréable",
+        "reading": "いい・よい",
+        "kanji": "良い"
+      },
+      {
+        "id": "68078a9a-75f9-4ff7-bccf-0fd22bf50148",
+        "french": "Mauvais, méprisable",
+        "reading": "わるい",
+        "kanji": "悪い"
+      },
+      {
+        "id": "c1372fc2-bcb6-4ddf-97d6-0c0836e7d79d",
+        "french": "Chaud (météo)",
+        "reading": "あつい",
+        "kanji": "暑い"
+      },
+      {
+        "id": "732a1a38-1238-4709-be3e-e105c5da2485",
+        "french": "Chaud (objet etc)",
+        "reading": "あつい",
+        "kanji": "熱い"
+      },
+      {
+        "id": "368ef77f-861a-4481-93c1-bd4b16ec61f8",
+        "french": "Froid (météo)",
+        "reading": "さむい",
+        "kanji": "寒い"
+      },
+      {
+        "id": "fd206538-37bd-409b-9c28-25feb8dfaf0f",
+        "french": "Froid, glacé (contact objet)",
+        "reading": "つめたい",
+        "kanji": "冷たい"
+      },
+      {
+        "id": "efcd6739-7581-4e2b-9899-830e2d0173fd",
+        "french": "Cher, élevé, haut, coûteux",
+        "reading": "たかい",
+        "kanji": "高い"
+      },
+      {
+        "id": "3bf70389-1dc3-41d0-836f-970f22dd4f7f",
+        "french": "Peu cher, bon marché",
+        "reading": "やすい",
+        "kanji": "安い"
+      },
+      {
+        "id": "a8a5970f-7266-4690-a67e-7368bc2ac365",
+        "french": "Occupé, pris",
+        "reading": "いそがしい",
+        "kanji": "忙しい"
+      },
+      {
+        "id": "896935e8-71d3-491e-a0fd-4f472fbf9cec",
+        "french": "Bon, délicieux",
+        "reading": "おいしい",
+        "kanji": "美味しい"
+      },
+      {
+        "id": "5020de63-3ae0-48a9-9fce-6ab7b2d0d8f9",
+        "french": "Amusant, joyeux, agréable",
+        "reading": "たのしい",
+        "kanji": "楽しい"
+      }
+    ]
+  },
+  {
+    "id": "abf71afa-0c1d-48a2-860a-af0b1c24096e",
+    "title": "Vocab – Pack 19 (Adverbes & connecteurs)",
+    "items": [
+      {
+        "id": "e8e51681-4959-4543-9c40-e74da25e7cb2",
+        "french": "Très, extrêmement",
+        "reading": "とても",
+        "kanji": null
+      },
+      {
+        "id": "65e073fd-6e70-4177-8988-5a40ec001852",
+        "french": "Très, extrêmement (plus poli)",
+        "reading": "たいへん",
+        "kanji": "大変"
+      },
+      {
+        "id": "ab740d2c-5d23-45b4-97f2-177f1edbba32",
+        "french": "Plutôt",
+        "reading": "まあ",
+        "kanji": null
+      },
+      {
+        "id": "b3b84ff8-6da3-44c8-8836-bd3706175d76",
+        "french": "Un peu",
+        "reading": "すこし／ちょっと",
+        "kanji": "少し／ちょっと"
+      },
+      {
+        "id": "63b196cf-dae5-403d-9c87-393c544bf0d2",
+        "french": "Pas très (+ négatif)",
+        "reading": "あまり",
+        "kanji": "余り"
+      },
+      {
+        "id": "d65065f2-70ea-49a6-9a50-74840ee704ba",
+        "french": "Pas du tout (+ négatif)",
+        "reading": "ぜんぜん",
+        "kanji": "全然"
+      },
+      {
+        "id": "c139cda2-fb6a-433c-b1a2-47dd7fea0a93",
+        "french": "Alcool",
+        "reading": "さけ",
+        "kanji": "酒"
+      },
+      {
+        "id": "0d61e529-9d99-4b73-88fc-3e15d5c97ea0",
+        "french": "Peut-être, probablement",
+        "reading": "たぶん",
+        "kanji": "多分"
+      },
+      {
+        "id": "e2df9b61-e118-4776-a365-bebb5a04cdec",
+        "french": "Bien sûr, bien entendu, naturellement",
+        "reading": "もちろん",
+        "kanji": "勿論"
+      },
+      {
+        "id": "3597c8aa-c2b1-4b3d-ac27-c3f0b7bf494a",
+        "french": "À coup sûr, sûrement, sans faute",
+        "reading": "かならず",
+        "kanji": "必ず"
+      },
+      {
+        "id": "0ff74227-07cd-47e5-a4ce-e5144349d329",
+        "french": "Toujours, tout le temps, sans cesse",
+        "reading": "いつも",
+        "kanji": null
+      },
+      {
+        "id": "6b1189fa-1725-4d15-866c-3f151fd72d75",
+        "french": "De temps en temps, parfois",
+        "reading": "ときどき",
+        "kanji": "時々"
+      },
+      {
+        "id": "00f7d370-9e2c-4d5d-b1ed-af2c92e56a0f",
+        "french": "Souvent, fréquemment",
+        "reading": "よく",
+        "kanji": "良く"
+      },
+      {
+        "id": "e00d2f4c-92a6-4449-9a6e-0964125bf809",
+        "french": "Mais, toutefois, cependant, néanmoins",
+        "reading": "しかし／でも",
+        "kanji": null
+      },
+      {
+        "id": "13788225-fd95-4eec-8660-f7935631f573",
+        "french": "En plus, en outre, de plus",
+        "reading": "そのうえ",
+        "kanji": "その上"
+      },
+      {
+        "id": "b8536c5e-852a-44d9-ba53-57207e1c7db0",
+        "french": "En tout cas",
+        "reading": "とにかく",
+        "kanji": null
+      },
+      {
+        "id": "f9f5022f-ce53-4e47-9d85-30ce805ad999",
+        "french": "Au fait, à propos, or",
+        "reading": "ところで",
+        "kanji": null
+      },
+      {
+        "id": "4cf42551-9fb3-4c49-9948-a974a64935f2",
+        "french": "C'est-à-dire, en un mot, bref",
+        "reading": "つまり",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "75e84ace-9abb-418e-8304-54d6025ae58c",
+    "title": "Vocab – Pack 20 (Verbes courants II)",
+    "items": [
+      {
+        "id": "9c64b941-ea2b-41c2-b189-5bfa242961c4",
+        "french": "Attendre, patienter",
+        "reading": "まつ",
+        "kanji": "待つ"
+      },
+      {
+        "id": "4c9490ae-d4ee-4b3d-b316-dbccabe336f2",
+        "french": "Mourir, décéder",
+        "reading": "しぬ",
+        "kanji": "死ぬ"
+      },
+      {
+        "id": "1681427c-7264-47df-9545-58fc112f3639",
+        "french": "Se dépêcher, se presser",
+        "reading": "いそぐ",
+        "kanji": "急ぐ"
+      },
+      {
+        "id": "f794e2dc-4741-4ac9-8068-232b06bdf4db",
+        "french": "Fort, puissant, vigoureux",
+        "reading": "つよい",
+        "kanji": "強い"
+      },
+      {
+        "id": "75abe0b8-d733-468a-ad97-9efc7015def7",
+        "french": "Rire",
+        "reading": "わらう",
+        "kanji": "笑う"
+      },
+      {
+        "id": "da7e7239-f617-4f7f-9015-dc63487c3d72",
+        "french": "Thé noir",
+        "reading": "こうちゃ",
+        "kanji": "紅茶"
+      },
+      {
+        "id": "dc15d888-3416-481e-8474-3eaa676142fc",
+        "french": "Cours",
+        "reading": "じゅぎょう",
+        "kanji": "授業"
+      },
+      {
+        "id": "26f65e1f-30b1-43a0-ac76-5efaa01e90bb",
+        "french": "Petit-déjeuner",
+        "reading": "あさごはん",
+        "kanji": "朝ご飯"
+      },
+      {
+        "id": "7ddc62c7-0cc0-4724-9546-100cec282047",
+        "french": "Déjeuner",
+        "reading": "ひるごはん",
+        "kanji": "昼ご飯"
+      },
+      {
+        "id": "e4468ad1-6ffd-496f-a30a-de5f1ed7a6df",
+        "french": "Dîner",
+        "reading": "ばんごはん",
+        "kanji": "晩ご飯"
+      },
+      {
+        "id": "d7852ad9-cb9b-4470-9576-a97c320d7633",
+        "french": "Décider, fixer, déterminer",
+        "reading": "きめる",
+        "kanji": "決める"
+      },
+      {
+        "id": "c500352a-b85e-41af-a334-375a913b9756",
+        "french": "Se reposer",
+        "reading": "やすむ",
+        "kanji": "休む"
+      },
+      {
+        "id": "4eef7b15-7f22-4328-b6c6-fc4324a8e067",
+        "french": "Finir",
+        "reading": "おわる",
+        "kanji": "終わる"
+      },
+      {
+        "id": "a9f9a4c4-83d8-4a3b-ab00-2ef72464192d",
+        "french": "Fumer, aspirer, inhaler",
+        "reading": "すう",
+        "kanji": "吸う"
+      },
+      {
+        "id": "892986a2-4725-40f9-8e2c-72920bff0bfa",
+        "french": "Entendre, écouter, demander",
+        "reading": "きく",
+        "kanji": "聞く"
+      }
+    ]
+  },
+  {
+    "id": "dec6cab2-0a81-4c54-900d-9b56b50f756e",
+    "title": "Vocab – Pack 21 (Vie quotidienne II)",
+    "items": [
+      {
+        "id": "95ff0566-0ab3-4103-b2b4-052a46961c7f",
+        "french": "Prendre",
+        "reading": "とる",
+        "kanji": "取る"
+      },
+      {
+        "id": "9b825115-f126-406a-99d5-a9373eb8b29a",
+        "french": "Nager",
+        "reading": "およぐ",
+        "kanji": "泳ぐ"
+      },
+      {
+        "id": "99c81d7d-963a-4d83-b6ad-8d41358f02db",
+        "french": "Être fatigué",
+        "reading": "つかれる",
+        "kanji": "疲れる"
+      },
+      {
+        "id": "e203153a-e21c-49e4-84f6-eb92c94b3a6e",
+        "french": "Comprendre, être au courant",
+        "reading": "わかる",
+        "kanji": "分かる"
+      },
+      {
+        "id": "4824fbd0-3fec-47fb-8ccb-e32a4462a5f4",
+        "french": "Se marier",
+        "reading": "けっこんする",
+        "kanji": "結婚する"
+      },
+      {
+        "id": "d99c4c5f-164c-487a-82e3-278b4f88780b",
+        "french": "Nombre de fois",
+        "reading": "かい",
+        "kanji": "回"
+      },
+      {
+        "id": "dabbfeb2-6212-4b97-a2ff-dc5733d39983",
+        "french": "Argent",
+        "reading": "おかね／かね",
+        "kanji": "お金／かね"
+      },
+      {
+        "id": "e2a5ec8a-2e4a-4b13-b23d-be67eaddfee4",
+        "french": "Pluie",
+        "reading": "あめ",
+        "kanji": "雨"
+      },
+      {
+        "id": "cfc06a5e-e5fe-4b7c-ab4c-94e804d27ad2",
+        "french": "Semaine",
+        "reading": "しゅうかん",
+        "kanji": "週間"
+      },
+      {
+        "id": "5458f987-e13e-4bd6-86fd-e96a3ad37894",
+        "french": "Habiter",
+        "reading": "すむ",
+        "kanji": "住む"
+      },
+      {
+        "id": "c3648c94-324f-4efe-9637-c6978df1fd67",
+        "french": "Jeu vidéo",
+        "reading": "ビデオゲーム",
+        "kanji": null
+      },
+      {
+        "id": "d231ac4d-a14f-470c-a68d-59a874cc3b24",
+        "french": "Jouer aux jeux vidéo",
+        "reading": "ビデオゲームをする",
+        "kanji": null
+      },
+      {
+        "id": "af324724-324d-4f44-b509-399594bc222c",
+        "french": "Bière",
+        "reading": "ビール",
+        "kanji": null
+      },
+      {
+        "id": "4395f17f-4566-48b5-b292-804c84b078e6",
+        "french": "Étage",
+        "reading": "かい",
+        "kanji": "階"
+      },
+      {
+        "id": "433ebbb5-b062-4eec-8114-470f3f36d781",
+        "french": "Seulement…, que…, juste…",
+        "reading": "だけ",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "7fc27120-1863-4cef-894b-f456bf067213",
+    "title": "Vocab – Pack 22 (Nature & Divers)",
+    "items": [
+      {
+        "id": "c36dab2a-9504-433e-9d09-e31b88f45bfc",
+        "french": "Bruyant, énervant, agaçant",
+        "reading": "うるさい",
+        "kanji": "煩い"
+      },
+      {
+        "id": "421313fb-0dd4-4e76-8fbc-3d4ee753c860",
+        "french": "Osaka",
+        "reading": "おおさか",
+        "kanji": "大阪"
+      },
+      {
+        "id": "44aade86-87e9-4a68-86ff-0a1e5344a4a6",
+        "french": "Feuille, feuillage",
+        "reading": "は",
+        "kanji": "葉"
+      },
+      {
+        "id": "7a1f7943-1b6e-43c2-89af-61f8ea161256",
+        "french": "Tomber",
+        "reading": "おちる",
+        "kanji": "落ちる"
+      },
+      {
+        "id": "eeec5251-8727-4ea6-8cac-cf275b3eb4d6",
+        "french": "Loup, louve",
+        "reading": "おおかみ",
+        "kanji": "狼"
+      },
+      {
+        "id": "694a658e-05e8-438a-b536-d0a7a62be6f5",
+        "french": "Nourriture",
+        "reading": "たべもの",
+        "kanji": "食べ物"
+      },
+      {
+        "id": "09f6e77d-e692-404f-849a-fa32db272a33",
+        "french": "Boisson",
+        "reading": "のみもの",
+        "kanji": "飲み物"
+      },
+      {
+        "id": "912ef584-5ade-4052-b268-4b81b358446f",
+        "french": "Chose, objet",
+        "reading": "もの",
+        "kanji": "物"
+      },
+      {
+        "id": "75c64d16-32d0-47bf-b6b2-15f017b9042a",
+        "french": "Animal, animaux",
+        "reading": "どうぶつ",
+        "kanji": "動物"
+      },
+      {
+        "id": "ce6225a0-5766-4868-9e70-3ede90f0ebf9",
+        "french": "S’entraîner, faire des exercices",
+        "reading": "れんしゅうする",
+        "kanji": "練習する"
+      },
+      {
+        "id": "30f336ec-afbe-4a1d-9c7a-51d0089c61b7",
+        "french": "Se battre",
+        "reading": "たたかう",
+        "kanji": "戦う"
+      },
+      {
+        "id": "85eba0b1-7370-451e-9cab-900168c327b6",
+        "french": "Sabre",
+        "reading": "かたな",
+        "kanji": "刀"
+      },
+      {
+        "id": "fddcd05c-fb9f-494a-ad31-c0fe14c794ac",
+        "french": "Tiède, chaleureux, chaud",
+        "reading": "あたたかい",
+        "kanji": "暖かい／温かい"
+      },
+      {
+        "id": "8b013b2d-5d0e-470e-b984-843cd78f08cf",
+        "french": "Frais",
+        "reading": "すずしい",
+        "kanji": "涼しい"
+      },
+      {
+        "id": "efd90b6e-9977-4fbf-b3e1-c9e448f228d1",
+        "french": "Chemise",
+        "reading": "シャツ／ワイシャツ",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "766de149-4ece-4eb9-9b04-3fc5239d7270",
+    "title": "Vocab – Pack 23 (Transport & Voyage I)",
+    "items": [
+      {
+        "id": "17ccb8ec-e090-462a-b9e8-5794f0f48f5d",
+        "french": "Mer, océan",
+        "reading": "うみ",
+        "kanji": "海"
+      },
+      {
+        "id": "79fb1d7d-7bd4-4e91-8615-0e6ddb5e97dc",
+        "french": "Ski",
+        "reading": "スキー",
+        "kanji": null
+      },
+      {
+        "id": "5c5a4ff0-7081-45c9-987f-b7ad5017aa1c",
+        "french": "Ville, quartier",
+        "reading": "まち",
+        "kanji": "町"
+      },
+      {
+        "id": "f4e90c22-c16a-4a3e-a393-69881f211a80",
+        "french": "Parapluie",
+        "reading": "かさ",
+        "kanji": "傘"
+      },
+      {
+        "id": "18abcce8-f4a2-4d85-a0af-99228716092a",
+        "french": "Cadeau",
+        "reading": "プレゼント",
+        "kanji": null
+      },
+      {
+        "id": "e69a2451-2d6d-4d3c-852c-fd08cec9ae70",
+        "french": "Fièvre, chaleur, passion, ardeur",
+        "reading": "ねつ",
+        "kanji": "熱"
+      },
+      {
+        "id": "86de083f-c39c-42f9-a701-e54f4b93b3fe",
+        "french": "Famille",
+        "reading": "かぞく",
+        "kanji": "家族"
+      },
+      {
+        "id": "ade9a67e-5f93-40e7-9eb2-c916181968ea",
+        "french": "Taxi",
+        "reading": "タクシー",
+        "kanji": null
+      },
+      {
+        "id": "126a37f0-8daa-43e4-9fbe-da427a903a8b",
+        "french": "Bateau, navire",
+        "reading": "ふね",
+        "kanji": "船"
+      },
+      {
+        "id": "b68c9519-68e0-4df8-859e-5af635e48840",
+        "french": "Avion",
+        "reading": "ひこうき",
+        "kanji": "飛行機"
+      },
+      {
+        "id": "9f2608a1-2647-4e65-b128-fdbbde82d4f5",
+        "french": "Métro",
+        "reading": "ちかてつ",
+        "kanji": "地下鉄"
+      },
+      {
+        "id": "67d04507-6ad8-44f6-9a18-9ac60e27f7aa",
+        "french": "Neige",
+        "reading": "ゆき",
+        "kanji": "雪"
+      },
+      {
+        "id": "fbc0bcc8-4516-45a8-840e-792f9a6690c2",
+        "french": "Hôtel",
+        "reading": "ホテル",
+        "kanji": null
+      },
+      {
+        "id": "f16ab528-903e-4d28-8646-c845cce90633",
+        "french": "Aéroport",
+        "reading": "くうこう",
+        "kanji": "空港"
+      },
+      {
+        "id": "eafe5e29-aeff-4e1c-81a8-8a55f3e59d86",
+        "french": "Ticket, billet",
+        "reading": "きっぷ／チケット",
+        "kanji": "切符／チケット"
+      }
+    ]
+  },
+  {
+    "id": "5ee740f6-ae70-4385-9ada-87faf4774a92",
+    "title": "Vocab – Pack 24 (Adjectifs III)",
+    "items": [
+      {
+        "id": "b744eb69-5f39-412a-99e5-d29b2f209708",
+        "french": "Étrange, bizarre, drôle, comique",
+        "reading": "おかしい",
+        "kanji": null
+      },
+      {
+        "id": "bea3a608-3bc7-4537-9c8d-10b8baf2f43a",
+        "french": "Facile",
+        "reading": "かんたん",
+        "kanji": "簡単"
+      },
+      {
+        "id": "ab8d9827-8dcb-4e4f-aa6c-319f3095800f",
+        "french": "Bas, peu élevé",
+        "reading": "ひくい",
+        "kanji": "低い"
+      },
+      {
+        "id": "365b9837-7fec-4675-8cf1-d5dfa0a11f2e",
+        "french": "Dangereux, risqué, critique",
+        "reading": "あぶない",
+        "kanji": "危ない"
+      },
+      {
+        "id": "abe34510-e8e6-4f86-be97-56a273e810d8",
+        "french": "Beau, belle",
+        "reading": "うつくしい",
+        "kanji": "美しい"
+      },
+      {
+        "id": "cc6d58c8-2b5c-4fcb-bae5-715b89cb57f6",
+        "french": "Formidable, génial, merveilleux",
+        "reading": "すばらしい",
+        "kanji": "素晴らしい"
+      },
+      {
+        "id": "2b18e07a-ac09-4a38-9c0d-c8bd747412fa",
+        "french": "Proche, près",
+        "reading": "ちかい",
+        "kanji": "近い"
+      },
+      {
+        "id": "8ec453dc-11e0-45e4-94fd-c62dbb005f0b",
+        "french": "Loin, lointain, éloigné",
+        "reading": "とおい",
+        "kanji": "遠い"
+      },
+      {
+        "id": "f462c48c-a31f-4558-a117-2fff2ad55b07",
+        "french": "Lent, tardif, tard",
+        "reading": "おそい",
+        "kanji": "遅い"
+      },
+      {
+        "id": "167725ac-aa99-4daf-bcd6-bad0af3ac427",
+        "french": "Nombreux, beaucoup",
+        "reading": "おおい",
+        "kanji": "多い"
+      },
+      {
+        "id": "0a050945-f59f-47db-a600-df9b720ecbb8",
+        "french": "Peu nombreux, peu",
+        "reading": "すくない",
+        "kanji": "少ない"
+      },
+      {
+        "id": "aa989324-429e-45a4-a07a-48badb5a17ac",
+        "french": "Doux, sucré",
+        "reading": "あまい",
+        "kanji": "甘い"
+      },
+      {
+        "id": "b857efb1-3ad0-40ed-a8fc-8ce39887b0d4",
+        "french": "Piquant, fort, épicé, salé, relevé",
+        "reading": "からい",
+        "kanji": "辛い"
+      },
+      {
+        "id": "937320e4-da7d-4403-926b-251daf5b5d0d",
+        "french": "Lourd",
+        "reading": "おもい",
+        "kanji": "重い"
+      },
+      {
+        "id": "97c4c506-5140-498e-9d08-256c92ab8953",
+        "french": "Léger",
+        "reading": "かるい",
+        "kanji": "軽い"
+      }
+    ]
+  },
+  {
+    "id": "45d51582-6161-42db-8404-d320137a304a",
+    "title": "Vocab – Pack 25 (Questions & Monde)",
+    "items": [
+      {
+        "id": "289412d7-61c6-40ef-bdbb-59706f9cec0b",
+        "french": "Lequel (2 choix seulement)",
+        "reading": "どちら",
+        "kanji": null
+      },
+      {
+        "id": "c2a5244a-0584-4c1d-995b-5f98bff4fafc",
+        "french": "Chinois (la langue)",
+        "reading": "ちゅうごくご",
+        "kanji": "中国語"
+      },
+      {
+        "id": "705b0153-201a-40c3-9047-742b159de92b",
+        "french": "Tôkyô",
+        "reading": "とうきょう",
+        "kanji": "東京"
+      },
+      {
+        "id": "28464bf1-a6d9-422f-b279-d106a92c2c88",
+        "french": "Aimer",
+        "reading": "すきです",
+        "kanji": "好きです"
+      },
+      {
+        "id": "0ca119de-b103-4a00-9963-ac6197a0af32",
+        "french": "Beaucoup plus",
+        "reading": "ずっと",
+        "kanji": null
+      },
+      {
+        "id": "54d80fd9-e094-42a6-9914-8860c64d417a",
+        "french": "Plus, davantage, encore",
+        "reading": "もっと",
+        "kanji": null
+      },
+      {
+        "id": "51de7eae-26d1-4274-a07d-9a00f0569e87",
+        "french": "Important, précieux, cher",
+        "reading": "たいせつ",
+        "kanji": "大切"
+      },
+      {
+        "id": "cdff5c4a-d2b8-4157-8a12-34e77775d37f",
+        "french": "Études, travail",
+        "reading": "べんきょう",
+        "kanji": "勉強"
+      },
+      {
+        "id": "3d4308c5-48f9-49b2-babc-47f35ee0d58c",
+        "french": "Langue, parole, mot, langage",
+        "reading": "ことば",
+        "kanji": "言葉"
+      },
+      {
+        "id": "9300c485-82c4-42aa-a10b-f20abbfb0084",
+        "french": "Monde, Terre, Univers",
+        "reading": "せかい",
+        "kanji": "世界"
+      },
+      {
+        "id": "283d7b44-0ef6-4f56-989d-9af97d92bf29",
+        "french": "Saison",
+        "reading": "きせつ",
+        "kanji": "季節"
+      },
+      {
+        "id": "1fe774f1-b169-49b4-a4ea-45aee1a6e8e4",
+        "french": "Temple bouddhiste",
+        "reading": "てら",
+        "kanji": "寺"
+      },
+      {
+        "id": "12f7fbd6-75b5-4495-a57f-46d95ac5088c",
+        "french": "Temple shintoïste",
+        "reading": "じんじゃ",
+        "kanji": "神社"
+      },
+      {
+        "id": "591ae852-27fa-4e4a-9bf5-4e107c0450ea",
+        "french": "Pays étranger",
+        "reading": "がいこく",
+        "kanji": "外国"
+      },
+      {
+        "id": "34ac93e2-d6c2-41ae-b1f9-175394830904",
+        "french": "Étranger",
+        "reading": "がいこくじん",
+        "kanji": "外国人"
+      }
+    ]
+  },
+  {
+    "id": "8f2cce10-af8f-4b20-a742-b88ebf622e27",
+    "title": "Vocab – Pack 26 (Superlatifs & Nature)",
+    "items": [
+      {
+        "id": "fea0b886-76e5-4b97-8251-99eca871d7ee",
+        "french": "Photo, photographie",
+        "reading": "しゃしん",
+        "kanji": "写真"
+      },
+      {
+        "id": "148e9900-d6bc-4665-b969-08c3810cb689",
+        "french": "Lequel (+ de 2 choix)",
+        "reading": "どれ",
+        "kanji": null
+      },
+      {
+        "id": "bdad0d58-19d7-4a5e-b5e4-ef9c4229b27b",
+        "french": "Parmi…",
+        "reading": "のなかで",
+        "kanji": "の中で"
+      },
+      {
+        "id": "985ed2d3-0eef-477d-8579-9a1370e38575",
+        "french": "Le premier, la première place",
+        "reading": "いちばん",
+        "kanji": "一番"
+      },
+      {
+        "id": "01150080-a7ab-47b9-a357-36a8ce17ace0",
+        "french": "Baseball",
+        "reading": "やきゅう",
+        "kanji": "野球"
+      },
+      {
+        "id": "a99de05b-03c1-4d92-b63f-d3d72e3f8fbe",
+        "french": "Le plus…",
+        "reading": "もっとも",
+        "kanji": "最も"
+      },
+      {
+        "id": "f2d60519-f181-4422-8f6d-926991a7b0ff",
+        "french": "Montagne, mont",
+        "reading": "やま",
+        "kanji": "山"
+      },
+      {
+        "id": "6e14992f-a3c3-46bf-9421-40ddb483670e",
+        "french": "Rivière, fleuve, ruisseau",
+        "reading": "かわ",
+        "kanji": "川"
+      },
+      {
+        "id": "0035260c-bca9-4085-b568-fe5d18b1ba69",
+        "french": "Le plus élevé, le meilleur",
+        "reading": "さいこう",
+        "kanji": "最高"
+      },
+      {
+        "id": "c7ebc242-d640-49e9-bd5f-e4f9238127ca",
+        "french": "Le pire, le plus mauvais",
+        "reading": "さいあく",
+        "kanji": "最悪"
+      },
+      {
+        "id": "d784d732-bbfc-43f2-a773-ce1d7330e246",
+        "french": "Récemment, le plus récent",
+        "reading": "さいきん",
+        "kanji": "最近"
+      },
+      {
+        "id": "1cf98a8e-51e2-4c2a-9459-fe4eacc872ea",
+        "french": "Le premier",
+        "reading": "さいしょ",
+        "kanji": "最初"
+      },
+      {
+        "id": "b0ae51ed-74da-41e8-a1c9-fb3f4da6fe9a",
+        "french": "Le dernier",
+        "reading": "さいご",
+        "kanji": "最後"
+      },
+      {
+        "id": "8ec48271-ff95-4990-bf34-10719880abcb",
+        "french": "Le plus grand, le maximum",
+        "reading": "さいだい",
+        "kanji": "最大"
+      },
+      {
+        "id": "dd9dc892-fe39-4a58-805c-87a5bd47ca09",
+        "french": "Le plus petit, le minimum",
+        "reading": "さいしょう",
+        "kanji": "最小"
+      }
+    ]
+  },
+  {
+    "id": "95d8086d-77d5-42e8-b315-a06160a13bdc",
+    "title": "Vocab – Pack 27 (Culture & Sentiments)",
+    "items": [
+      {
+        "id": "ec8a181f-4b16-4d9a-ade3-da370e23dd2c",
+        "french": "Bâtiment, immeuble",
+        "reading": "たてもの",
+        "kanji": "建物"
+      },
+      {
+        "id": "8dbaca97-3aec-463e-a9b2-0a36ce579f4f",
+        "french": "Concert",
+        "reading": "コンサート",
+        "kanji": null
+      },
+      {
+        "id": "b69ea845-937a-4c8a-b51e-bfd534bc1528",
+        "french": "Cuisine, plat, mets",
+        "reading": "りょうり",
+        "kanji": "料理"
+      },
+      {
+        "id": "f7bf10db-e370-4d37-aead-1e41f74ac738",
+        "french": "Aimer",
+        "reading": "すきです",
+        "kanji": "好きです"
+      },
+      {
+        "id": "47126b18-874e-420c-9309-23146608457f",
+        "french": "Détester, ne pas aimer",
+        "reading": "きらいです",
+        "kanji": "嫌いです"
+      },
+      {
+        "id": "a62eac2b-573b-4328-81f9-9aa09238d689",
+        "french": "Légume",
+        "reading": "やさい",
+        "kanji": "野菜"
+      },
+      {
+        "id": "0687ac89-0990-47f2-b51c-5a8b4102104c",
+        "french": "Fruit",
+        "reading": "くだもの",
+        "kanji": "果物"
+      },
+      {
+        "id": "4e5ab479-923b-48be-95c3-7960b3c89517",
+        "french": "Foule, masse",
+        "reading": "おおぜい",
+        "kanji": "大勢"
+      },
+      {
+        "id": "77c561f9-df1c-4630-9bc9-c410fded9bff",
+        "french": "Beaucoup de, un grand nombre de",
+        "reading": "おおぜいの",
+        "kanji": "大勢の"
+      },
+      {
+        "id": "690962a0-fbd1-47a1-bf1d-621d71d362d6",
+        "french": "Quel genre de…",
+        "reading": "どんな",
+        "kanji": null
+      },
+      {
+        "id": "449a8fa4-adb3-4e12-b8ba-55018242bdc4",
+        "french": "Endroit, lieu, place",
+        "reading": "ところ",
+        "kanji": "所"
+      },
+      {
+        "id": "d3bf2f34-a16e-486d-9442-4066816dc36d",
+        "french": "Chanteuse, chanteur",
+        "reading": "かしゅ",
+        "kanji": "歌手"
+      },
+      {
+        "id": "393c2c81-99e7-4ed7-9fd2-a2612d2db944",
+        "french": "Triste",
+        "reading": "かなしい",
+        "kanji": "悲しい"
+      },
+      {
+        "id": "8e031881-ef51-4d13-9b5f-eead25e9db29",
+        "french": "Musique",
+        "reading": "おんがく",
+        "kanji": "音楽"
+      },
+      {
+        "id": "ddb5f14a-349e-4334-8999-24104b4dc42b",
+        "french": "Chanter",
+        "reading": "うたう",
+        "kanji": "歌う"
+      },
+      {
+        "id": "cc1393be-b3c6-4bca-91dd-6d25688f993f",
+        "french": "Chanson",
+        "reading": "うた",
+        "kanji": "歌"
+      }
+    ]
+  },
+  {
+    "id": "0a43d858-5355-469d-9f63-16a9a7b34e42",
+    "title": "Vocab – Pack 28 (Corps & Points cardinaux)",
+    "items": [
+      {
+        "id": "72d76bd4-a23a-466c-93a9-5772d328b984",
+        "french": "Œil",
+        "reading": "め",
+        "kanji": "目"
+      },
+      {
+        "id": "be172369-9962-42ba-83b3-42fa5ea01a5f",
+        "french": "Oreille",
+        "reading": "みみ",
+        "kanji": "耳"
+      },
+      {
+        "id": "4f796530-aafd-4bfe-af7c-08ba7f8e853a",
+        "french": "Bouche",
+        "reading": "くち",
+        "kanji": "口"
+      },
+      {
+        "id": "f950b369-5785-486c-bf2d-7f9ff4a66608",
+        "french": "Visage",
+        "reading": "かお",
+        "kanji": "顔"
+      },
+      {
+        "id": "e7b54bb9-9e01-4a87-af8a-e5651828fc5c",
+        "french": "Nez",
+        "reading": "はな",
+        "kanji": "鼻"
+      },
+      {
+        "id": "dde246c6-cee7-4f21-81b3-bff525aa02fd",
+        "french": "Dent",
+        "reading": "は",
+        "kanji": "歯"
+      },
+      {
+        "id": "a182adeb-eda4-4d30-860d-71d4e067a406",
+        "french": "Main",
+        "reading": "て",
+        "kanji": "手"
+      },
+      {
+        "id": "a46347bc-73a3-4519-8742-817c50fb6dd6",
+        "french": "Jambe, pied",
+        "reading": "あし",
+        "kanji": "足"
+      },
+      {
+        "id": "92e8aaa1-5e53-4673-af2c-2710b7a6f448",
+        "french": "Tête",
+        "reading": "あたま",
+        "kanji": "頭"
+      },
+      {
+        "id": "288f0817-de68-46f7-a6fa-6d531aa8aebc",
+        "french": "Bras",
+        "reading": "うで",
+        "kanji": "腕"
+      },
+      {
+        "id": "b00b8869-3565-40a3-8c81-3b7502cdd927",
+        "french": "Cheveux, cheveu, chevelure",
+        "reading": "かみ",
+        "kanji": "髪"
+      },
+      {
+        "id": "b68b58b6-a5ae-4e57-8f1b-9dfaff3637a2",
+        "french": "Cœur",
+        "reading": "こころ",
+        "kanji": "心"
+      },
+      {
+        "id": "2dec6b33-3561-49f9-8a59-bb4b1383813a",
+        "french": "Corps",
+        "reading": "からだ",
+        "kanji": "体"
+      },
+      {
+        "id": "e1ac5cf6-3b03-493f-bb3d-6aef7a076164",
+        "french": "Nord",
+        "reading": "きた",
+        "kanji": "北"
+      },
+      {
+        "id": "40e57b7d-1554-4062-8f41-f009a05a9b99",
+        "french": "Sud",
+        "reading": "みなみ",
+        "kanji": "南"
+      },
+      {
+        "id": "7eff0b74-c8bc-4faf-b3cd-66035886a474",
+        "french": "Ouest",
+        "reading": "にし",
+        "kanji": "西"
+      },
+      {
+        "id": "d2ffaf4e-80c0-4b62-8278-4f3ab8ed67a7",
+        "french": "Est",
+        "reading": "ひがし",
+        "kanji": "東"
+      }
+    ]
+  },
+  {
+    "id": "49cfcc9a-0209-415c-8b0e-51f75fbf7ab2",
+    "title": "Vocab – Pack 29 (Mesures & Vie courante)",
+    "items": [
+      {
+        "id": "3b0ce02a-1575-47ab-8cff-82cd01adc84b",
+        "french": "Temps, climat, météo",
+        "reading": "てんき",
+        "kanji": "天気"
+      },
+      {
+        "id": "8fb098d2-9277-4f8f-9add-81e0674a2e36",
+        "french": "Jeune",
+        "reading": "わかい",
+        "kanji": "若い"
+      },
+      {
+        "id": "63e349cf-77ad-4709-bd40-468ac9088cb9",
+        "french": "Kilomètre",
+        "reading": "キロメートル",
+        "kanji": null
+      },
+      {
+        "id": "bbdc21b1-39cf-408b-ba88-40d50b74c08f",
+        "french": "Kilogramme",
+        "reading": "キロ・キログラム",
+        "kanji": null
+      },
+      {
+        "id": "d2ebf0cb-839c-4eb1-b139-34aa9973a778",
+        "french": "Mètre",
+        "reading": "メートル",
+        "kanji": null
+      },
+      {
+        "id": "3008e567-0d28-41e2-865c-183f8c74c073",
+        "french": "Promenade, balade",
+        "reading": "さんぽ",
+        "kanji": "散歩"
+      },
+      {
+        "id": "5f9a749b-dfe9-4ca8-a9fc-5d2ecaf93d70",
+        "french": "Se promener, se balader, flâner",
+        "reading": "さんぽする",
+        "kanji": "散歩する"
+      },
+      {
+        "id": "3754b2d6-742b-44e8-82fa-3d2105fc33c7",
+        "french": "Jeu, plaisir, divertissement",
+        "reading": "あそび",
+        "kanji": "遊び"
+      },
+      {
+        "id": "f0c84374-3d97-4a93-8ed5-a8bf248c30a6",
+        "french": "Sucre",
+        "reading": "さとう",
+        "kanji": "砂糖"
+      },
+      {
+        "id": "bfb507ae-6855-480b-99a3-b30eabd8b572",
+        "french": "Sel",
+        "reading": "しお",
+        "kanji": "塩"
+      },
+      {
+        "id": "74960903-5a17-42cc-8e4e-c047a5b1e518",
+        "french": "Poisson",
+        "reading": "さかな",
+        "kanji": "魚"
+      },
+      {
+        "id": "fe446972-806e-4b48-9982-7a4a66aaebdb",
+        "french": "Viande",
+        "reading": "にく",
+        "kanji": "肉"
+      },
+      {
+        "id": "54f39197-f26f-47de-b28f-ac80d242da00",
+        "french": "Pain",
+        "reading": "パン",
+        "kanji": null
+      },
+      {
+        "id": "d0acf958-0698-41ad-aa52-993f256e4a99",
+        "french": "Midi",
+        "reading": "ひる",
+        "kanji": "昼"
+      },
+      {
+        "id": "20cea41e-ff5e-4b6e-b116-fc44e72ebd2d",
+        "french": "Voyage, excursion, tour",
+        "reading": "りょこう",
+        "kanji": "旅行"
+      },
+      {
+        "id": "155dcb76-658f-45e0-b6dc-eb3f8ba5d29d",
+        "french": "Voyager",
+        "reading": "りょこうする",
+        "kanji": "旅行する"
+      }
+    ]
+  },
+  {
+    "id": "94227a09-6b7a-4efe-a269-4d65823f7aaf",
+    "title": "Vocab – Pack 30 (Communication & Expressions)",
+    "items": [
+      {
+        "id": "d8b75357-5b09-455d-a00b-3956ec8d3523",
+        "french": "Tout le monde",
+        "reading": "みんな・みなさん",
+        "kanji": "皆・皆さん"
+      },
+      {
+        "id": "9c0ee078-85d1-4d90-acc2-7e4af780de14",
+        "french": "Dictionnaire",
+        "reading": "じしょ／じびき",
+        "kanji": "辞書／字引"
+      },
+      {
+        "id": "3373584c-1b51-4aff-998f-6e824d2a2aa1",
+        "french": "Prendre (une photo)",
+        "reading": "（しゃしんを）とる",
+        "kanji": "（写真を）撮る"
+      },
+      {
+        "id": "0ea3e553-e6c4-4c7a-9868-dd842780f79e",
+        "french": "Faire, créer, fabriquer",
+        "reading": "つくる",
+        "kanji": "作る"
+      },
+      {
+        "id": "432b3d29-9e48-4d1a-82f9-ae857e735986",
+        "french": "Maladie",
+        "reading": "びょうき",
+        "kanji": "病気"
+      },
+      {
+        "id": "6c1f0b14-d506-4b74-ba9b-6656191ab635",
+        "french": "Répondre",
+        "reading": "こたえる",
+        "kanji": "答える"
+      },
+      {
+        "id": "1cd72c6d-2939-4793-970a-99cc50de1e0c",
+        "french": "Question, interrogation",
+        "reading": "しつもん",
+        "kanji": "質問"
+      },
+      {
+        "id": "deea6a87-4aaf-44fd-a99c-56c9b56fa0f4",
+        "french": "Être doué, habile",
+        "reading": "じょうず",
+        "kanji": "上手"
+      },
+      {
+        "id": "14817cfc-459c-4aea-98fd-e2429acf9475",
+        "french": "Être mauvais, malhabile",
+        "reading": "へた",
+        "kanji": "下手"
+      },
+      {
+        "id": "5895f3fa-ae51-4a29-8040-07f60e83571f",
+        "french": "Kanji",
+        "reading": "かんじ",
+        "kanji": "漢字"
+      },
+      {
+        "id": "65b8d434-a390-4c18-b6f2-e2b96028a0bf",
+        "french": "Études",
+        "reading": "べんきょう",
+        "kanji": "勉強"
+      },
+      {
+        "id": "fb7e652b-96fa-4cb5-a3a7-4bdf9610573d",
+        "french": "Sentiment, émotion, sensation",
+        "reading": "きもち",
+        "kanji": "気持ち"
+      },
+      {
+        "id": "455f2857-a08e-4243-8052-f23215bada5b",
+        "french": "Danse",
+        "reading": "ダンス",
+        "kanji": null
+      },
+      {
+        "id": "2dbbf81e-2ced-42ab-a8eb-02cad41aa24a",
+        "french": "Ensemble",
+        "reading": "いっしょに",
+        "kanji": "一緒に"
+      },
+      {
+        "id": "86fada52-d684-4ce4-a27f-7af9e99e0aee",
+        "french": "Seul",
+        "reading": "ひとりで",
+        "kanji": "一人で"
+      },
+      {
+        "id": "fe00f187-849d-4a4b-9e62-63a88495c66b",
+        "french": "À deux",
+        "reading": "ふたりで",
+        "kanji": "二人で"
+      }
+    ]
+  },
+  {
+    "id": "f13da2a6-a69d-4274-8c77-f15f5a81f865",
+    "title": "Vocab – Pack 31 (Communication & Loisirs)",
+    "items": [
+      {
+        "id": "5f6fefed-1e53-4a4a-b417-b502bc4f9f16",
+        "french": "Sens, signification",
+        "reading": "いみ",
+        "kanji": "意味"
+      },
+      {
+        "id": "a8cc09fb-5f9f-4086-8f74-2ca95040d31a",
+        "french": "Poser une question",
+        "reading": "しつもんする",
+        "kanji": "質問する"
+      },
+      {
+        "id": "21828c5c-abf3-493e-a502-d61e85a8667a",
+        "french": "Oublier",
+        "reading": "わすれる",
+        "kanji": "忘れる"
+      },
+      {
+        "id": "1355fc78-a625-4d70-b11f-1356f8020d59",
+        "french": "Savoir (être au courant)",
+        "reading": "しっている",
+        "kanji": "知っている"
+      },
+      {
+        "id": "a0ba9f5d-daae-4f00-8609-b5bb2d0bc090",
+        "french": "Histoire, discours, conversation",
+        "reading": "はなし",
+        "kanji": "話"
+      },
+      {
+        "id": "ad87a20c-31ef-46d2-aa51-1ff5609a9668",
+        "french": "Réponse",
+        "reading": "こたえ",
+        "kanji": "答え"
+      },
+      {
+        "id": "63c0e326-44d2-4c8f-96e2-d385a99c49ee",
+        "french": "Mariage",
+        "reading": "けっこん",
+        "kanji": "結婚"
+      },
+      {
+        "id": "b133d343-13dc-485a-822d-7ae9df550f41",
+        "french": "Bataille",
+        "reading": "たたかい",
+        "kanji": "戦い"
+      },
+      {
+        "id": "cd77de76-bf33-45af-907e-cac73d642d3d",
+        "french": "Passe-temps, loisir, hobby",
+        "reading": "しゅみ",
+        "kanji": "趣味"
+      },
+      {
+        "id": "20c49f89-0db1-4126-847a-e57ba086c857",
+        "french": "Téléphoner",
+        "reading": "でんわする",
+        "kanji": "電話する"
+      },
+      {
+        "id": "54827737-f980-4d0c-824c-62e93fb767c3",
+        "french": "Foot",
+        "reading": "サッカー",
+        "kanji": null
+      },
+      {
+        "id": "5261ad03-87fd-4721-ade3-c4e4b26922af",
+        "french": "Dessiner (faire un dessin)",
+        "reading": "デッサンする・えをかく",
+        "kanji": "絵を描く"
+      },
+      {
+        "id": "550ee9ee-6137-4cdf-b229-b459103e80ef",
+        "french": "Courses, achats",
+        "reading": "かいもの",
+        "kanji": "買い物"
+      },
+      {
+        "id": "9b5d28ac-b20d-48b8-8f6b-c7397ac6b3f4",
+        "french": "Appareil photo",
+        "reading": "カメラ",
+        "kanji": null
+      },
+      {
+        "id": "81f6835e-2074-440c-a63b-d2d304fb9aba",
+        "french": "Faire le ménage",
+        "reading": "そうじする",
+        "kanji": "掃除する"
+      }
+    ]
+  },
+  {
+    "id": "99762bcc-cf00-4440-a2b7-47600d872fa4",
+    "title": "Vocab – Pack 32 (Vie courante III)",
+    "items": [
+      {
+        "id": "656aec5c-886a-443a-b424-b49d6bfc599f",
+        "french": "Courir",
+        "reading": "はしる",
+        "kanji": "走る"
+      },
+      {
+        "id": "18b31518-8304-4af2-8acc-36abfe18eefe",
+        "french": "Laver, rincer, nettoyer",
+        "reading": "あらう",
+        "kanji": "洗う"
+      },
+      {
+        "id": "3786f009-c41a-4879-b75d-25a2d1de0f09",
+        "french": "Se blesser, être blessé",
+        "reading": "けがをする",
+        "kanji": null
+      },
+      {
+        "id": "0cef0b41-0b25-48ab-bfa1-c86a4533c7be",
+        "french": "Appartement",
+        "reading": "アパート",
+        "kanji": null
+      },
+      {
+        "id": "594c8c1b-d08c-456b-83ff-54310a88a5e3",
+        "french": "Email, courrier électronique",
+        "reading": "メール",
+        "kanji": null
+      },
+      {
+        "id": "938214a8-2e24-4d64-ad16-10354dc61adc",
+        "french": "Bentō, panier-repas",
+        "reading": "べんとう",
+        "kanji": "弁当"
+      },
+      {
+        "id": "4b4467c0-76d7-49c3-bcbb-e29e5336ee93",
+        "french": "Salon de thé, café",
+        "reading": "きっさてん",
+        "kanji": "喫茶店"
+      },
+      {
+        "id": "e53ed37f-a8f5-4131-b430-63ba54944088",
+        "french": "Adulte",
+        "reading": "おとな",
+        "kanji": "大人"
+      },
+      {
+        "id": "27f1b608-a071-43cc-8632-26f5beb09e97",
+        "french": "Foyer, (sa) maison, (sa) famille",
+        "reading": "かてい",
+        "kanji": "家庭"
+      },
+      {
+        "id": "1a394b80-cc8c-45cd-9063-9dc40186c794",
+        "french": "Jardin",
+        "reading": "にわ",
+        "kanji": "庭"
+      },
+      {
+        "id": "896a5d4f-5f93-4db8-99c6-7b26bf78a303",
+        "french": "Vrai, véritable",
+        "reading": "ほんとう",
+        "kanji": "本当"
+      },
+      {
+        "id": "8a7f9c67-1cf1-4f1b-9196-093c10b87989",
+        "french": "Connaître, savoir",
+        "reading": "しる",
+        "kanji": "知る"
+      },
+      {
+        "id": "7f07145c-66de-429d-91a4-f0af011817bb",
+        "french": "Fête",
+        "reading": "パーティー",
+        "kanji": null
+      },
+      {
+        "id": "b3d301be-fd82-4807-ab5a-7bdadacd0678",
+        "french": "Page",
+        "reading": "ページ",
+        "kanji": null
+      },
+      {
+        "id": "ee92a5c3-9235-4252-9e05-95a66c7673f8",
+        "french": "Stylo / stylo-bille",
+        "reading": "ペン／ボールペン",
+        "kanji": null
+      },
+      {
+        "id": "204d613e-40b0-459d-9111-6ead906b7797",
+        "french": "Fourchette / Couteau / Cuillère",
+        "reading": "フォーク／ナイフ／スプーン",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "9ba97d31-e8cc-457d-be0b-17ddbad32c62",
+    "title": "Vocab – Pack 33 (Santé & Nature)",
+    "items": [
+      {
+        "id": "d19a18c9-a46f-438d-adae-24e5cbaca350",
+        "french": "Temps",
+        "reading": "じかん",
+        "kanji": "時間"
+      },
+      {
+        "id": "ed50d3ad-2f5b-4406-a628-20ddca7e10ae",
+        "french": "Douche",
+        "reading": "シャワー",
+        "kanji": null
+      },
+      {
+        "id": "ffc6844d-46f8-4d88-9957-66729179d894",
+        "french": "Prendre (douche/bain/soleil)",
+        "reading": "あびる",
+        "kanji": "浴びる"
+      },
+      {
+        "id": "e17085f3-5d3d-4820-9b65-3d49c5b7695a",
+        "french": "Rhume",
+        "reading": "かぜ",
+        "kanji": "風邪"
+      },
+      {
+        "id": "00165425-b576-47d5-bf33-2863ec3fbb97",
+        "french": "Attraper un rhume",
+        "reading": "かぜをひく",
+        "kanji": "風邪をひく"
+      },
+      {
+        "id": "6e9d2f80-da7a-4003-9154-2be10c4faba7",
+        "french": "Vent",
+        "reading": "かぜ",
+        "kanji": "風"
+      },
+      {
+        "id": "d2656117-72a4-44ac-9e8c-cfd278f8f103",
+        "french": "Voisin, proche",
+        "reading": "となり",
+        "kanji": "隣"
+      },
+      {
+        "id": "a3e5a21e-b472-4d53-9c45-6fb9e47ad046",
+        "french": "Entreprise",
+        "reading": "かいしゃ",
+        "kanji": "会社"
+      },
+      {
+        "id": "3b7955de-b70b-4aea-951c-c16cb6adb4de",
+        "french": "Forêt",
+        "reading": "もり",
+        "kanji": "森"
+      },
+      {
+        "id": "44f9ea6f-7c0a-47f2-be14-197e9286e792",
+        "french": "Oiseau",
+        "reading": "とり",
+        "kanji": "鳥"
+      },
+      {
+        "id": "c08fa379-0a71-4879-9082-2c0f67b7a860",
+        "french": "Poulet, volaille (viande)",
+        "reading": "とりにく",
+        "kanji": "鶏肉"
+      },
+      {
+        "id": "e8e2f5fd-2e35-4e3a-baac-9da2c5949afa",
+        "french": "Bœuf (viande)",
+        "reading": "ぎゅうにく",
+        "kanji": "牛肉"
+      },
+      {
+        "id": "65c1d240-62ba-4585-94bb-ce09b2c3740a",
+        "french": "Porc (viande)",
+        "reading": "ぶたにく",
+        "kanji": "豚肉"
+      },
+      {
+        "id": "b4cbbe30-22ef-4c51-bf1e-ae4d6e4bf40d",
+        "french": "Lait (de vache)",
+        "reading": "ぎゅうにゅう",
+        "kanji": "牛乳"
+      },
+      {
+        "id": "5bbbb67e-cc11-4eb9-a33a-7d04e8cf5e38",
+        "french": "Marchand de fruits/légumes, maraîcher",
+        "reading": "やおや",
+        "kanji": "八百屋"
+      },
+      {
+        "id": "255f7651-be84-46e8-a1a8-2c18e6f697c6",
+        "french": "Miauler, aboyer, meugler, chanter, etc.",
+        "reading": "なく",
+        "kanji": "鳴く"
+      }
+    ]
+  },
+  {
+    "id": "efcef957-263e-4fa2-a306-2b7683f05707",
+    "title": "Vocab – Pack 34 (École & Courses)",
+    "items": [
+      {
+        "id": "fa884352-82f8-4d23-8b88-24b82b759168",
+        "french": "Salle de classe",
+        "reading": "きょうしつ",
+        "kanji": "教室"
+      },
+      {
+        "id": "61ea3d7f-8138-46b9-920f-5aa10734e0ef",
+        "french": "Classe",
+        "reading": "クラス",
+        "kanji": null
+      },
+      {
+        "id": "f2532bf2-6e08-418c-984d-00c04dcaabd5",
+        "french": "Université",
+        "reading": "だいがく",
+        "kanji": "大学"
+      },
+      {
+        "id": "52ce5498-3886-45d4-8e99-2b72d710e7a7",
+        "french": "Devoirs à la maison",
+        "reading": "しゅくだい",
+        "kanji": "宿題"
+      },
+      {
+        "id": "d4dc26c5-1bf1-442e-9642-ea5a083d8611",
+        "french": "Fleurir, éclore",
+        "reading": "さく",
+        "kanji": "咲く"
+      },
+      {
+        "id": "5f8f6768-932c-45bc-b00f-2f9e9018551c",
+        "french": "Télévision",
+        "reading": "テレビ",
+        "kanji": null
+      },
+      {
+        "id": "2efc515a-d043-47a3-a9e8-d1b9e536bea5",
+        "french": "Centre commercial",
+        "reading": "デパート",
+        "kanji": null
+      },
+      {
+        "id": "18186737-f386-46d7-9b3b-0533a1f6ac71",
+        "french": "Supermarché",
+        "reading": "スーパー",
+        "kanji": null
+      },
+      {
+        "id": "08252b73-4efa-4540-8700-bde72ad40c4a",
+        "french": "Baguettes (pour manger)",
+        "reading": "はし",
+        "kanji": "箸"
+      },
+      {
+        "id": "c0835750-4c4b-48b7-a85a-91de55f016e2",
+        "french": "Étang",
+        "reading": "いけ",
+        "kanji": "池"
+      },
+      {
+        "id": "1d9d47de-3e07-4cd1-9eb8-dbf852c96587",
+        "french": "Chaise",
+        "reading": "いす",
+        "kanji": "椅子"
+      },
+      {
+        "id": "0f73dca9-2d13-475b-9485-e995dc42759b",
+        "french": "Bonbon, sucrerie",
+        "reading": "あめ",
+        "kanji": "飴"
+      },
+      {
+        "id": "9d4fa4fb-ebd0-42e4-824f-905b6c66c877",
+        "french": "Noël",
+        "reading": "クリスマス",
+        "kanji": null
+      },
+      {
+        "id": "bf592ecf-1513-4ab3-a09d-eef2b151764d",
+        "french": "Chocolat",
+        "reading": "チョコレート",
+        "kanji": null
+      },
+      {
+        "id": "9f3bb5ce-ec4e-41dd-9ab0-c6fd29802e08",
+        "french": "Sauce soja",
+        "reading": "しょうゆ",
+        "kanji": "醤油"
+      }
+    ]
+  },
+  {
+    "id": "44de1c98-5431-439e-b00d-ebf39e41e620",
+    "title": "Vocab – Pack 35 (Maison & Météo)",
+    "items": [
+      {
+        "id": "9502acad-f654-4d2e-8a75-fc85be3ed3ff",
+        "french": "Montre, horloge, pendule",
+        "reading": "とけい",
+        "kanji": "時計"
+      },
+      {
+        "id": "7680c1d9-7e6a-47a7-b1d2-1305b9a4128e",
+        "french": "Faire la lessive",
+        "reading": "せんたくする",
+        "kanji": "洗濯する"
+      },
+      {
+        "id": "274249bb-4de7-4d92-b6ab-bbe5b859ab74",
+        "french": "Lessive",
+        "reading": "せんたく",
+        "kanji": "洗濯"
+      },
+      {
+        "id": "6413542a-5a1c-44a5-a4e8-1aaeded9fd41",
+        "french": "Menu",
+        "reading": "メニュー",
+        "kanji": null
+      },
+      {
+        "id": "69c763bc-594e-462e-843e-71da64c88000",
+        "french": "Commencer",
+        "reading": "はじめる",
+        "kanji": "始める"
+      },
+      {
+        "id": "3faf7c05-b441-4144-8a38-5e6eb7777bc6",
+        "french": "Sortir, faire sortir; délivrer",
+        "reading": "だす",
+        "kanji": "出す"
+      },
+      {
+        "id": "91421458-37d4-4b8f-8676-0745f5fb09b5",
+        "french": "Pleuvoir",
+        "reading": "あめがふる",
+        "kanji": "雨が降る"
+      },
+      {
+        "id": "f55dfdc1-7bcb-4e42-af19-0cac0f513b65",
+        "french": "Neiger",
+        "reading": "ゆきがふる",
+        "kanji": "雪が降る"
+      },
+      {
+        "id": "515aca3a-38d8-4f25-908a-42b52b988bcc",
+        "french": "Apprendre",
+        "reading": "ならう",
+        "kanji": "習う"
+      },
+      {
+        "id": "8d9ba6bc-a5ee-46cb-8163-a1c3fb729bef",
+        "french": "Souffler (vent, air)",
+        "reading": "ふく",
+        "kanji": "吹く"
+      },
+      {
+        "id": "dfd0ffd2-7714-419a-a94f-0d16ea3c0ebe",
+        "french": "Sac",
+        "reading": "バッグ／かばん",
+        "kanji": "バッグ／鞄"
+      },
+      {
+        "id": "35d666ff-88f2-4087-a63c-587ce0958fd5",
+        "french": "Lit",
+        "reading": "ベッド",
+        "kanji": null
+      },
+      {
+        "id": "dd1c7b53-4624-47d0-bfe5-aa248339b4c9",
+        "french": "Porte",
+        "reading": "ドア／もん",
+        "kanji": "ドア／門"
+      },
+      {
+        "id": "72a661f3-82ab-43c5-a3ad-c32904dd9d52",
+        "french": "Toilettes",
+        "reading": "トイレ／おてあらい",
+        "kanji": "トイレ／お手洗い"
+      },
+      {
+        "id": "a4c80f5c-34d2-4acc-b8d2-68aa7e6000c4",
+        "french": "Cahier, carnet, calepin",
+        "reading": "ノート",
+        "kanji": null
+      },
+      {
+        "id": "010e1a57-9263-4396-997f-422b592411ba",
+        "french": "Piscine",
+        "reading": "プール",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "365badd8-0b81-419e-aefd-2a4e6ac26681",
+    "title": "Vocab – Pack 36 (Objets & Médias)",
+    "items": [
+      {
+        "id": "3b0b893a-4e93-49be-afaf-3eced0a9c49d",
+        "french": "Jogging",
+        "reading": "ジョギング",
+        "kanji": null
+      },
+      {
+        "id": "1293b993-9030-41fd-b641-a49bc184d641",
+        "french": "Actualités télévisées, infos, news",
+        "reading": "ニュース",
+        "kanji": null
+      },
+      {
+        "id": "dab23121-87aa-4244-9ae3-a276aa46ea7f",
+        "french": "Mouchoir",
+        "reading": "ハンカチ",
+        "kanji": null
+      },
+      {
+        "id": "5e25d49c-359e-4fa8-8242-8251388c9e11",
+        "french": "Poche",
+        "reading": "ポケット",
+        "kanji": null
+      },
+      {
+        "id": "6b62ea72-166e-4720-a0de-5face4b302fa",
+        "french": "Voler, planer, voltiger",
+        "reading": "とぶ",
+        "kanji": "飛ぶ"
+      },
+      {
+        "id": "17f07773-d90b-4c4a-ba7a-6ba618680956",
+        "french": "Guitare",
+        "reading": "ギター",
+        "kanji": null
+      },
+      {
+        "id": "5393b5d5-d997-4d2e-a023-2f2355e18706",
+        "french": "Test, essai",
+        "reading": "テスト",
+        "kanji": null
+      },
+      {
+        "id": "68fe75ce-e1a5-4c9c-b101-fb10a8d53a53",
+        "french": "Douloureux",
+        "reading": "いたい",
+        "kanji": "痛い"
+      },
+      {
+        "id": "ca4d623f-94f8-4801-a17e-f4a54d060c69",
+        "french": "Réfléchir",
+        "reading": "かんがえる",
+        "kanji": "考える"
+      },
+      {
+        "id": "551e09b2-1851-473c-9090-441434203f03",
+        "french": "Crayon",
+        "reading": "えんぴつ",
+        "kanji": "鉛筆"
+      },
+      {
+        "id": "904c6266-c4f9-4092-af66-99fe9e04d583",
+        "french": "Cigarette, tabac",
+        "reading": "タバコ／たばこ",
+        "kanji": "タバコ／煙草"
+      },
+      {
+        "id": "b503ec1f-9400-49e1-b527-96feecb67f9d",
+        "french": "Radio",
+        "reading": "ラジオ",
+        "kanji": null
+      },
+      {
+        "id": "d2c1033f-029c-4386-87c2-7985d86c1508",
+        "french": "Disque de musique",
+        "reading": "レコード",
+        "kanji": null
+      },
+      {
+        "id": "2e213219-31f1-4ad2-af72-0a2341d52d41",
+        "french": "Cassette audio, bande magnétique",
+        "reading": "テープ",
+        "kanji": null
+      },
+      {
+        "id": "db70da92-93e9-4273-8ec1-b0ceff55d6bf",
+        "french": "Magnétophone",
+        "reading": "テープレコーダー",
+        "kanji": null
+      },
+      {
+        "id": "eeb7609a-4c35-442b-beac-c44be70d2482",
+        "french": "Allô (au téléphone)",
+        "reading": "もしもし",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "f0cbe0b7-7201-4c1a-8b5c-88a2ede473f5",
+    "title": "Vocab – Pack 37 (Vêtements)",
+    "items": [
+      {
+        "id": "44e02c42-6f1a-42f0-985f-115262ce0d94",
+        "french": "Pantalon",
+        "reading": "ズボン",
+        "kanji": null
+      },
+      {
+        "id": "87ac2d00-3668-42af-8660-1625bd6acff8",
+        "french": "Manteau, veste",
+        "reading": "コート／うわぎ",
+        "kanji": "コート／上着"
+      },
+      {
+        "id": "4202cb8e-9bb0-443b-a333-81f8fcd3cabe",
+        "french": "Chaussettes",
+        "reading": "くつした",
+        "kanji": "靴下"
+      },
+      {
+        "id": "7711b0b2-6b03-47cf-949c-0a2ab4a7f406",
+        "french": "Jupe",
+        "reading": "スカート",
+        "kanji": null
+      },
+      {
+        "id": "f7ad0f32-20f5-42ca-a129-b40749207ae4",
+        "french": "Pantoufle",
+        "reading": "スリッパ",
+        "kanji": null
+      },
+      {
+        "id": "0689fc80-789f-45d5-b977-aa1690ade9be",
+        "french": "Pull",
+        "reading": "セーター",
+        "kanji": null
+      },
+      {
+        "id": "c1fc8bfa-42e9-47bd-9e3f-6b1105f7fde3",
+        "french": "Cravate",
+        "reading": "ネクタイ",
+        "kanji": null
+      },
+      {
+        "id": "1d74ea6f-1898-45fe-8bc1-0f2521ac6d23",
+        "french": "Costume d’affaire",
+        "reading": "せびろ",
+        "kanji": "背広"
+      },
+      {
+        "id": "c751d182-71bb-4cc4-8b80-56c2f3f1ed28",
+        "french": "Lunettes",
+        "reading": "めがね",
+        "kanji": "眼鏡"
+      },
+      {
+        "id": "a3458bef-e217-4826-84e1-52b30a135b96",
+        "french": "Vêtement",
+        "reading": "ふく",
+        "kanji": "服"
+      },
+      {
+        "id": "2a10910f-5c84-443d-8ef5-4b227be82b9c",
+        "french": "Vêtements occidentaux",
+        "reading": "ようふく",
+        "kanji": "洋服"
+      },
+      {
+        "id": "05792a8d-bc7c-450d-9203-c2852b7891a4",
+        "french": "S’habiller (épaules)",
+        "reading": "きる",
+        "kanji": "着る"
+      },
+      {
+        "id": "27e9f0d6-ed1f-4cfc-a9d6-d450e5934a0b",
+        "french": "Se déshabiller",
+        "reading": "ぬぐ",
+        "kanji": "脱ぐ"
+      },
+      {
+        "id": "c9c3d913-caab-4666-8d85-2d129c89be9f",
+        "french": "Porter (vêtements en dessous de la taille)",
+        "reading": "はく",
+        "kanji": "履く"
+      },
+      {
+        "id": "1b4c0c9e-2889-47c5-a7c8-8804fbfcf792",
+        "french": "Porter quelque chose sur la tête",
+        "reading": "かぶる",
+        "kanji": "被る"
+      },
+      {
+        "id": "654811cc-152d-4b36-909e-acd25caaad15",
+        "french": "Porter des lunettes; accrocher; dépenser (argent)",
+        "reading": "かける",
+        "kanji": "掛ける"
+      }
+    ]
+  },
+  {
+    "id": "625e37b4-cafe-4f16-ae3e-87f72e1be8df",
+    "title": "Vocab – Pack 38 (Administration & Famille II)",
+    "items": [
+      {
+        "id": "286627e7-c088-4ca1-a75b-5bfb8de1b5cf",
+        "french": "Hôpital",
+        "reading": "びょういん",
+        "kanji": "病院"
+      },
+      {
+        "id": "e1edbe4d-8683-4b15-b0bc-2839d1ddc8fd",
+        "french": "Magazine, revue",
+        "reading": "ざっし",
+        "kanji": "雑誌"
+      },
+      {
+        "id": "549df296-2384-4f8d-a84a-edb02142ebd2",
+        "french": "Journal",
+        "reading": "しんぶん",
+        "kanji": "新聞"
+      },
+      {
+        "id": "a894939a-42dd-4c85-950c-53c71f43cead",
+        "french": "Papier",
+        "reading": "かみ",
+        "kanji": "紙"
+      },
+      {
+        "id": "be7372e5-d190-44ec-89ab-6703a09176cd",
+        "french": "Calendrier",
+        "reading": "カレンダー",
+        "kanji": null
+      },
+      {
+        "id": "806db380-4808-4335-b7f9-195ff879667f",
+        "french": "Enveloppe",
+        "reading": "ふうとう",
+        "kanji": "封筒"
+      },
+      {
+        "id": "d64e9f26-f037-4f21-9cab-42dc7cbd0936",
+        "french": "Timbre",
+        "reading": "きって",
+        "kanji": "切手"
+      },
+      {
+        "id": "e61e7ed6-483e-402f-8d90-71d748ab32df",
+        "french": "Épouse (la nôtre)",
+        "reading": "かない",
+        "kanji": "家内"
+      },
+      {
+        "id": "768ca610-c95d-4de8-a612-ed52515c7957",
+        "french": "Épouse (de quelqu’un)",
+        "reading": "おくさん",
+        "kanji": "奥さん"
+      },
+      {
+        "id": "3a0ebc6f-5334-4afb-906f-7ddb5787f4ea",
+        "french": "Mari (le nôtre)",
+        "reading": "おっと",
+        "kanji": "夫"
+      },
+      {
+        "id": "ded22082-838a-46cd-a112-328f7ec64c22",
+        "french": "Mari (de quelqu’un)",
+        "reading": "ごしゅじん",
+        "kanji": "ご主人"
+      },
+      {
+        "id": "bada27d2-7385-43c5-88e6-650712fd07b1",
+        "french": "Tante",
+        "reading": "おば／おばさん",
+        "kanji": "伯母／伯母さん"
+      },
+      {
+        "id": "2289b0ed-35fe-4b3f-bb11-6ba717c79ee6",
+        "french": "Oncle",
+        "reading": "おじ／おじさん",
+        "kanji": "伯父／伯父さん"
+      },
+      {
+        "id": "11d15d6f-fa96-4a04-a8e6-1a395e6de280",
+        "french": "Gros",
+        "reading": "ふとい",
+        "kanji": "太い"
+      },
+      {
+        "id": "df2dfa48-cc32-42c7-be3c-a6f78f792a25",
+        "french": "Mince, pâle (pour une couleur)",
+        "reading": "うすい",
+        "kanji": "薄い"
+      },
+      {
+        "id": "b6bc37fa-366d-4868-a77d-094bbe42d2a9",
+        "french": "Épais",
+        "reading": "あつい",
+        "kanji": "厚い"
+      },
+      {
+        "id": "e7bc2e10-36a9-4822-b53e-4c788029a7d0",
+        "french": "Portez-vous bien, prends soin de toi",
+        "reading": "おげんきで",
+        "kanji": "お元気で"
+      }
+    ]
+  },
+  {
+    "id": "1c815402-78a1-4717-839b-adb738e0abcc",
+    "title": "Vocab – Pack 39 (Temps & Lieux)",
+    "items": [
+      {
+        "id": "1b37c261-441c-41d6-9414-abf6650c6c1e",
+        "french": "Dire",
+        "reading": "いう",
+        "kanji": "言う"
+      },
+      {
+        "id": "3d7709cc-c72c-477d-97ab-c0509451dbfc",
+        "french": "Penser",
+        "reading": "おもう",
+        "kanji": "思う"
+      },
+      {
+        "id": "938d0f3f-ad84-4804-9bc3-b8c3757220e9",
+        "french": "Clair",
+        "reading": "あかるい",
+        "kanji": "明るい"
+      },
+      {
+        "id": "f3042a62-40e0-42ea-bcb4-39aced2acb8c",
+        "french": "Sombre",
+        "reading": "くらい",
+        "kanji": "暗い"
+      },
+      {
+        "id": "c5a3f021-04a4-4453-94aa-3d4ce6af1cbb",
+        "french": "Long",
+        "reading": "ながい",
+        "kanji": "長い"
+      },
+      {
+        "id": "ad2b9277-6ff2-48f4-b549-532fbd6da63e",
+        "french": "Court",
+        "reading": "みじかい",
+        "kanji": "短い"
+      },
+      {
+        "id": "af03452e-2d95-4853-8bff-286b771073f6",
+        "french": "Ascenseur",
+        "reading": "エレベーター",
+        "kanji": null
+      },
+      {
+        "id": "bbc66e21-d30c-4f00-8ac9-f11d84aabb6b",
+        "french": "Escalier",
+        "reading": "かいだん",
+        "kanji": "階段"
+      },
+      {
+        "id": "b3ebaef9-c62e-4fa5-bba6-1afddd3f1c1a",
+        "french": "Ciel",
+        "reading": "そら",
+        "kanji": "空"
+      },
+      {
+        "id": "b2a3543c-2c85-4cb8-bcc2-ce60ee717c90",
+        "french": "Beau temps, temps clair",
+        "reading": "はれ",
+        "kanji": "晴れ"
+      },
+      {
+        "id": "c7754b15-5f14-4172-8dd0-4df22240e9b5",
+        "french": "S’éclaircir, s’ensoleiller",
+        "reading": "はれる",
+        "kanji": "晴れる"
+      },
+      {
+        "id": "e1db8082-e9d9-4bc2-bf60-5c88f41edf26",
+        "french": "Nuageux, temps couvert",
+        "reading": "くもり",
+        "kanji": "曇り"
+      },
+      {
+        "id": "63c26299-9018-4780-834a-6236f2893763",
+        "french": "Clair de lune",
+        "reading": "つきあかり",
+        "kanji": "月明かり"
+      },
+      {
+        "id": "1ad82151-b72c-4f9a-a98f-16ad29b38daf",
+        "french": "Soir, soirée",
+        "reading": "ゆうがた",
+        "kanji": "夕方"
+      },
+      {
+        "id": "fa77c19d-d7df-441b-a373-f9cd355ade61",
+        "french": "Nuit",
+        "reading": "よる",
+        "kanji": "夜"
+      },
+      {
+        "id": "51689d36-b316-4605-a3e6-9549ca3ae014",
+        "french": "Chauffage",
+        "reading": "ストーブ",
+        "kanji": null
+      }
+    ]
+  },
+  {
+    "id": "ac262e5e-ceb2-44bd-a97d-96f5660afdd1",
+    "title": "Vocab – Pack 40 (Déplacements & Actions)",
+    "items": [
+      {
+        "id": "923986b2-4583-4875-b0dd-582fe1b12cc7",
+        "french": "Savon",
+        "reading": "せっけん",
+        "kanji": "石鹸"
+      },
+      {
+        "id": "d4d14554-b512-44c7-aa17-83ec31433697",
+        "french": "Envoyer, expédier",
+        "reading": "おくる",
+        "kanji": "送る"
+      },
+      {
+        "id": "270021fb-90b4-44b3-b2d1-e1468a69f5c9",
+        "french": "Escalader, grimper, gravir",
+        "reading": "のぼる",
+        "kanji": "登る・上る"
+      },
+      {
+        "id": "640477d6-2e25-4b7e-b041-8f8679e26e7f",
+        "french": "Cuisiner",
+        "reading": "りょうりする",
+        "kanji": "料理する"
+      },
+      {
+        "id": "3a3e56eb-2925-452e-b035-f03988d7013e",
+        "french": "Se souvenir",
+        "reading": "おぼえる",
+        "kanji": "覚える"
+      },
+      {
+        "id": "d79c4254-6fe9-45de-82ce-d5200fae8f6c",
+        "french": "Médicament",
+        "reading": "くすり",
+        "kanji": "薬"
+      },
+      {
+        "id": "6d42c8d0-5b16-4269-8dc2-9f54026fe756",
+        "french": "Beaucoup de, bien des, de nombreux",
+        "reading": "おおくの",
+        "kanji": "多くの"
+      },
+      {
+        "id": "2680cf31-ac4b-40b1-987e-604ef925498b",
+        "french": "Étoile",
+        "reading": "ほし",
+        "kanji": "星"
+      },
+      {
+        "id": "08e9b4f7-4eb9-48c4-94c5-b9a55565166a",
+        "french": "Monter à / dans (un véhicule)",
+        "reading": "のる",
+        "kanji": "乗る"
+      },
+      {
+        "id": "4bb997db-9605-4ec4-9138-2c81dcc47d3e",
+        "french": "Descendre (montagne, véhicule, …)",
+        "reading": "おりる",
+        "kanji": "降りる"
+      },
+      {
+        "id": "05bcdbd5-f0ef-423c-8d88-23db913bbb45",
+        "french": "Partir (en train, en avion, etc.)",
+        "reading": "たつ",
+        "kanji": "発つ"
+      },
+      {
+        "id": "2a18dc19-4ba7-47c5-adbc-7c0929fed900",
+        "french": "Arriver, atteindre, parvenir",
+        "reading": "つく",
+        "kanji": "着く"
+      },
+      {
+        "id": "59374930-0db8-44ef-becb-0899abd84bad",
+        "french": "Bagage, paquet",
+        "reading": "にもつ",
+        "kanji": "荷物"
+      },
+      {
+        "id": "7efef279-ad87-4e71-a092-7e49716ec470",
+        "french": "Chemin",
+        "reading": "みち",
+        "kanji": "道"
+      },
+      {
+        "id": "cb0c74e6-4f28-435a-8b86-5dd728203fe1",
+        "french": "Être capable de faire",
+        "reading": "できる",
+        "kanji": "出来る"
+      }
+    ]
+  },
+  {
+    "id": "9d9b78be-adcb-4af3-aaca-0121cfccc98d",
+    "title": "Vocab – Pack 41 (Cuisine & Maison)",
+    "items": [
+      {
+        "id": "46705796-e2b7-46dc-a451-4b4e66da10c2",
+        "french": "Bruit, son, volume",
+        "reading": "おと",
+        "kanji": "音"
+      },
+      {
+        "id": "f4e64074-2d94-4a0b-bb46-f51d293b811c",
+        "french": "Travailler dur, faire de son mieux",
+        "reading": "がんばる",
+        "kanji": "頑張る"
+      },
+      {
+        "id": "c5d20b85-6f23-4f11-9337-b0b05eb69311",
+        "french": "Utiliser, employer; dépenser (argent)",
+        "reading": "つかう",
+        "kanji": "使う"
+      },
+      {
+        "id": "148f3317-5d3f-49d9-a79a-f0cf581c1d26",
+        "french": "Lentement, tranquillement",
+        "reading": "ゆっくり",
+        "kanji": null
+      },
+      {
+        "id": "5a92b6dc-e93f-4a74-aa25-ab5a9b5cdb10",
+        "french": "Beurre",
+        "reading": "バター",
+        "kanji": null
+      },
+      {
+        "id": "c73c109a-eb52-425c-b003-5c54c0cbb27b",
+        "french": "Repas, riz cuit",
+        "reading": "ごはん",
+        "kanji": "ご飯"
+      },
+      {
+        "id": "ec8e1484-1684-4219-adde-d7a3e0b7df24",
+        "french": "Ventre, estomac",
+        "reading": "おなか",
+        "kanji": "お腹"
+      },
+      {
+        "id": "6adac009-5ff2-4cfe-81c7-cd7c8bc2c42b",
+        "french": "Gramme",
+        "reading": "グラム",
+        "kanji": null
+      },
+      {
+        "id": "2b1a4033-5328-4479-8f33-e2d446d781c6",
+        "french": "Assiette",
+        "reading": "さら",
+        "kanji": "皿"
+      },
+      {
+        "id": "55bec108-812d-4096-8a1e-e0d6bf497de9",
+        "french": "Verre",
+        "reading": "コップ",
+        "kanji": null
+      },
+      {
+        "id": "193cf001-1551-48b5-a43d-befd42b345aa",
+        "french": "Salle à manger",
+        "reading": "しょくどう",
+        "kanji": "食堂"
+      },
+      {
+        "id": "d42bd805-1d8e-4e5b-86d5-b46af931f058",
+        "french": "Cuisine (la pièce de la maison)",
+        "reading": "だいどころ",
+        "kanji": "台所"
+      },
+      {
+        "id": "5df38497-05de-4e66-8466-88a621e87094",
+        "french": "Bol à riz, tasse à thé",
+        "reading": "ちゃわん",
+        "kanji": "茶碗"
+      },
+      {
+        "id": "7b6cb741-1430-4e33-8a21-7eb752d5cdf6",
+        "french": "Réfrigérateur, frigo",
+        "reading": "れいぞうこ",
+        "kanji": "冷蔵庫"
+      }
+    ]
+  },
+  {
+    "id": "a91ad8dc-726b-4b5c-ac03-42b5d269d0da",
+    "title": "Vocab – Pack 42 (Expressions utiles II)",
+    "items": [
+      {
+        "id": "2ce8ded9-4ada-4f85-b79e-95d285db0fe8",
+        "french": "Tôt",
+        "reading": "はやく",
+        "kanji": "早く"
+      },
+      {
+        "id": "fac796be-34e3-4010-b963-2763c95df47f",
+        "french": "Faire vite, se dépêcher",
+        "reading": "はやくする",
+        "kanji": "早くする"
+      },
+      {
+        "id": "608ddf2d-3795-4d7d-8b83-0603251a4c07",
+        "french": "Tôt le matin, de bonne heure",
+        "reading": "あさはやく",
+        "kanji": "朝早く"
+      },
+      {
+        "id": "894857f4-585c-4671-8346-2e35fdc151e1",
+        "french": "Électricité, lumière, courant",
+        "reading": "でんき",
+        "kanji": "電気"
+      },
+      {
+        "id": "7a0d08d6-3b39-4cf5-9fb0-3309ee5b369a",
+        "french": "Éteindre, effacer, supprimer",
+        "reading": "けす",
+        "kanji": "消す"
+      },
+      {
+        "id": "837adc01-1660-4c41-9809-af23b778216d",
+        "french": "Allumer (une lumière, une cigarette…)",
+        "reading": "つける",
+        "kanji": "点ける"
+      },
+      {
+        "id": "ef805061-9164-45db-b97e-4c99f37c74b2",
+        "french": "Lettre, caractère",
+        "reading": "もじ",
+        "kanji": "文字"
+      },
+      {
+        "id": "a3bac9f2-5bde-433c-8752-a45ecaca56e9",
+        "french": "Euh…, eh bien…, donc…",
+        "reading": "あの",
+        "kanji": null
+      },
+      {
+        "id": "655d9210-ec91-4081-b7d0-93a6f73499c1",
+        "french": "Oui, en effet, c’est cela",
+        "reading": "ええ",
+        "kanji": null
+      },
+      {
+        "id": "22909026-81db-4643-b7b5-161585cca24e",
+        "french": "C’est parfait, c’est OK, ça me va",
+        "reading": "けっこうです",
+        "kanji": "結構です"
+      },
+      {
+        "id": "90bb9bfb-6726-4a81-833a-d328ddce3eec",
+        "french": "Bien, merveilleux, excellent",
+        "reading": "けっこう",
+        "kanji": "結構"
+      },
+      {
+        "id": "18b61b51-d7bb-46eb-b3d0-cd7083c25c6d",
+        "french": "Dans ce cas, alors, donc",
+        "reading": "それでは／では",
+        "kanji": null
+      },
+      {
+        "id": "f10c06cc-df8f-425b-a1a3-828c6ed9f256",
+        "french": "Sans problème, ça va, qui va bien",
+        "reading": "だいじょうぶ",
+        "kanji": "大丈夫"
+      },
+      {
+        "id": "727249ee-dde3-46a2-86a3-ca2224ccce24",
+        "french": "Bonne santé, vigoureux, solide",
+        "reading": "じょうぶ",
+        "kanji": "丈夫"
+      },
+      {
+        "id": "5697ac48-2ea6-4a0d-b9b2-1abad777211b",
+        "french": "À plus tard",
+        "reading": "また・またね",
+        "kanji": null
+      }
+    ]
+  }
+]
