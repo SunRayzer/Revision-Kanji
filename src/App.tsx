@@ -120,6 +120,241 @@ const DATA = [
 
 ];
 
+
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import vocabQuizzes from "./assets/vocab_quizzes.json";
+
+// --------------------
+// STRUCTURE DES DONNÉES
+// --------------------
+
+const MODULE_MAP = {};
+function mapRangeToModule(start, end, moduleNumber) {
+  for (let p = start; p <= end; p++) MODULE_MAP[p] = moduleNumber;
+}
+mapRangeToModule(1, 5, 2);
+mapRangeToModule(6, 10, 3);
+mapRangeToModule(11, 13, 4);
+mapRangeToModule(14, 18, 5);
+mapRangeToModule(19, 23, 6);
+mapRangeToModule(24, 28, 7);
+mapRangeToModule(29, 32, 8);
+mapRangeToModule(33, 36, 9);
+mapRangeToModule(37, 42, 10);
+
+// Construire la liste des packs à partir du JSON
+const ALL_PACKS = vocabQuizzes.map((rawPack, index) => {
+  const packNumber = index + 1;
+  return {
+    packNumber,
+    title: rawPack.title,
+    moduleNumber: MODULE_MAP[packNumber],
+    items: rawPack.items,
+  };
+});
+
+// Construire les modules regroupant les packs
+const MODULE_NUMBERS = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+const MODULES = MODULE_NUMBERS.map((num) => {
+  const packs = ALL_PACKS.filter((p) => p.moduleNumber === num);
+  return {
+    moduleNumber: num,
+    label: `Module ${num}`,
+    packs,
+  };
+});
+
+// --------------------
+// COMPOSANT PRINCIPAL
+// --------------------
+
+export default function App() {
+  const [page, setPage] = useState("menu"); // menu principal (kanji/quiz/etc.)
+  const [selectedModule, setSelectedModule] = useState(null);
+  const [selectedPack, setSelectedPack] = useState(null);
+
+  // --------------------
+  // ÉCRANS
+  // --------------------
+
+  // ✅ MENU PRINCIPAL
+  if (page === "menu") {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>Menu principal</Text>
+        <View style={styles.menu}>
+          <TouchableOpacity style={styles.menuButton}>
+            <Text style={styles.menuText}>Kanji</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuButton}>
+            <Text style={styles.menuText}>Quiz</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuButton}>
+            <Text style={styles.menuText}>Quiz complet</Text>
+          </TouchableOpacity>
+
+          {/* 🔹 Nouveau bouton Vocabulaire */}
+          <TouchableOpacity style={styles.menuButton} onPress={() => setPage("vocabModules")}>
+            <Text style={[styles.menuText, { color: "#e91e63" }]}>Vocabulaire</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // ✅ PAGE MODULES
+  if (page === "vocabModules") {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>📘 Modules de vocabulaire</Text>
+        <FlatList
+          data={MODULES}
+          keyExtractor={(m) => String(m.moduleNumber)}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.moduleCard}
+              onPress={() => {
+                setSelectedModule(item);
+                setPage("vocabPacks");
+              }}
+            >
+              <Text style={styles.moduleTitle}>{item.label}</Text>
+              <Text style={styles.moduleSub}>
+                {item.packs.length} packs • {item.packs.reduce((n, p) => n + p.items.length, 0)} mots
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity style={styles.backButton} onPress={() => setPage("menu")}>
+          <Text style={styles.backButtonText}>← Retour</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  // ✅ PAGE PACKS D’UN MODULE
+  if (page === "vocabPacks" && selectedModule) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>{selectedModule.label}</Text>
+        <FlatList
+          data={selectedModule.packs}
+          keyExtractor={(p) => String(p.packNumber)}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.packCard}
+              onPress={() => {
+                setSelectedPack(item);
+                setPage("vocabWords");
+              }}
+            >
+              <Text style={styles.packTitle}>Pack {item.packNumber}</Text>
+              <Text style={styles.packSub}>{item.items.length} mots</Text>
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity style={styles.backButton} onPress={() => setPage("vocabModules")}>
+          <Text style={styles.backButtonText}>← Retour aux modules</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  // ✅ PAGE MOTS D’UN PACK (affiche seulement les traductions)
+  if (page === "vocabWords" && selectedPack) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>
+          {selectedPack.title.replace(/^Vocab\s*–\s*/, "")}
+        </Text>
+        <ScrollView style={{ marginTop: 10 }}>
+          {selectedPack.items.map((it) => (
+            <View key={it.id} style={styles.wordRow}>
+              <Text style={styles.wordText}>{it.french}</Text>
+            </View>
+          ))}
+        </ScrollView>
+        <TouchableOpacity style={styles.backButton} onPress={() => setPage("vocabPacks")}>
+          <Text style={styles.backButtonText}>← Retour aux packs</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  return null;
+}
+
+// --------------------
+// STYLES
+// --------------------
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 16,
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  menu: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+  },
+  menuButton: {
+    backgroundColor: "#f2f2f2",
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+  },
+  menuText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  moduleCard: {
+    backgroundColor: "#f7f7f7",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  moduleTitle: { fontSize: 18, fontWeight: "600" },
+  moduleSub: { fontSize: 14, color: "#555", marginTop: 4 },
+  packCard: {
+    backgroundColor: "#f0f0f0",
+    padding: 14,
+    borderRadius: 10,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+  },
+  packTitle: { fontSize: 16, fontWeight: "600" },
+  packSub: { fontSize: 13, color: "#666" },
+  wordRow: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  wordText: { fontSize: 16, fontWeight: "500", color: "#111" },
+  backButton: {
+    marginTop: 20,
+    alignSelf: "center",
+    backgroundColor: "#e91e63",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+  },
+  backButtonText: { color: "#fff", fontWeight: "700" },
+});
+
 /** Pool de lectures (pour génèr. de distracteurs) */
 const READING_POOL = Array.from(new Set(DATA.flatMap(k => [...(k.kunyomi||[]), ...(k.onyomi||[])])));
 
