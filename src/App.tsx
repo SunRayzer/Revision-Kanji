@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React, { useMemo, useState, useEffect, useRef } from "react";
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import vocabQuizzes from "./assets/vocab_quizzes.json";
 
 /** ================== Données JLPT N5 (kanji) ================== */
 const DATA = [
@@ -121,95 +123,17 @@ const DATA = [
 ];
 
 
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, SafeAreaView, ScrollView } from "react-native";
-import vocabQuizzes from "./assets/vocab_quizzes.json";
-
-// --------------------
-// STRUCTURE DES DONNÉES
-// --------------------
-
-const MODULE_MAP = {};
-function mapRangeToModule(start, end, moduleNumber) {
-  for (let p = start; p <= end; p++) MODULE_MAP[p] = moduleNumber;
-}
-mapRangeToModule(1, 5, 2);
-mapRangeToModule(6, 10, 3);
-mapRangeToModule(11, 13, 4);
-mapRangeToModule(14, 18, 5);
-mapRangeToModule(19, 23, 6);
-mapRangeToModule(24, 28, 7);
-mapRangeToModule(29, 32, 8);
-mapRangeToModule(33, 36, 9);
-mapRangeToModule(37, 42, 10);
-
-// Construire la liste des packs à partir du JSON
-const ALL_PACKS = vocabQuizzes.map((rawPack, index) => {
-  const packNumber = index + 1;
-  return {
-    packNumber,
-    title: rawPack.title,
-    moduleNumber: MODULE_MAP[packNumber],
-    items: rawPack.items,
-  };
-});
-
-// Construire les modules regroupant les packs
-const MODULE_NUMBERS = [2, 3, 4, 5, 6, 7, 8, 9, 10];
-const MODULES = MODULE_NUMBERS.map((num) => {
-  const packs = ALL_PACKS.filter((p) => p.moduleNumber === num);
-  return {
-    moduleNumber: num,
-    label: `Module ${num}`,
-    packs,
-  };
-});
-
-// --------------------
-// COMPOSANT PRINCIPAL
-// --------------------
-
-export default function App() {
-  const [page, setPage] = useState("menu"); // menu principal (kanji/quiz/etc.)
+function VocabSection({ onExit }) {
+  const [subPage, setSubPage] = useState<"modules" | "packs" | "words">("modules");
   const [selectedModule, setSelectedModule] = useState(null);
   const [selectedPack, setSelectedPack] = useState(null);
 
-  // --------------------
-  // ÉCRANS
-  // --------------------
-
-  // ✅ MENU PRINCIPAL
-  if (page === "menu") {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.header}>Menu principal</Text>
-        <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuButton}>
-            <Text style={styles.menuText}>Kanji</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuButton}>
-            <Text style={styles.menuText}>Quiz</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuButton}>
-            <Text style={styles.menuText}>Quiz complet</Text>
-          </TouchableOpacity>
-
-          {/* 🔹 Nouveau bouton Vocabulaire */}
-          <TouchableOpacity style={styles.menuButton} onPress={() => setPage("vocabModules")}>
-            <Text style={[styles.menuText, { color: "#e91e63" }]}>Vocabulaire</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  // ✅ PAGE MODULES
-  if (page === "vocabModules") {
+  // 1) Écran "modules"
+  if (subPage === "modules") {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.header}>📘 Modules de vocabulaire</Text>
+
         <FlatList
           data={MODULES}
           keyExtractor={(m) => String(m.moduleNumber)}
@@ -218,28 +142,31 @@ export default function App() {
               style={styles.moduleCard}
               onPress={() => {
                 setSelectedModule(item);
-                setPage("vocabPacks");
+                setSubPage("packs");
               }}
             >
               <Text style={styles.moduleTitle}>{item.label}</Text>
               <Text style={styles.moduleSub}>
-                {item.packs.length} packs • {item.packs.reduce((n, p) => n + p.items.length, 0)} mots
+                {item.packs.length} packs •{" "}
+                {item.packs.reduce((n, p) => n + p.items.length, 0)} mots
               </Text>
             </TouchableOpacity>
           )}
         />
-        <TouchableOpacity style={styles.backButton} onPress={() => setPage("menu")}>
-          <Text style={styles.backButtonText}>← Retour</Text>
+
+        <TouchableOpacity style={styles.backButton} onPress={onExit}>
+          <Text style={styles.backButtonText}>← Retour menu</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
   }
 
-  // ✅ PAGE PACKS D’UN MODULE
-  if (page === "vocabPacks" && selectedModule) {
+  // 2) Écran "packs" dans un module
+  if (subPage === "packs" && selectedModule) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.header}>{selectedModule.label}</Text>
+
         <FlatList
           data={selectedModule.packs}
           keyExtractor={(p) => String(p.packNumber)}
@@ -248,7 +175,7 @@ export default function App() {
               style={styles.packCard}
               onPress={() => {
                 setSelectedPack(item);
-                setPage("vocabWords");
+                setSubPage("words");
               }}
             >
               <Text style={styles.packTitle}>Pack {item.packNumber}</Text>
@@ -256,36 +183,49 @@ export default function App() {
             </TouchableOpacity>
           )}
         />
-        <TouchableOpacity style={styles.backButton} onPress={() => setPage("vocabModules")}>
-          <Text style={styles.backButtonText}>← Retour aux modules</Text>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => setSubPage("modules")}
+        >
+          <Text style={styles.backButtonText}>← Retour modules</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
   }
 
-  // ✅ PAGE MOTS D’UN PACK (affiche seulement les traductions)
-  if (page === "vocabWords" && selectedPack) {
+  // 3) Écran "words" = liste des mots d’un pack
+  if (subPage === "words" && selectedPack) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.header}>
           {selectedPack.title.replace(/^Vocab\s*–\s*/, "")}
         </Text>
+
         <ScrollView style={{ marginTop: 10 }}>
           {selectedPack.items.map((it) => (
             <View key={it.id} style={styles.wordRow}>
+              {/* Affichage demandé : UNIQUEMENT la traduction française */}
               <Text style={styles.wordText}>{it.french}</Text>
             </View>
           ))}
         </ScrollView>
-        <TouchableOpacity style={styles.backButton} onPress={() => setPage("vocabPacks")}>
-          <Text style={styles.backButtonText}>← Retour aux packs</Text>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => setSubPage("packs")}
+        >
+          <Text style={styles.backButtonText}>← Retour packs</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
   }
 
+  // fallback
   return null;
 }
+
+
 
 // --------------------
 // STYLES
@@ -2846,6 +2786,7 @@ export default function App() {
             <button onClick={()=>{ setRoute("select"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Kanji</button>
             <button onClick={()=>{ setRoute("quiz"); setQuizSection(null); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
             <button onClick={()=>{ setRoute("quizAll"); setQuizAllSection(null); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
+            <button onClick={()=>{ setRoute("vocab"); }} className="px-3 py-1 rounded-lg hover:bg-pink-100 text-pink-600 font-semibold">Vocabulaire</button>
 
           </div>
         </div>
@@ -2863,7 +2804,7 @@ export default function App() {
 
         {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder pour ta future base) */}
         {route === "quiz" && quizSection === "vocab" && (
-          <VocabMenu onBackToTypes={() => setQuizSection(null)} />
+          <VocabSection onExit={() => setQuizSection(null)} />
         )}
 
         {/* 3.1 — Écran 1 : choix du type de quiz */}
