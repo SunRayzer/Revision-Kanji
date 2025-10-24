@@ -122,6 +122,55 @@ const DATA = [
 ];
 
 
+// ================== Données vocabulaire (modules / packs) ==================
+
+// 1. Associer les packs à leur module
+const MODULE_MAP: Record<number, number> = {};
+
+function mapRangeToModule(start: number, end: number, moduleNumber: number) {
+  for (let p = start; p <= end; p++) {
+    MODULE_MAP[p] = moduleNumber;
+  }
+}
+
+// Répartition que tu m'as donnée :
+mapRangeToModule(1, 5, 2);    // Module 2 = packs 1-5
+mapRangeToModule(6, 10, 3);   // Module 3 = packs 6-10
+mapRangeToModule(11, 13, 4);  // Module 4 = packs 11-13
+mapRangeToModule(14, 18, 5);  // Module 5 = packs 14-18
+mapRangeToModule(19, 23, 6);  // Module 6 = packs 19-23
+mapRangeToModule(24, 28, 7);  // Module 7 = packs 24-28
+mapRangeToModule(29, 32, 8);  // Module 8 = packs 29-32
+mapRangeToModule(33, 36, 9);  // Module 9 = packs 33-36
+mapRangeToModule(37, 42, 10); // Module 10 = packs 37-42
+
+// 2. Construire la liste de tous les packs à partir du JSON
+//    vocabQuizzes doit déjà être importé tout en haut :
+/*
+   import vocabQuizzes from "./assets/vocab_quizzes.json";
+*/
+const ALL_PACKS = vocabQuizzes.map((rawPack: any, index: number) => {
+  const packNumber = index + 1; // pack 1 = premier dans le JSON
+  return {
+    packNumber,
+    title: rawPack.title,
+    moduleNumber: MODULE_MAP[packNumber],
+    items: rawPack.items, // [{ id, french, reading, kanji }]
+  };
+});
+
+// 3. Construire les modules avec leurs packs
+const MODULE_NUMBERS = [2,3,4,5,6,7,8,9,10];
+
+const MODULES = MODULE_NUMBERS.map((num) => {
+  const packs = ALL_PACKS.filter((p) => p.moduleNumber === num);
+  return {
+    moduleNumber: num,
+    label: `Module ${num}`,
+    packs, // chaque pack = { packNumber, title, items[...] }
+  };
+});
+
 function VocabSection({ onExit }: { onExit: () => void }) {
   // subPage = "modules" | "packs" | "words"
   const [subPage, setSubPage] = useState<"modules" | "packs" | "words">("modules");
