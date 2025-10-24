@@ -3060,18 +3060,8 @@ function QuizAllTypeMenu({
     <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
       <div className="text-lg font-semibold mb-2">Quiz Complet</div>
       <p className="text-sm text-gray-600 mb-1">Choisis le type</p>
-      <button
-        onClick={() => setQuizAllSection('kanji')}
-        className="w-full p-3 rounded-xl text-white bg-pink-400"
-      >
-        Kanji
-      </button>
-      <button
-        onClick={() => setQuizAllSection('vocab')}
-        className="w-full p-3 rounded-xl text-white bg-pink-400"
-      >
-        Vocabulaire
-      </button>
+      <button onClick={() => setQuizAllSection('kanji')}className="w-full p-3 rounded-xl text-white bg-pink-400">Kanji</button>
+      <button onClick={() => setQuizAllSection('vocab')}className="w-full p-3 rounded-xl text-white bg-pink-400">Vocabulaire</button>
     </div>
   );
 }
@@ -3215,6 +3205,9 @@ export default function App() {
         {route === "quiz" && quizMode === "tradLecture" && (
           <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
         )}
+
+
+
         
         {route === "quiz" && quizMode === "drawKanji" && (
           <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Saisie Kanji" />
@@ -3233,7 +3226,14 @@ export default function App() {
         )}
 
     
-
+        {/* === Quiz : Traduction / Lecture === */}
+{route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
+  <QuizVocabTraductionLecture
+    onExit={() => {
+      setQuizVocabMode(null); // revient au menu vocabulaire
+    }}
+  />
+)}
 
 
 
