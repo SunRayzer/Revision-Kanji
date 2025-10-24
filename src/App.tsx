@@ -3004,18 +3004,29 @@ function QuizTypeMenu({ setQuizSection }: { setQuizSection: (s:'kanji'|'vocab')=
 }
 
 /** ================== Sous-menu Vocabulaire (placeholder) ================== */
-function VocabMenu({ onBackToTypes }: { onBackToTypes: ()=>void }) {
+function QuizVocabMenu({
+  onStartTraductionLecture,
+  onBackToTypes,
+}: {
+  onStartTraductionLecture: () => void;
+  onBackToTypes: () => void;
+}) {
   return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
-      <div className="flex items-center gap-2 mb-2">
-        <button onClick={onBackToTypes} className="px-3 py-1 rounded bg-gray-100">← Types</button>
-        <span className="font-semibold">Vocabulaire</span>
+    <div className="p-4 max-w-sm mx-auto bg-white rounded-2xl shadow-sm space-y-4">
+      <div className="flex items-center gap-2">
+        <button onClick={onBackToTypes}
+          className="px-3 py-1 rounded bg-gray-100 text-sm"
+        >
+          ← Types
+        </button>
+        <div className="font-semibold text-lg">Quiz Vocabulaire</div>
       </div>
-      <p className="text-sm text-gray-600">
-        Ici on affichera les quiz de vocabulaire issus de ta nouvelle base (fichiers que tu m’enverras).
-      </p>
-      <button disabled className="w-full p-3 rounded-xl text-white bg-gray-300 cursor-not-allowed">
-        (à venir) Quiz Vocab Liste 1
+
+      <button
+        onClick={onStartTraductionLecture}
+        className="w-full p-3 rounded-xl text-white bg-pink-500 hover:bg-pink-600 font-semibold text-center"
+      >
+        Traduction / Lecture
       </button>
     </div>
   );
@@ -3113,34 +3124,7 @@ function QuizCompletMenu({
 }
 
 
-function QuizVocabMenu({
-  onStartTraductionLecture,
-  onBackToTypes,
-}: {
-  onStartTraductionLecture: () => void;
-  onBackToTypes: () => void;
-}) {
-  return (
-    <div className="p-4 max-w-sm mx-auto bg-white rounded-2xl shadow-sm space-y-4">
-      <div className="flex items-center gap-2">
-        <button
-          onClick={onBackToTypes}
-          className="px-3 py-1 rounded bg-gray-100 text-sm"
-        >
-          ← Types
-        </button>
-        <div className="font-semibold text-lg">Quiz Vocabulaire</div>
-      </div>
 
-      <button
-        onClick={onStartTraductionLecture}
-        className="w-full p-3 rounded-xl text-white bg-pink-500 hover:bg-pink-600 font-semibold text-center"
-      >
-        Traduction / Lecture
-      </button>
-    </div>
-  );
-}
 
  
 /** ================== App ================== */
