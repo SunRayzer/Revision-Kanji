@@ -3417,13 +3417,12 @@ function QuizCompletMenu({
  
 /** ================== App ================== */
 export default function App() {
-  const [route, setRoute] = useState("select");
   const [quizMode, setQuizMode] = useState(null);
   const [quizAllMode, setQuizAllMode] = useState<string|null>(null);
   const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizVocabMode, setQuizVocabMode] = useState<string | null>(null);
-  const [route, setRoute] = useState<"main" | "vocabSelect" | "vocabQuiz">("main");
+  const [route, setRoute] = useState<"main" | "vocabSelect" | "vocabQuiz">("select");
   const [selectedModules, setSelectedModules] = useState<number[]>([]);
   const [selectedPacks, setSelectedPacks] = useState<number[]>([]);
   const [quizWords, setQuizWords] = useState<any[]>([]);
@@ -3506,19 +3505,6 @@ React.useEffect(() => {
         )}
 
 
-{route === "vocabSelect" && (
-      <VocabSection
-        onExit={() => setRoute("main")}
-        selectedModules={selectedModules}
-        setSelectedModules={setSelectedModules}
-        selectedPacks={selectedPacks}
-        setSelectedPacks={setSelectedPacks}
-        onStartQuiz={(wordsForQuiz) => {
-          setQuizWords(wordsForQuiz);
-          setRoute("vocabQuiz");
-        }}
-      />
-    )}
 
         {route === "vocabSelect" && (
       <VocabSection
