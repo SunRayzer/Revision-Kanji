@@ -3588,10 +3588,7 @@ React.useEffect(() => {
           <QuizCompletMenu setQuizAllMode={setQuizAllMode} onBackToTypes={() => setQuizAllSection(null)} />
         )}
 
-        {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder) */}
-        {route === "quizAll" && quizAllSection === "vocab" && (
-          <VocabAllMenu onBackToTypes={() => setQuizAllSection(null)} />
-        )}
+       
 
         {route === "quizAll" && quizAllMode === "tradLectureComplete" && (
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
