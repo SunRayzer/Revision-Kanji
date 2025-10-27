@@ -3582,13 +3582,11 @@ React.useEffect(() => {
   />
 )}
 
-{route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
+{route === "quiz" && quizMode === "vocab" && (
   <QuizVocabulaire
-    onExit={() => {
-      setQuizVocabMode(null);
-    }}
-    selectedModules={selectedVocabModules}
-    selectedPacks={selectedVocabPacks}
+    picked={vocabSelection} // -> la liste des mots choisis
+    onBack={() => setQuizMode(null)}
+    title="Quiz Vocabulaire"
   />
 )}
 
