@@ -3141,8 +3141,42 @@ export default function App() {
   const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizVocabMode, setQuizVocabMode] = useState<string | null>(null);
-  const [selectedVocabModules, setSelectedVocabModules] = useState<number[]>([]);
-  const [selectedVocabPacks, setSelectedVocabPacks] = useState<number[]>([]);
+  const [selectedVocabModules, setSelectedVocabModules] = useState<number[]>(() => {
+  try {
+    const raw = window.localStorage.getItem("selectedVocabModules");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+  });
+
+  const [selectedVocabPacks, setSelectedVocabPacks] = useState<number[]>(() => {
+  try {
+    const raw = window.localStorage.getItem("selectedVocabPacks");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+  });
+
+React.useEffect(() => {
+  try {
+    window.localStorage.setItem(
+      "selectedVocabModules",
+      JSON.stringify(selectedVocabModules)
+    );
+  } catch {}
+}, [selectedVocabModules]);
+
+React.useEffect(() => {
+  try {
+    window.localStorage.setItem(
+      "selectedVocabPacks",
+      JSON.stringify(selectedVocabPacks)
+    );
+  } catch {}
+}, [selectedVocabPacks]);
+
   const [selectedIds, setSelectedIds] = useState(() => {
     try {
       const raw = localStorage.getItem("jlpt_selected_ids");
