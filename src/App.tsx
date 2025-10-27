@@ -3558,7 +3558,14 @@ React.useEffect(() => {
         )}
 
     
-
+{route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
+  <QuizVocabMenu
+    onBackToTypes={() => {
+      setQuizSection(null);      // ← retourne au choix Kanji / Vocabulaire
+      setQuizVocabMode(null);
+    }}
+  />
+)}
 
 
 {route === "quiz" && quizMode === "voctradLecture" && (
