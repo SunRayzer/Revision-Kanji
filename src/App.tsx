@@ -3583,10 +3583,7 @@ React.useEffect(() => {
           <QuizAllTypeMenu setQuizAllSection={setQuizAllSection} />
         )}    
 
-        {/* 3.2 — Écran 2a : sous-menu KANJI (tes anciens modes “complets”) */}
-        {route === "quizAll" && quizAllSection === "kanji" && !quizAllMode && (
-          <QuizCompletMenu setQuizAllMode={setQuizAllMode} onBackToTypes={() => setQuizAllSection(null)} />
-        )}
+       
 
        
 
