@@ -2123,59 +2123,60 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
       </div>
 
       <input
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-          setChecked(null);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (checked === null) checkAnswer();
-            else pickRandomWord();
-          }
-        }}
-        placeholder="écris la lecture..."
-        className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
-      />
+  value={input}
+  onChange={(e) => {
+    setInput(e.target.value);
+    setChecked(null);
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      if (checked === null) {
+        checkAnswer();
+      } else {
+        pickRandomWord();
+      }
+    }
+  }}
+  placeholder="écris la lecture..."
+  className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
+/>
 
-      <div className="mt-4 flex flex-col items-center gap-2">
-        {checked === null && (
-          <button
-            onClick={checkAnswer}
-            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold"
-          >
-            Valider
-          </button>
-        )}
+<div className="mt-4 flex flex-col items-center gap-3">
 
-        {checked === "good" && (
-          <>
-            <div className="text-green-600 font-semibold">✔ Correct !</div>
-            <button
-              onClick={pickRandomWord}
-              className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
-            >
-              Mot suivant →
-            </button>
-          </>
-        )}
+  {/* Ligne boutons d'action */}
+  <div className="flex flex-col sm:flex-row gap-2">
+    {checked === null && (
+      <button
+        onClick={checkAnswer}
+        className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold text-center"
+      >
+        Valider
+      </button>
+    )}
 
-        {checked === "bad" && (
-          <>
-            <div className="text-red-600 font-semibold">✘ Faux</div>
-            <div className="text-sm text-gray-700">
-              Réponse attendue :{" "}
-              <span className="font-semibold">{current.reading}</span>
-            </div>
-            <button
-              onClick={pickRandomWord}
-              className="px-3 py-1.5 bg-pink-500 text-white rounded-lg hover:bg-pink-600 text-sm"
-            >
-              Mot suivant →
-            </button>
-          </>
-        )}
-      </div>
+    {/* bouton Suivant : toujours dispo */}
+    <button
+      onClick={pickRandomWord}
+      className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold text-center"
+    >
+      Suivant →
+    </button>
+  </div>
+
+  {/* Feedback */}
+  {checked === "good" && (
+    <div className="text-green-600 font-semibold">
+      ✔ Correct !
+    </div>
+  )}
+
+  {checked === "bad" && (
+    <div className="text-red-600 font-semibold">
+      ✘ Faux
+    </div>
+  )}
+</div>
+
 
       <div className="mt-8 text-center">
         <button
