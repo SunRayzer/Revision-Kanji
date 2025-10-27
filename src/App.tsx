@@ -171,26 +171,32 @@ const MODULES = MODULE_NUMBERS.map((num) => {
   };
 });
 
-function VocabSection({ onExit }: { onExit: () => void }) {
+function VocabSection({
+  onExit,
+  selectedModules,
+  setSelectedModules,
+  selectedPacks,
+  setSelectedPacks,
+}: {
+  onExit: () => void;
+  selectedModules: number[];
+  setSelectedModules: React.Dispatch<React.SetStateAction<number[]>>;
+  selectedPacks: number[];
+  setSelectedPacks: React.Dispatch<React.SetStateAction<number[]>>;
+}) {
   // subPage contrôle où on est :
-  // "modules" = vue globale
-  // "packs"   = vue d'un module
-  // "words"   = vue des mots d'un pack
-  const [subPage, setSubPage] = React.useState<"modules" | "packs" | "words">(
-    "modules"
-  );
+  const [subPage, setSubPage] = React.useState<"modules" | "packs" | "words">("modules");
 
-  // module qu'on est en train d'explorer (quand on est dans "packs")
+  // module affiché actuellement
   const [moduleView, setModuleView] = React.useState<any>(null);
 
-  // pack qu'on est en train d'afficher en détail (quand on est dans "words")
+  // pack affiché en détail
   const [packView, setPackView] = React.useState<any>(null);
 
-  // ✅ Sélections utilisateur
-  // modules cochés (Module 2, Module 3, etc.)
-  const [selectedModules, setSelectedModules] = React.useState<number[]>([]);
-  // packs cochés (pack 1, pack 2, etc.)
-  const [selectedPacks, setSelectedPacks] = React.useState<number[]>([]);
+  // ⚠️ SUPPRIMER ces 2 lignes dans ta version :
+  // const [selectedModules, setSelectedModules] = React.useState<number[]>([]);
+  // const [selectedPacks, setSelectedPacks] = React.useState<number[]>([]);
+  // --> maintenant ils viennent des props, donc on ne les redéclare pas ici.
 
   // --- helpers sélection ------------------------
 
@@ -3135,6 +3141,8 @@ export default function App() {
   const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizVocabMode, setQuizVocabMode] = useState<string | null>(null);
+  const [selectedVocabModules, setSelectedVocabModules] = useState<number[]>([]);
+  const [selectedVocabPacks, setSelectedVocabPacks] = useState<number[]>([]);
   const [selectedIds, setSelectedIds] = useState(() => {
     try {
       const raw = localStorage.getItem("jlpt_selected_ids");
@@ -3178,7 +3186,13 @@ export default function App() {
         )}
 
         {route === "vocab" && (
-  <VocabSection onExit={() => setRoute("select")} />
+        <VocabSection
+    onExit={() => setRoute("select")}
+    selectedModules={selectedVocabModules}
+    setSelectedModules={setSelectedVocabModules}
+    selectedPacks={selectedVocabPacks}
+    setSelectedPacks={setSelectedVocabPacks}
+  />
 )}
 
         {/* 3.1 — Écran 1 : choix du type de quiz */}
