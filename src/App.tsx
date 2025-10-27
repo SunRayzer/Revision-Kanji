@@ -3501,23 +3501,19 @@ React.useEffect(() => {
 
 
 
-        {route === "vocabSelect" && (
-      <VocabSection
-        onExit={() => setRoute("main")}
-        selectedModules={selectedModules}
-        setSelectedModules={setSelectedModules}
-        selectedPacks={selectedPacks}
-        setSelectedPacks={setSelectedPacks}
-        onStartQuiz={(wordsForQuiz) => {
-          setQuizWords(wordsForQuiz);
-          setRoute("vocabQuiz");
-        }}
-      />
-    )}
 
 
 
 
+        {route === "vocab" && (
+        <VocabSection
+    onExit={() => setRoute("select")}
+    selectedModules={selectedVocabModules}
+    setSelectedModules={setSelectedVocabModules}
+    selectedPacks={selectedVocabPacks}
+    setSelectedPacks={setSelectedVocabPacks}
+  />
+)}
 
         {/* 3.1 — Écran 1 : choix du type de quiz */}
         {route === "quiz" && quizSection === null && (
