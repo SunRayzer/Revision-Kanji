@@ -3258,11 +3258,23 @@ React.useEffect(() => {
         )}
 
     
-        {/* === Quiz : Traduction / Lecture === */}
+{route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
+  <QuizVocabMenu
+    onBackToTypes={() => {
+      setQuizSection(null);      // ← retourne au choix Kanji / Vocabulaire
+      setQuizVocabMode(null);
+    }}
+    onStartTraductionLecture={() => {
+      setQuizVocabMode("tradLecture");  // ← lance le quiz Traduction / Lecture
+    }}
+  />
+)}
+
+{/* === Quiz : Traduction / Lecture === */}
 {route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
   <QuizVocabTraductionLecture
     onExit={() => {
-      setQuizVocabMode(null); // revient au menu vocabulaire
+      setQuizVocabMode(null);   // ← revient au menu Quiz Vocabulaire
     }}
   />
 )}
