@@ -3558,20 +3558,16 @@ React.useEffect(() => {
         )}
 
     
-{route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
-  <QuizVocabMenu
-    onBackToTypes={() => {
-      setQuizSection(null);      // ← retourne au choix Kanji / Vocabulaire
-      setQuizVocabMode(null);
-    }}
-    onStartTraductionLecture={() => {
-      setQuizVocabMode("tradLecture");  // ← lance le quiz Traduction / Lecture
-    }}
+
+
+
+{route === "quiz" && quizMode === "voctradLecture" && (
+  <QuizVocabulaire
+    picked={vocabSelection} // -> la liste des mots choisis
+    onBack={() => onStartTraductionLecture(null)}
+    title="Quiz Vocabulaire"
   />
 )}
-
-
-
 
 
         {/* 3.1 — Écran 1 : choix du type (Kanji | Vocab) */}
