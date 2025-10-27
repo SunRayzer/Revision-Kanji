@@ -3491,12 +3491,12 @@ React.useEffect(() => {
 
       <main className="max-w-5xl mx-auto p-4 space-y-4">
         {route === "select" && (
-          <AllSelectable selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
+         <AllSelectable selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
         )}
 
         {/* 3.2 — Écran 2a : sous-menu KANJI (comme avant) */}
         {route === "quiz" && quizSection === "kanji" && !quizMode && (
-          <QuizMenu setQuizMode={setQuizMode} onBackToTypes={() => setQuizSection(null)} />
+         <QuizMenu setQuizMode={setQuizMode} onBackToTypes={() => setQuizSection(null)} />
         )}
 
 
@@ -3517,15 +3517,7 @@ React.useEffect(() => {
 
 
 
-        {route === "vocab" && (
-        <VocabSection
-    onExit={() => setRoute("select")}
-    selectedModules={selectedVocabModules}
-    setSelectedModules={setSelectedVocabModules}
-    selectedPacks={selectedVocabPacks}
-    setSelectedPacks={setSelectedVocabPacks}
-  />
-)}
+
 
         {/* 3.1 — Écran 1 : choix du type de quiz */}
         {route === "quiz" && quizSection === null && (
@@ -3535,9 +3527,6 @@ React.useEffect(() => {
         {route === "quiz" && quizMode === "tradLecture" && (
           <QuizTradLecture picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Lecture" />
         )}
-
-
-
         
         {route === "quiz" && quizMode === "drawKanji" && (
           <QuizDrawKanji picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Traduction → Saisie Kanji" />
@@ -3555,13 +3544,10 @@ React.useEffect(() => {
           <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture → Saisie du Kanji" />
         )}
 
-    
-
-
-
-
-
-
+       {/*  Sous menu QUIZ VOCABULAIRE */}
+        {route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
+         <QuizVocabMenu onBackToTypes={() => {setQuizSection(null); setQuizVocabMode(null);}} />
+        )}
 
 
 
@@ -3571,15 +3557,17 @@ React.useEffect(() => {
           <QuizAllTypeMenu setQuizAllSection={setQuizAllSection} />
         )}    
 
+
+
         {/* 3.2 — Écran 2a : sous-menu COMPLET KANJI (tes anciens modes “complets”) */}
         {route === "quizAll" && quizAllSection === "kanji" && !quizAllMode && (
           <QuizCompletMenu setQuizAllMode={setQuizAllMode} onBackToTypes={() => setQuizAllSection(null)} />
         )}
 
-        SUPPRIMER {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder) */}
-        {route === "quizAll" && quizAllSection === "vocab" && (
-          <VocabAllMenu onBackToTypes={() => setQuizAllSection(null)} />
-        )}
+
+
+
+         {/* ROUTE QUIZ KANJI COMPLET */}
 
         {route === "quizAll" && quizAllMode === "tradLectureComplete" && (
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
