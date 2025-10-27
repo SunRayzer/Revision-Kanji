@@ -2023,6 +2023,34 @@ function QuizKunToDraw({
   );
 }
 
+
+function normalizeAnswer(str: string) {
+  if (!str) return "";
+  return str
+    .toLowerCase()
+    .replace(/[\sー\-]/g, "")
+    .replace(/ou/g, "o")
+    .replace(/uu/g, "u")
+    .replace(/ou/g, "o")
+    .replace(/nn/g, "n")
+    .trim();
+}
+
+function getAcceptedReadingsForItem(item: any) {
+  const readings = [];
+
+  if (item.reading) readings.push(normalizeAnswer(item.reading));
+
+  // Si le mot a plusieurs lectures séparées par des / ou 、 les découper
+  if (item.readings) {
+    item.readings.forEach((r: string) =>
+      readings.push(normalizeAnswer(r))
+    );
+  }
+
+  return Array.from(new Set(readings)); // retire les doublons
+}
+
 /** ================== QUIZ VOCABULAIRE ================== */
 
 /** ================== QUIZ VOC TRAD/LECTURE ================== */
