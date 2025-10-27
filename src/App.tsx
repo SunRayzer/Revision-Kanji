@@ -3571,7 +3571,7 @@ React.useEffect(() => {
 {route === "quiz" && quizMode === "voctradLecture" && (
   <QuizVocabulaire
     picked={vocabSelection} // -> la liste des mots choisis
-    onBack={() => setQuizMode(null)}
+    onBack={() => onStartTraductionLecture(null)}
     title="Quiz Vocabulaire"
   />
 )}
