@@ -3562,6 +3562,18 @@ React.useEffect(() => {
         )}
 
 
+
+        {route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
+  <QuizVocabulaire
+    onBack={() => {
+      // on revient au sous-menu vocab
+      setQuizVocabMode(null);
+    }}
+    title="Quiz Vocabulaire : Traduction → Lecture"
+  />
+)}
+
+
         {route === "vocab" && quizVocabMode === "tradLecture" && (
          <QuizVocabulaire onBack={() => setQuizMode(null)} title="Quiz Vocabulaire : Traduction → Lecture" />
         )}
