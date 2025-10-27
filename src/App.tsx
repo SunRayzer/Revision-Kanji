@@ -124,6 +124,8 @@ const DATA = [
 
 // ================== Données vocabulaire (modules / packs) ==================
 
+
+
 // 1. Associer les packs à leur module
 const MODULE_MAP: Record<number, number> = {};
 
@@ -2026,25 +2028,24 @@ function QuizKunToDraw({
 /** ================== QUIZ VOC TRAD/LECTURE ================== */
 
 function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
-  // mot actuel
-  const [current, setCurrent] = useState<any>(null);
+  const [current, setCurrent] = React.useState<any>(null);
+  const [input, setInput] = React.useState("");
+  const [checked, setChecked] = React.useState<null | "good" | "bad">(null);
 
-  // réponse utilisateur
-  const [input, setInput] = useState("");
-  const [checked, setChecked] = useState<null | "good" | "bad">(null);
-
-  // au montage / quand on passe au mot suivant
+  // === UTILISE UNIQUEMENT LES MOTS DU VOCAB ===
+  // (si tu veux plus tard limiter aux packs sélectionnés, on le fera à l’étape suivante)
   React.useEffect(() => {
-    if (!current) {
-      pickRandomWord();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
+    pickRandomWord();
+  }, []);
 
   function pickRandomWord() {
-    const idx = Math.floor(Math.random() * VOCAB_WORDS.length);
-    const word = VOCAB_WORDS[idx];
-    setCurrent(word);
+    const all = VOCAB_WORDS;
+    if (!all || all.length === 0) {
+      setCurrent(null);
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * all.length);
+    setCurrent(all[randomIndex]);
     setInput("");
     setChecked(null);
   }
@@ -2052,19 +2053,25 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
   if (!current) {
     return (
       <div className="p-4 text-center">
-        <div className="text-lg font-semibold mb-4">Chargement…</div>
+        <p className="text-gray-600">Chargement du quiz vocabulaire…</p>
+        <button
+          onClick={onExit}
+          className="mt-3 text-sm underline text-gray-500 hover:text-gray-700"
+        >
+          ← Retour
+        </button>
       </div>
     );
   }
 
-  // les lectures acceptées pour ce mot
+  // On prépare la vérification
   const accepted = getAcceptedReadingsForItem(current);
 
   function checkAnswer() {
-    const normUser = normalizeAnswer(input);
-    if (normUser.length === 0) return;
+    const user = normalizeAnswer(input);
+    if (!user) return;
 
-    if (accepted.includes(normUser)) {
+    if (accepted.includes(user)) {
       setChecked("good");
     } else {
       setChecked("bad");
@@ -2078,84 +2085,71 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
           Traduction → Lecture
         </div>
         <div className="text-sm text-gray-600">
-          Écris la lecture japonaise (kana OU romaji)
+          Écris la lecture japonaise (kana ou rōmaji)
         </div>
       </div>
 
-      {/* Mot à deviner */}
-      <div className="mb-6 rounded-xl border bg-white shadow-sm p-4 text-center">
+      <div className="mb-6 p-4 rounded-xl bg-white shadow border text-center">
         <div className="text-gray-500 text-sm mb-1">Traduction :</div>
         <div className="text-2xl font-semibold">{current.french}</div>
       </div>
 
-      {/* Champ de réponse */}
-      <div className="flex flex-col gap-2 mb-4">
-        <input
-          className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
-          placeholder="écris la lecture..."
-          value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-            setChecked(null);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              if (checked === null) {
-                checkAnswer();
-              } else {
-                pickRandomWord();
-              }
-            }
-          }}
-        />
+      <input
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          setChecked(null);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            if (checked === null) checkAnswer();
+            else pickRandomWord();
+          }
+        }}
+        placeholder="écris la lecture..."
+        className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
+      />
 
+      <div className="mt-4 flex flex-col items-center gap-2">
         {checked === null && (
           <button
-            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold"
             onClick={checkAnswer}
+            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold"
           >
             Valider
           </button>
         )}
 
         {checked === "good" && (
-          <div className="text-center">
-            <div className="text-green-600 font-semibold text-lg mb-2">
-              ✔ Correct !
-            </div>
+          <>
+            <div className="text-green-600 font-semibold">✔ Correct !</div>
             <button
-              className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold"
               onClick={pickRandomWord}
+              className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
             >
               Mot suivant →
             </button>
-          </div>
+          </>
         )}
 
         {checked === "bad" && (
-          <div className="text-center">
-            <div className="text-red-600 font-semibold text-lg mb-1">
-              ✘ Faux
-            </div>
-            <div className="text-sm text-gray-700 mb-3">
-              Réponse attendue :
-              <br />
-              <span className="font-semibold">
-                {current.reading}
-              </span>
+          <>
+            <div className="text-red-600 font-semibold">✘ Faux</div>
+            <div className="text-sm text-gray-700">
+              Réponse attendue :{" "}
+              <span className="font-semibold">{current.reading}</span>
             </div>
             <button
-              className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold"
               onClick={pickRandomWord}
+              className="px-3 py-1.5 bg-pink-500 text-white rounded-lg hover:bg-pink-600 text-sm"
             >
               Mot suivant →
             </button>
-          </div>
+          </>
         )}
       </div>
 
-      {/* bouton quitter */}
-      <div className="mt-8 flex justify-center">
+      <div className="mt-8 text-center">
         <button
           onClick={onExit}
           className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
@@ -2166,6 +2160,7 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
     </div>
   );
 }
+
 
 /** ================== QUIZ COMPLET ================== */
 
