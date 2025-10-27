@@ -2051,29 +2051,113 @@ function getAcceptedReadingsForItem(item: any) {
   return Array.from(new Set(readings)); // retire les doublons
 }
 
+
+// Retourne la liste des packs qu'on doit utiliser pour le quiz vocabulaire,
+// en respectant la règle : si des packs sont cochés → on ignore les modules
+function getChosenPackNumbersForQuizFromSelection(
+  selectedModules: number[],
+  selectedPacks: number[]
+) {
+  // si l'utilisateur a choisi des packs précis → priorité à ça
+  if (selectedPacks.length > 0) {
+    return Array.from(new Set(selectedPacks));
+  }
+
+  // sinon on prend tous les packs associés aux modules sélectionnés
+  const packsFromModules: number[] = [];
+  MODULES.forEach((m) => {
+    if (selectedModules.includes(m.moduleNumber)) {
+      m.packs.forEach((p: any) => {
+        packsFromModules.push(p.packNumber);
+      });
+    }
+  });
+
+  return Array.from(new Set(packsFromModules));
+}
+
+// Construit la liste de mots à partir d'une liste de numéros de packs
+function buildWordPoolFromPackNumbers(packNumbers: number[]) {
+  const pool: any[] = [];
+  ALL_PACKS.forEach((pack: any) => {
+    if (packNumbers.includes(pack.packNumber)) {
+      // ajoute chaque mot de ce pack
+      pack.items.forEach((it: any) => {
+        pool.push(it);
+      });
+    }
+  });
+  return pool;
+}
+
+// Fabrique la liste de mots QUI SERONT QUIZZÉS
+function getActiveVocabPool(
+  selectedModules: number[],
+  selectedPacks: number[]
+) {
+  const chosenPackNumbers = getChosenPackNumbersForQuizFromSelection(
+    selectedModules,
+    selectedPacks
+  );
+  return buildWordPoolFromPackNumbers(chosenPackNumbers);
+}
+
+
+
+
 /** ================== QUIZ VOCABULAIRE ================== */
 
 /** ================== QUIZ VOC TRAD/LECTURE ================== */
 
-function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
+function QuizVocabTraductionLecture({
+  onExit,
+  selectedModules,
+  selectedPacks,
+}: {
+  onExit: () => void;
+  selectedModules: number[];
+  selectedPacks: number[];
+}) {
+  // pool des mots à interroger (en fonction de la sélection actuelle)
+  const [pool, setPool] = React.useState<any[]>([]);
+
+  // mot courant
   const [current, setCurrent] = React.useState<any>(null);
+
+  // réponse utilisateur
   const [input, setInput] = React.useState("");
   const [checked, setChecked] = React.useState<null | "good" | "bad">(null);
 
-  // === UTILISE UNIQUEMENT LES MOTS DU VOCAB ===
-  // (si tu veux plus tard limiter aux packs sélectionnés, on le fera à l’étape suivante)
+  // Recalcule le pool à l'ouverture du quiz (ou quand sélection change)
   React.useEffect(() => {
-    pickRandomWord();
-  }, []);
+    const newPool = getActiveVocabPool(selectedModules, selectedPacks);
 
-  function pickRandomWord() {
-    const all = VOCAB_WORDS;
-    if (!all || all.length === 0) {
+    // si aucun mot dans la sélection => fallback sur tout le vocab
+    const finalPool =
+      newPool.length > 0
+        ? newPool
+        : ALL_PACKS.flatMap((p: any) => p.items);
+
+    setPool(finalPool);
+  }, [selectedModules, selectedPacks]);
+
+  // Quand le pool est prêt ou a changé, on choisit un mot
+  React.useEffect(() => {
+    if (pool.length > 0) {
+      pickRandomWord(pool);
+    } else {
+      setCurrent(null);
+    }
+  }, [pool]);
+
+  function pickRandomWord(source: any[] = pool) {
+    if (!source || source.length === 0) {
       setCurrent(null);
       return;
     }
-    const randomIndex = Math.floor(Math.random() * all.length);
-    setCurrent(all[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * source.length);
+    const word = source[randomIndex];
+    setCurrent(word);
     setInput("");
     setChecked(null);
   }
@@ -2081,10 +2165,15 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
   if (!current) {
     return (
       <div className="p-4 text-center">
-        <p className="text-gray-600">Chargement du quiz vocabulaire…</p>
+        <p className="text-gray-600">
+          Il n'y a pas de vocabulaire sélectionné.
+        </p>
+        <p className="text-sm text-gray-500 mt-2">
+          (Va dans l’onglet “Vocabulaire” et coche un module ou des packs)
+        </p>
         <button
           onClick={onExit}
-          className="mt-3 text-sm underline text-gray-500 hover:text-gray-700"
+          className="mt-4 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
         >
           ← Retour
         </button>
@@ -2092,7 +2181,7 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
     );
   }
 
-  // On prépare la vérification
+  // lectures acceptées pour ce mot
   const accepted = getAcceptedReadingsForItem(current);
 
   function checkAnswer() {
@@ -2115,69 +2204,73 @@ function QuizVocabTraductionLecture({ onExit }: { onExit: () => void }) {
         <div className="text-sm text-gray-600">
           Écris la lecture japonaise (kana ou rōmaji)
         </div>
+        <div className="text-xs text-gray-400 mt-1">
+          {pool.length} mots dans le quiz
+        </div>
       </div>
 
+      {/* MOT COURANT */}
       <div className="mb-6 p-4 rounded-xl bg-white shadow border text-center">
         <div className="text-gray-500 text-sm mb-1">Traduction :</div>
         <div className="text-2xl font-semibold">{current.french}</div>
       </div>
 
+      {/* INPUT RÉPONSE */}
       <input
-  value={input}
-  onChange={(e) => {
-    setInput(e.target.value);
-    setChecked(null);
-  }}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      if (checked === null) {
-        checkAnswer();
-      } else {
-        pickRandomWord();
-      }
-    }
-  }}
-  placeholder="écris la lecture..."
-  className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
-/>
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+          setChecked(null);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            if (checked === null) {
+              checkAnswer();
+            } else {
+              pickRandomWord();
+            }
+          }
+        }}
+        placeholder="écris la lecture..."
+        className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
+      />
 
-<div className="mt-4 flex flex-col items-center gap-3">
+      {/* ACTIONS + FEEDBACK */}
+      <div className="mt-4 flex flex-col items-center gap-3">
 
-  {/* Ligne boutons d'action */}
-  <div className="flex flex-col sm:flex-row gap-2">
-    {checked === null && (
-      <button
-        onClick={checkAnswer}
-        className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold text-center"
-      >
-        Valider
-      </button>
-    )}
+        <div className="flex flex-col sm:flex-row gap-2">
+          {checked === null && (
+            <button
+              onClick={checkAnswer}
+              className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold text-center"
+            >
+              Valider
+            </button>
+          )}
 
-    {/* bouton Suivant : toujours dispo */}
-    <button
-      onClick={pickRandomWord}
-      className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold text-center"
-    >
-      Suivant →
-    </button>
-  </div>
+          {/* bouton Suivant toujours actif */}
+          <button
+            onClick={() => pickRandomWord()}
+            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold text-center"
+          >
+            Suivant →
+          </button>
+        </div>
 
-  {/* Feedback */}
-  {checked === "good" && (
-    <div className="text-green-600 font-semibold">
-      ✔ Correct !
-    </div>
-  )}
+        {checked === "good" && (
+          <div className="text-green-600 font-semibold">
+            ✔ Correct !
+          </div>
+        )}
 
-  {checked === "bad" && (
-    <div className="text-red-600 font-semibold">
-      ✘ Faux
-    </div>
-  )}
-</div>
+        {checked === "bad" && (
+          <div className="text-red-600 font-semibold">
+            ✘ Faux
+          </div>
+        )}
+      </div>
 
-
+      {/* QUITTER */}
       <div className="mt-8 text-center">
         <button
           onClick={onExit}
@@ -3294,12 +3387,13 @@ React.useEffect(() => {
   />
 )}
 
-{/* === Quiz : Traduction / Lecture === */}
 {route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
   <QuizVocabTraductionLecture
     onExit={() => {
-      setQuizVocabMode(null);   // ← revient au menu Quiz Vocabulaire
+      setQuizVocabMode(null);
     }}
+    selectedModules={selectedVocabModules}
+    selectedPacks={selectedVocabPacks}
   />
 )}
 
