@@ -3567,10 +3567,6 @@ React.useEffect(() => {
   />
 )}
 
-{/*  LANCER QUIZ VOCABULAIRE */}
-{route === "quiz" && quizMode === "voctradLecture" && (
-          <QuizVocabulaire picked={picked} onBack={()=>setQuizMode(null)} title="QQ LECTRAD" />
-        )}
 
 
 
