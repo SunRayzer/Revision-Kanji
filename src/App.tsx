@@ -3563,7 +3563,7 @@ React.useEffect(() => {
 
 
         {route === "vocab" && quizVocabMode === "tradLecture" && (
-         <QuizVocabTradLecture onBack={() => setQuizVocabMode(null)} title="Quiz Vocabulaire : Traduction → Lecture" />
+         <QuizVocabulaire onBack={() => setQuizVocabMode(null)} title="Quiz Vocabulaire : Traduction → Lecture" />
         )}
 
         {/* 3.1 — Écran 1 : choix du type COMPET (Kanji | Vocab) */}
