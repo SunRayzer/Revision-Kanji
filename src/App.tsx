@@ -3578,12 +3578,12 @@ React.useEffect(() => {
 
 
 
-        {/* 3.1 — Écran 1 : choix du type (Kanji | Vocab) */}
-        {route === "quizAll" && quizAllSection === null && (
-          <QuizAllTypeMenu setQuizAllSection={setQuizAllSection} />
-        )}    
 
-       
+
+        {/* 3.2 — Écran 2a : sous-menu KANJI (tes anciens modes “complets”) */}
+        {route === "quizAll" && quizAllSection === "kanji" && !quizAllMode && (
+          <QuizCompletMenu setQuizAllMode={setQuizAllMode} onBackToTypes={() => setQuizAllSection(null)} />
+        )}
 
        
 
