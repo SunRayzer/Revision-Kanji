@@ -3527,8 +3527,6 @@ React.useEffect(() => {
   />
 )}
 
-        
-
         {/* 3.1 — Écran 1 : choix du type de quiz */}
         {route === "quiz" && quizSection === null && (
           <QuizTypeMenu setQuizSection={setQuizSection} />
@@ -3558,6 +3556,8 @@ React.useEffect(() => {
         )}
 
     
+
+    {/*  Sous menu QUIZ VOCABULAIRE */}
 {route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
   <QuizVocabMenu
     onBackToTypes={() => {
@@ -3567,7 +3567,14 @@ React.useEffect(() => {
   />
 )}
 
+{/*  LANCER QUIZ VOCABULAIRE */}
+{route === "quiz" && quizMode === "voctradLecture" && (
+          <QuizVocabulaire picked={picked} onBack={()=>setQuizMode(null)} title="QQ LECTRAD" />
+        )}
 
+
+
+{/*  Sous menu COMPlET VOCABULAIRE */}
 {route === "quiz" && quizMode === "voctradLecture" && (
   <QuizVocabulaire
     picked={vocabSelection} // -> la liste des mots choisis
@@ -3577,17 +3584,21 @@ React.useEffect(() => {
 )}
 
 
-        {/* 3.1 — Écran 1 : choix du type (Kanji | Vocab) */}
+
+        {/* 3.1 — Écran 1 : choix du type COMPET (Kanji | Vocab) */}
         {route === "quizAll" && quizAllSection === null && (
           <QuizAllTypeMenu setQuizAllSection={setQuizAllSection} />
         )}    
 
-        {/* 3.2 — Écran 2a : sous-menu KANJI (tes anciens modes “complets”) */}
+        {/* 3.2 — Écran 2a : sous-menu COMPLET KANJI (tes anciens modes “complets”) */}
         {route === "quizAll" && quizAllSection === "kanji" && !quizAllMode && (
           <QuizCompletMenu setQuizAllMode={setQuizAllMode} onBackToTypes={() => setQuizAllSection(null)} />
         )}
 
-       
+        SUPPRIMER {/* 3.3 — Écran 2b : sous-menu VOCAB (placeholder) */}
+        {route === "quizAll" && quizAllSection === "vocab" && (
+          <VocabAllMenu onBackToTypes={() => setQuizAllSection(null)} />
+        )}
 
         {route === "quizAll" && quizAllMode === "tradLectureComplete" && (
          <QuizTradLectureComplete picked={picked} onBack={() => setQuizAllMode(null)} title="Quiz Complet — Traduction → Lecture" />
