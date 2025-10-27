@@ -3574,14 +3574,7 @@ React.useEffect(() => {
 
 
 
-{/*  Sous menu COMPlET VOCABULAIRE */}
-{route === "quiz" && quizMode === "voctradLecture" && (
-  <QuizVocabulaire
-    picked={vocabSelection} // -> la liste des mots choisis
-    onBack={() => onStartTraductionLecture(null)}
-    title="Quiz Vocabulaire"
-  />
-)}
+
 
 
 
