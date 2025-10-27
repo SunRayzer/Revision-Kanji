@@ -3501,7 +3501,19 @@ React.useEffect(() => {
 
 
 
-
+        {route === "vocabSelect" && (
+      <VocabSection
+        onExit={() => setRoute("main")}
+        selectedModules={selectedModules}
+        setSelectedModules={setSelectedModules}
+        selectedPacks={selectedPacks}
+        setSelectedPacks={setSelectedPacks}
+        onStartQuiz={(wordsForQuiz) => {
+          setQuizWords(wordsForQuiz);
+          setRoute("vocabQuiz");
+        }}
+      />
+    )}
 
 
 
