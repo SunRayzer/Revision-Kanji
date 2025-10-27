@@ -3311,6 +3311,7 @@ function QuizVocabMenu({onStartTraductionLecture, onBackToTypes }: {
         Traduction / Lecture
       </button>
       <button onClick={()=>onStartTraductionLecture("voctradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Q Traduction / Lecture</button>
+      <button onClick={() => setQuizVocabMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400 hover:bg-pink-500">Quiz Vocabulaire — Traduction / Lecture</button>
     </div>
   );
 }
@@ -3515,7 +3516,7 @@ React.useEffect(() => {
       />
     )}
 
-
+ {/* SELECTION VOCABULAIRE */}
 
         {route === "vocab" && (
         <VocabSection
@@ -3552,13 +3553,18 @@ React.useEffect(() => {
           <QuizKunToDraw picked={picked} onBack={()=>setQuizMode(null)} title="Quiz Lecture → Saisie du Kanji" />
         )}
 
+
+
+
        {/*  Sous menu QUIZ VOCABULAIRE */}
         {route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
          <QuizVocabMenu onBackToTypes={() => {setQuizSection(null); setQuizVocabMode(null);}} />
         )}
 
 
-
+        {route === "vocab" && quizVocabMode === "tradLecture" && (
+         <QuizVocabTradLecture onBack={() => setQuizVocabMode(null)} title="Quiz Vocabulaire : Traduction → Lecture" />
+        )}
 
         {/* 3.1 — Écran 1 : choix du type COMPET (Kanji | Vocab) */}
         {route === "quizAll" && quizAllSection === null && (
