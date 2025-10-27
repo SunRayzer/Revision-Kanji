@@ -3292,10 +3292,7 @@ function QuizTypeMenu({ setQuizSection }: { setQuizSection: (s:'kanji'|'vocab')=
 }
 
 /** ================== Sous-menu Vocabulaire (placeholder) ================== */
-function QuizVocabMenu({
-  onStartTraductionLecture,
-  onBackToTypes,
-}: {
+function QuizVocabMenu({onStartTraductionLecture, onBackToTypes }: {
   onStartTraductionLecture: () => void;
   onBackToTypes: () => void;
 }) {
@@ -3310,12 +3307,10 @@ function QuizVocabMenu({
         <div className="font-semibold text-lg">Quiz Vocabulaire</div>
       </div>
 
-      <button
-        onClick={onStartTraductionLecture}
-        className="w-full p-3 rounded-xl text-white bg-pink-500 hover:bg-pink-600 font-semibold text-center"
-      >
+      <button onClick={onStartTraductionLecture}className="w-full p-3 rounded-xl text-white bg-pink-500 hover:bg-pink-600 font-semibold text-center">
         Traduction / Lecture
       </button>
+      <button onClick={()=>onStartTraductionLecture("voctradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Q Traduction / Lecture</button>
     </div>
   );
 }
@@ -3520,12 +3515,7 @@ React.useEffect(() => {
       />
     )}
 
-    {route === "vocabQuiz" && (
-      <QuizVocabulaire
-        words={quizWords}
-        onBack={() => setRoute("main")}
-      />
-    )}
+
 
         {route === "vocab" && (
         <VocabSection
@@ -3578,7 +3568,7 @@ React.useEffect(() => {
   />
 )}
 
-{route === "quiz" && quizMode === "vocab" && (
+{route === "quiz" && quizMode === "voctradLecture" && (
   <QuizVocabulaire
     picked={vocabSelection} // -> la liste des mots choisis
     onBack={() => setQuizMode(null)}
