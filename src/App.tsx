@@ -2109,179 +2109,268 @@ function getActiveVocabPool(
 
 /** ================== QUIZ VOC TRAD/LECTURE ================== */
 
-function QuizVocabTraductionLecture({
-  onExit,
-  selectedModules,
-  selectedPacks,
-}: {
-  onExit: () => void;
-  selectedModules: number[];
-  selectedPacks: number[];
-}) {
-  // pool des mots à interroger (en fonction de la sélection actuelle)
-  const [pool, setPool] = React.useState<any[]>([]);
+function QuizVocabulaire({ picked, onBack, title }) {
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(false);
 
-  // mot courant
-  const [current, setCurrent] = React.useState<any>(null);
+  // ordre des questions
+  const [order, setOrder] = useState([]);
+  const [idx, setIdx] = useState(0);
 
-  // réponse utilisateur
-  const [input, setInput] = React.useState("");
-  const [checked, setChecked] = React.useState<null | "good" | "bad">(null);
+  // saisie utilisateur
+  const [input, setInput] = useState("");
+  const [status, setStatus] = useState("idle"); // "idle" | "hit" | "miss"
 
-  // Recalcule le pool à l'ouverture du quiz (ou quand sélection change)
-  React.useEffect(() => {
-    const newPool = getActiveVocabPool(selectedModules, selectedPacks);
+  // récap final
+  const [results, setResults] = useState([]);
 
-    // si aucun mot dans la sélection => fallback sur tout le vocab
-    const finalPool =
-      newPool.length > 0
-        ? newPool
-        : ALL_PACKS.flatMap((p: any) => p.items);
-
-    setPool(finalPool);
-  }, [selectedModules, selectedPacks]);
-
-  // Quand le pool est prêt ou a changé, on choisit un mot
-  React.useEffect(() => {
-    if (pool.length > 0) {
-      pickRandomWord(pool);
-    } else {
-      setCurrent(null);
+  // pour focus auto champ texte
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (started && !finished) {
+      const t = setTimeout(() => {
+        if (inputRef.current) inputRef.current.focus();
+      }, 0);
+      return () => clearTimeout(t);
     }
-  }, [pool]);
+  }, [started, finished, idx, status]);
 
-  function pickRandomWord(source: any[] = pool) {
-    if (!source || source.length === 0) {
-      setCurrent(null);
-      return;
-    }
-    const randomIndex = Math.floor(Math.random() * source.length);
-    const word = source[randomIndex];
-    setCurrent(word);
-    setInput("");
-    setChecked(null);
+  // petites utils locales
+  const kataToHira = (s) =>
+    Array.from(s).map(ch => {
+      const code = ch.charCodeAt(0);
+      return (code >= 0x30A1 && code <= 0x30F6)
+        ? String.fromCharCode(code - 0x60)
+        : ch;
+    }).join("");
+
+  const stripAccents = (s) =>
+    (s ?? "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+  const normRoma = (s) =>
+    stripAccents(s)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "");
+
+  const normKana = (s) =>
+    kataToHira(s)
+      .trim()
+      .replace(/\s+/g, "");
+
+  // retourne true si la réponse utilisateur matche au moins une lecture attendue
+  function isAnswerCorrect(user, item) {
+    if (!user || !item) return false;
+
+    // normalisation utilisateur
+    const userRomaNorm = normRoma(user);
+    const userKanaNorm = normKana(user);
+
+    // normalisation des lectures attendues
+    const validKanaList = (item.readingsKana || []).map(normKana); // ex ["たべる"]
+    const validRomaList = (item.readingsRoma || []).map(normRoma); // ex ["taberu"]
+
+    // accepte si kana correspond OU rōmaji correspond
+    const okKana = validKanaList.includes(userKanaNorm);
+    const okRoma = validRomaList.includes(userRomaNorm);
+
+    return okKana || okRoma;
   }
 
-  if (!current) {
-    return (
-      <div className="p-4 text-center">
-        <p className="text-gray-600">
-          Il n'y a pas de vocabulaire sélectionné.
-        </p>
-        <p className="text-sm text-gray-500 mt-2">
-          (Va dans l’onglet “Vocabulaire” et coche un module ou des packs)
-        </p>
-        <button
-          onClick={onExit}
-          className="mt-4 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
-        >
+  // démarrer le quiz
+  const start = () => {
+    // on mélange les mots sélectionnés et on ne les pose qu'une seule fois chacun
+    const shuffled = [...picked].sort(() => Math.random() - 0.5);
+
+    setOrder(shuffled);
+    setIdx(0);
+    setInput("");
+    setStatus("idle");
+    setResults([]);
+    setFinished(false);
+    setStarted(true);
+  };
+
+  const current = order[idx];
+  const total = order.length;
+
+  // valider une réponse
+  const handleSubmit = () => {
+    if (!current) return;
+    const correct = isAnswerCorrect(input, current);
+
+    setResults(r => [
+      ...r,
+      {
+        word: current.word,               // le mot japonais
+        translationFR: current.translationFR,
+        userAnswer: input,
+        correct,
+        expectedKana: current.readingsKana || [],
+        expectedRoma: current.readingsRoma || [],
+      },
+    ]);
+
+    if (idx + 1 < total) {
+      // question suivante
+      setIdx(idx + 1);
+      setInput("");
+      setStatus("idle");
+    } else {
+      // terminé
+      setFinished(true);
+    }
+  };
+
+  // affichage
+  return (
+    <div className="p-4 bg-white rounded-2xl shadow-sm">
+      {/* header quiz */}
+      <div className="flex items-center gap-2 mb-2">
+        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">
           ← Retour
         </button>
-      </div>
-    );
-  }
-
-  // lectures acceptées pour ce mot
-  const accepted = getAcceptedReadingsForItem(current);
-
-  function checkAnswer() {
-    const user = normalizeAnswer(input);
-    if (!user) return;
-
-    if (accepted.includes(user)) {
-      setChecked("good");
-    } else {
-      setChecked("bad");
-    }
-  }
-
-  return (
-    <div className="p-4 max-w-xl mx-auto">
-      <div className="text-center mb-6">
-        <div className="text-xl font-bold text-pink-600 mb-1">
-          Traduction → Lecture
-        </div>
-        <div className="text-sm text-gray-600">
-          Écris la lecture japonaise (kana ou rōmaji)
-        </div>
-        <div className="text-xs text-gray-400 mt-1">
-          {pool.length} mots dans le quiz
-        </div>
+        <span className="font-semibold">{title}</span>
+        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+          {picked.length} mots sélectionnés
+        </span>
+        {finished && (
+          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+            Score: {results.filter(r => r.correct).length}/{results.length}
+          </span>
+        )}
       </div>
 
-      {/* MOT COURANT */}
-      <div className="mb-6 p-4 rounded-xl bg-white shadow border text-center">
-        <div className="text-gray-500 text-sm mb-1">Traduction :</div>
-        <div className="text-2xl font-semibold">{current.french}</div>
-      </div>
+      {/* écran démarrage */}
+      {!started ? (
+        <button
+          onClick={start}
+          disabled={picked.length === 0}
+          className={`w-full p-3 rounded-xl text-white ${
+            picked.length > 0 ? "bg-pink-400" : "bg-gray-300"
+          }`}
+        >
+          Commencer le {title}
+        </button>
+      ) : !finished ? (
+        // écran quiz en cours
+        <div className="flex flex-col items-center gap-4 p-4">
+          <div className="text-sm text-gray-600">
+            Mot {idx + 1} / {total}
+          </div>
 
-      {/* INPUT RÉPONSE */}
-      <input
-        value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-          setChecked(null);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (checked === null) {
-              checkAnswer();
-            } else {
-              pickRandomWord();
-            }
-          }
-        }}
-        placeholder="écris la lecture..."
-        className="w-full border rounded-lg px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-pink-400"
-      />
+          {/* On affiche la traduction FR, l'utilisateur doit donner la lecture japonaise */}
+          <div className="text-center">
+            <div className="text-sm text-gray-500 mb-1">Traduction :</div>
+            <div className="text-2xl font-semibold text-gray-900">
+              {current?.translationFR || "—"}
+            </div>
+          </div>
 
-      {/* ACTIONS + FEEDBACK */}
-      <div className="mt-4 flex flex-col items-center gap-3">
+          <input
+            ref={inputRef}
+            type="text"
+            className="w-full max-w-md p-3 rounded-xl border text-lg text-center"
+            placeholder="Lecture en japonais (kana ou rōmaji)"
+            value={input}
+            onChange={e => {
+              setInput(e.target.value);
+              if (status !== "idle") setStatus("idle");
+            }}
+            onKeyDown={e => {
+              if (e.key === "Enter" && input.trim()) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+          />
 
-        <div className="flex flex-col sm:flex-row gap-2">
-          {checked === null && (
-            <button
-              onClick={checkAnswer}
-              className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold text-center"
-            >
-              Valider
-            </button>
-          )}
-
-          {/* bouton Suivant toujours actif */}
           <button
-            onClick={() => pickRandomWord()}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold text-center"
+            onClick={handleSubmit}
+            disabled={!input.trim()}
+            className={`w-full max-w-md p-3 rounded-xl text-white ${
+              input.trim() ? "bg-pink-400" : "bg-gray-300"
+            }`}
           >
-            Suivant →
+            Valider
           </button>
         </div>
-
-        {checked === "good" && (
-          <div className="text-green-600 font-semibold">
-            ✔ Correct !
+      ) : (
+        // écran récapitulatif
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl bg-gray-50 font-semibold flex items-center justify-between">
+            <span>Récapitulatif</span>
+            <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
+              Score: {results.filter(r => r.correct).length}/{results.length}
+            </span>
           </div>
-        )}
 
-        {checked === "bad" && (
-          <div className="text-red-600 font-semibold">
-            ✘ Faux
-          </div>
-        )}
-      </div>
+          {results.map((r, i) => (
+            <div
+              key={i}
+              className="p-3 rounded-xl bg-gray-50 flex flex-col gap-2"
+            >
+              <div className="flex items-center justify-between">
+                <div className="text-lg font-bold">{r.translationFR}</div>
+                <div
+                  className={`text-lg font-bold ${
+                    r.correct ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {r.correct ? "✔️" : "❌"}
+                </div>
+              </div>
 
-      {/* QUITTER */}
-      <div className="mt-8 text-center">
-        <button
-          onClick={onExit}
-          className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm font-medium"
-        >
-          ← Retour
-        </button>
-      </div>
+              <div className="text-sm">
+                <span className="text-gray-500">Ta réponse :</span>{" "}
+                <span className="font-medium">{r.userAnswer || "—"}</span>
+              </div>
+
+              <div className="text-sm">
+                <span className="text-gray-500">Lecture attendue :</span>{" "}
+                {/* on affiche les kana en priorité */}
+                {r.expectedKana && r.expectedKana.length > 0 ? (
+                  r.expectedKana.map((kana, idx2) => (
+                    <span
+                      key={idx2}
+                      className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700"
+                    >
+                      {kana}
+                    </span>
+                  ))
+                ) : (
+                  "—"
+                )}
+              </div>
+
+              {/* on peut aussi montrer les rōmaji possibles */}
+              {r.expectedRoma && r.expectedRoma.length > 0 && (
+                <div className="text-xs text-gray-500">
+                  <span className="text-gray-500">Rōmaji :</span>{" "}
+                  {r.expectedRoma.join(", ")}
+                </div>
+              )}
+
+              <div className="text-xs text-gray-400">
+                Mot : <span className="font-mono">{r.word}</span>
+              </div>
+            </div>
+          ))}
+
+          <button
+            onClick={start}
+            className="w-full p-3 rounded-xl bg-gray-100"
+          >
+            Recommencer
+          </button>
+        </div>
+      )}
     </div>
   );
 }
+
 
 
 /** ================== QUIZ COMPLET ================== */
