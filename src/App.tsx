@@ -179,12 +179,14 @@ function VocabSection({
   setSelectedModules,
   selectedPacks,
   setSelectedPacks,
+  onStartQuiz,
 }: {
   onExit: () => void;
   selectedModules: number[];
   setSelectedModules: React.Dispatch<React.SetStateAction<number[]>>;
   selectedPacks: number[];
   setSelectedPacks: React.Dispatch<React.SetStateAction<number[]>>;
+  onStartQuiz: (wordsForQuiz: any[]) => void;
 }) {
   // subPage contrôle où on est :
   const [subPage, setSubPage] = React.useState<"modules" | "packs" | "words">("modules");
@@ -257,24 +259,42 @@ function VocabSection({
   // lancer le quiz vocabulaire
   // (pour l'instant on n'a pas encore fait l'écran quiz vocab
   // donc je fais juste un alert() avec les packs choisis)
-  function handleStartQuiz() {
-    const chosenPackNumbers = getChosenPackNumbersForQuiz();
-    if (chosenPackNumbers.length === 0) {
-      alert("Sélectionne au moins un module ou un pack 👍");
-      return;
-    }
+function handleStartQuiz() {
+  const chosenPackNumbers = getChosenPackNumbersForQuiz();
 
-    alert(
-      "Quiz lancé avec packs : " +
-        chosenPackNumbers.join(", ") +
-        "\nNombre total de mots : " +
-        getChosenWordCount()
-    );
-
-    // ICI plus tard :
-    // -> setRoute("vocabQuiz")
-    // -> tu passes chosenPackNumbers au composant quiz
+  if (chosenPackNumbers.length === 0) {
+    alert("Sélectionne au moins un module ou un pack 👍");
+    return;
   }
+
+  // construire la liste unique de mots à partir des packs choisis
+  const wordsMap = new Map<string, any>();
+  ALL_PACKS.forEach((pack: any) => {
+    if (chosenPackNumbers.includes(pack.packNumber)) {
+      pack.items.forEach((it: any) => {
+        if (!wordsMap.has(it.id)) {
+          wordsMap.set(it.id, it);
+        }
+      });
+    }
+  });
+
+  const wordsForQuiz = Array.from(wordsMap.values());
+
+  // 👇 petit debug facultatif
+  alert(
+    "Quiz lancé avec packs : " +
+      chosenPackNumbers.join(", ") +
+      "\nNombre total de mots : " +
+      wordsForQuiz.length
+  );
+
+  // 👇 ici on dit au parent "voilà les mots", le parent va switcher vers l'écran Quiz
+  onStartQuiz(wordsForQuiz);
+}
+
+
+
 
   // -------------------------------------------------
   // 1) PAGE : LISTE DES MODULES
@@ -2110,238 +2130,160 @@ function getActiveVocabPool(
 /** ================== QUIZ VOC TRAD/LECTURE ================== */
 
 function QuizVocabulaire({
-  picked,
+  words,
   onBack,
-  title,
 }: {
-  picked: {
-    french: string;
-    reading: string; // kana correct (ex: おんな)
-    kanji?: string;  // optionnel, ex: 女
-  }[];
+  words: Array<{ id: string; french: string; reading: string; kanji?: string }>;
   onBack: () => void;
-  title: string;
 }) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
 
-  // ordre des questions
-  const [order, setOrder] = useState<
-    { french: string; reading: string; kanji?: string }[]
-  >([]);
+  // ordre des questions (shuffle au départ)
+  const [order, setOrder] = useState<any[]>([]);
   const [idx, setIdx] = useState(0);
 
-  // saisie utilisateur
   const [input, setInput] = useState("");
   const [status, setStatus] = useState<"idle" | "hit" | "miss">("idle");
+  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // récap final
-  const [results, setResults] = useState<
-    {
+  // récap
+  const results = useRef<
+    Array<{
+      id: string;
       french: string;
-      kanji?: string;
-      correctReading: string;
-      userAnswer: string;
-      correct: boolean;
-    }[]
+      reading: string;
+      user: string;
+      ok: boolean;
+    }>
   >([]);
 
-  // focus sur l'input
+  // focus auto
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (started && !finished) {
-      const t = setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
+      const t = setTimeout(() => inputRef.current?.focus(), 0);
       return () => clearTimeout(t);
     }
   }, [started, finished, idx, status]);
 
-  // --- utils ---
+  // Helpers pour comparaison
+  // reading dans vocabQuizzes peut être "き" ou "き / きのき"
+  function normalizeAllAcceptableReadings(readingField: string) {
+    // on coupe sur / , ・ , espaces multiples
+    const rawPieces = readingField
+      .split(/[\/;,、]/)
+      .map(s => s.trim())
+      .filter(Boolean);
 
-  // Katakana → Hiragana
-  const kataToHira = (s: string) =>
-    Array.from(s).map((ch) => {
-      const code = ch.charCodeAt(0);
-      return code >= 0x30a1 && code <= 0x30f6
-        ? String.fromCharCode(code - 0x60)
-        : ch;
-    }).join("");
-
-  // Normalisation kana utilisateur (enlève espaces et transforme カタカナ -> ひらがな)
-  const normKana = (s: string) =>
-    kataToHira(s)
-      .trim()
-      .replace(/\s+/g, "");
-
-  // Pour le romaji: on convertit la lecture correcte (kana) en romaji
-  // et on normalise la saisie utilisateur en romaji simple (minuscule, sans accents)
-  const stripAccents = (s: string) =>
-    (s ?? "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-
-  const normRoma = (s: string) =>
-    stripAccents(s)
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "");
-
-  // Kana → rōmaji (Hepburn simplifié)
-  const kanaToRomaji = (input: string) => {
-    if (!input) return "";
-    const map: Record<string, string> = {
-      "あ":"a","い":"i","う":"u","え":"e","お":"o",
-      "か":"ka","き":"ki","く":"ku","け":"ke","こ":"ko",
-      "さ":"sa","し":"shi","す":"su","せ":"se","そ":"so",
-      "た":"ta","ち":"chi","つ":"tsu","て":"te","と":"to",
-      "な":"na","に":"ni","ぬ":"nu","ね":"ne","の":"no",
-      "は":"ha","ひ":"hi","ふ":"fu","へ":"he","ほ":"ho",
-      "ま":"ma","み":"mi","む":"mu","め":"me","も":"mo",
-      "や":"ya","ゆ":"yu","よ":"yo",
-      "ら":"ra","り":"ri","る":"ru","れ":"re","ろ":"ro",
-      "わ":"wa","を":"o","ん":"n",
-      "が":"ga","ぎ":"gi","ぐ":"gu","げ":"ge","ご":"go",
-      "ざ":"za","じ":"ji","ず":"zu","ぜ":"ze","ぞ":"zo",
-      "だ":"da","ぢ":"ji","づ":"zu","で":"de","ど":"do",
-      "ば":"ba","び":"bi","ぶ":"bu","べ":"be","ぼ":"bo",
-      "ぱ":"pa","ぴ":"pi","ぷ":"pu","ぺ":"pe","ぽ":"po",
-      "きゃ":"kya","きゅ":"kyu","きょ":"kyo",
-      "しゃ":"sha","しゅ":"shu","しょ":"sho",
-      "ちゃ":"cha","ちゅ":"chu","ちょ":"cho",
-      "にゃ":"nya","にゅ":"nyu","にょ":"nyo",
-      "ひゃ":"hya","ひゅ":"hyu","ひょ":"hyo",
-      "みゃ":"mya","みゅ":"myu","みょ":"myo",
-      "りゃ":"rya","りゅ":"ryu","りょ":"ryo",
-      "ぎゃ":"gya","ぎゅ":"gyu","ぎょ":"gyo",
-      "じゃ":"ja","じゅ":"ju","じょ":"jo",
-      "びゃ":"bya","びゅ":"byu","びょ":"byo",
-      "ぴゃ":"pya","ぴゅ":"pyu","ぴょ":"pyo",
-      "ぁ":"a","ぃ":"i","ぅ":"u","ぇ":"e","ぉ":"o",
-      "ゃ":"ya","ゅ":"yu","ょ":"yo",
-      "っ":"*", // sokuon, handled below
-      "ー":"-"  // long vowel marker
-    };
-
-    const chars = Array.from(input);
-    let out = "";
-    for (let i = 0; i < chars.length; i++) {
-      const ch = chars[i];
-      const next = chars[i + 1] ?? "";
-      const pair = ch + next;
-
-      // digrammes (きゃ, しゃ, etc.)
-      if (map[pair]) {
-        // double small tsu before pair:
-        if (pair[0] === "っ") {
-          const romaNext = map[pair.slice(1)] || "";
-          if (romaNext) {
-            const c = romaNext[0];
-            if (/[bcdfghjklmnpqrstvwxyz]/.test(c)) out += c;
-            out += romaNext;
-          }
-        } else {
-          out += map[pair];
-        }
-        i++;
-        continue;
+    // pour chaque forme kana, on ajoute aussi la version romaji
+    const normKeys = new Set<string>();
+    rawPieces.forEach(piece => {
+      // forme kana/hira/katakana normalisée
+      if (piece) {
+        const hira = normalizeKana(piece);       // ex "キ" -> "き"
+        const roma = norm(kanaToRomaji(piece));  // ex "き" -> "ki"
+        normKeys.add(norm(hira));
+        normKeys.add(roma);
       }
+    });
 
-      // petit っ pour doubler la consonne
-      if (ch === "っ") {
-        const romaNext = map[next] || "";
-        if (romaNext) {
-          const c = romaNext[0];
-          if (/[bcdfghjklmnpqrstvwxyz]/.test(c)) {
-            out += c;
-          }
-        }
-        continue;
-      }
-
-      // long vowel mark "ー": on répète la dernière voyelle
-      if (ch === "ー") {
-        const m = out.match(/[aiueo]$/);
-        if (m) out += m[0];
-        continue;
-      }
-
-      // fallback simple kana
-      if (map[ch]) {
-        out += map[ch];
-      } else {
-        out += ch; // caractère inconnu => on le laisse tel quel
-      }
-    }
-    return out;
-  };
-
-  // Vérifie si la réponse utilisateur est correcte
-  function isAnswerCorrect(userAnswer: string, expectedKana: string) {
-    const userKanaNorm = normKana(userAnswer);
-    const expectedKanaNorm = normKana(expectedKana);
-
-    if (userKanaNorm && userKanaNorm === expectedKanaNorm) {
-      return true; // l'utilisateur a tapé la bonne lecture en kana
-    }
-
-    const userRomaNorm = normRoma(userAnswer);
-    const expectedRomaNorm = normRoma(kanaToRomaji(expectedKana));
-
-    if (userRomaNorm && userRomaNorm === expectedRomaNorm) {
-      return true; // l'utilisateur a tapé la bonne lecture en romaji
-    }
-
-    return false;
+    return Array.from(normKeys); // liste de clés possibles
   }
 
-  // Lancer le quiz (shuffle, une seule fois chaque mot)
+  // prépare la question actuelle
+  const currentQ = useMemo(() => {
+    if (!started || idx >= order.length) return null;
+
+    const w = order[idx];
+    return {
+      id: w.id,
+      french: w.french,
+      reading: w.reading,
+      acceptableKeys: normalizeAllAcceptableReadings(w.reading),
+    };
+  }, [started, idx, order]);
+
+  const total = order.length;
+  const remaining = Math.max(0, total - idx - 1);
+
+  useEffect(() => {
+    return () => {
+      if (autoNext.current) clearTimeout(autoNext.current);
+    };
+  }, []);
+
   const start = () => {
-    const shuffled = [...picked].sort(() => Math.random() - 0.5);
+    // mélange les mots reçus en props
+    const shuffled = [...words].sort(() => Math.random() - 0.5);
+
     setOrder(shuffled);
     setIdx(0);
     setInput("");
     setStatus("idle");
-    setResults([]);
+    results.current = [];
     setFinished(false);
     setStarted(true);
+
+    setTimeout(() => inputRef.current?.focus(), 0);
   };
 
-  const current = order[idx];
-  const total = order.length;
+  function goNext(okForThisOne: boolean, userAnswer: string) {
+    if (!currentQ) return;
 
-  // Validation d'une réponse
-  const handleSubmit = () => {
-    if (!current) return;
+    // on pousse le résultat pour le mot courant
+    results.current.push({
+      id: currentQ.id,
+      french: currentQ.french,
+      reading: currentQ.reading,
+      user: userAnswer,
+      ok: okForThisOne,
+    });
 
-    const correct = isAnswerCorrect(input, current.reading);
-
-    // On pousse le résultat
-    setResults((prev) => [
-      ...prev,
-      {
-        french: current.french,
-        kanji: current.kanji,
-        correctReading: current.reading,
-        userAnswer: input,
-        correct,
-      },
-    ]);
-
-    // Question suivante ou fin
+    // question suivante ou fin
     if (idx + 1 < total) {
       setIdx(idx + 1);
       setInput("");
       setStatus("idle");
+      setTimeout(() => inputRef.current?.focus(), 0);
     } else {
       setFinished(true);
     }
-  };
+  }
 
-  // --- rendu ---
+  function handleSubmit() {
+    if (!currentQ) return;
+    const raw = input.trim();
+    if (!raw) return;
+
+    const userKeyKana = norm(normalizeKana(raw));      // si kana
+    const userKeyRoma = norm(raw);                     // si romaji direct
+    const userIsValid =
+      currentQ.acceptableKeys.includes(userKeyKana) ||
+      currentQ.acceptableKeys.includes(userKeyRoma);
+
+    if (userIsValid) {
+      setStatus("hit");
+      if (autoNext.current) clearTimeout(autoNext.current);
+      autoNext.current = setTimeout(() => {
+        goNext(true, raw);
+      }, 500);
+    } else {
+      // faux -> on force à réessayer, PAS skip auto
+      setStatus("miss");
+      setInput("");
+    }
+  }
+
+  function skip() {
+    goNext(false, input);
+  }
+
+  // score final
+  const score = results.current.filter(r => r.ok).length;
+
   return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm">
-      {/* header du quiz */}
+    <div className="p-4 bg-white rounded-2xl shadow-sm max-w-xl mx-auto">
       <div className="flex items-center gap-2 mb-2">
         <button
           onClick={onBack}
@@ -2350,50 +2292,52 @@ function QuizVocabulaire({
           ← Retour
         </button>
 
-        <span className="font-semibold">{title}</span>
-
-        <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-          {picked.length} mots sélectionnés
-        </span>
+        <span className="font-semibold flex-1">Quiz vocabulaire</span>
 
         {finished && (
           <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-            Score : {results.filter((r) => r.correct).length}/{results.length}
+            Score: {score}/{results.current.length}
           </span>
         )}
       </div>
 
-      {/* Écran avant de commencer */}
       {!started ? (
         <button
           onClick={start}
-          disabled={picked.length === 0}
+          disabled={words.length === 0}
           className={`w-full p-3 rounded-xl text-white ${
-            picked.length > 0 ? "bg-pink-400" : "bg-gray-300"
+            words.length > 0 ? "bg-pink-400" : "bg-gray-300"
           }`}
         >
-          Commencer le {title}
+          Commencer le quiz vocabulaire
         </button>
       ) : !finished ? (
-        // Écran quiz en cours
         <div className="flex flex-col items-center gap-4 p-4">
           <div className="text-sm text-gray-600">
-            Mot {idx + 1} / {total}
+            Question {idx + 1} / {total}
           </div>
 
-          {/* On montre la traduction FR, l'utilisateur doit donner la lecture japonaise */}
           <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">Traduction :</div>
-            <div className="text-2xl font-semibold text-gray-900">
-              {current?.french || "—"}
+            <div className="text-sm text-gray-500 mb-1">
+              Traduction française :
+            </div>
+            <div className="text-2xl font-semibold">
+              {currentQ?.french}
             </div>
           </div>
 
           <input
             ref={inputRef}
+            autoFocus
             type="text"
-            className="w-full max-w-md p-3 rounded-xl border text-lg text-center"
-            placeholder="Lecture japonaise (kana ou rōmaji)"
+            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
+              status === "miss"
+                ? "border-red-400"
+                : status === "hit"
+                ? "border-green-500"
+                : ""
+            }`}
+            placeholder="Lecture en kana OU en rōmaji, puis Entrée"
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
@@ -2405,72 +2349,98 @@ function QuizVocabulaire({
                 handleSubmit();
               }
             }}
+            disabled={status === "hit"}
           />
 
-          <button
-            onClick={handleSubmit}
-            disabled={!input.trim()}
-            className={`w-full max-w-md p-3 rounded-xl text-white ${
-              input.trim() ? "bg-pink-400" : "bg-gray-300"
-            }`}
-          >
-            Valider
-          </button>
-        </div>
-      ) : (
-        // Écran récapitulatif
-        <div className="space-y-3">
-          <div className="p-3 rounded-xl bg-gray-50 font-semibold flex items-center justify-between">
-            <span>Récapitulatif</span>
-            <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-              Score : {results.filter((r) => r.correct).length}/{results.length}
+          <div className="flex items-center gap-2 w-full max-w-md">
+            <button
+              onClick={handleSubmit}
+              disabled={!input.trim() || status === "hit"}
+              className={`flex-1 p-3 rounded-xl text-white ${
+                input.trim() && status !== "hit"
+                  ? "bg-pink-400"
+                  : "bg-gray-300"
+              }`}
+            >
+              Valider
+            </button>
+
+            <button
+              onClick={skip}
+              className="px-4 py-3 rounded-xl bg-gray-100"
+            >
+              Suivant
+            </button>
+
+            <span className="px-3 py-3 text-sm text-gray-500">
+              Restants: {Math.max(0, total - idx - 1)}
             </span>
           </div>
 
-          {results.map((r, i) => (
+          {status === "miss" && (
+            <div className="text-sm text-red-600">
+              Incorrect. Réessaie ou clique sur "Suivant".
+            </div>
+          )}
+          {status === "hit" && (
+            <div className="text-sm text-green-600">
+              Correct !
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl bg-gray-50 font-semibold">
+            Récapitulatif
+          </div>
+
+          {results.current.map((r, i) => (
             <div
               key={i}
-              className="p-3 rounded-xl bg-gray-50 flex flex-col gap-2"
+              className="p-3 rounded-xl bg-gray-50"
             >
-              <div className="flex items-center justify-between">
-                <div className="text-lg font-bold">
-                  {r.french}
-                  {r.kanji ? (
-                    <span className="text-gray-500 font-normal ml-2">
-                      ({r.kanji})
-                    </span>
-                  ) : null}
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm">
+                  <div className="text-gray-500 text-xs">
+                    Français :
+                  </div>
+                  <div className="text-base font-semibold">
+                    {r.french}
+                  </div>
                 </div>
 
                 <div
-                  className={`text-lg font-bold ${
-                    r.correct ? "text-green-600" : "text-red-600"
-                  }`}
+                  className={
+                    r.ok
+                      ? "text-green-600 font-bold"
+                      : "text-red-600 font-bold"
+                  }
                 >
-                  {r.correct ? "✔️" : "❌"}
+                  {r.ok ? "Correct" : "Faux"}
                 </div>
               </div>
 
-              <div className="text-sm">
-                <span className="text-gray-500">Ta réponse :</span>{" "}
-                <span className="font-medium">{r.userAnswer || "—"}</span>
+              <div className="text-sm mb-1">
+                <span className="text-gray-500">
+                  Ta réponse :
+                </span>{" "}
+                {r.user || "—"}
               </div>
 
-              <div className="text-sm">
-                <span className="text-gray-500">Lecture attendue :</span>{" "}
-                <span className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">
-                  {r.correctReading}
-                </span>
+              <div className="text-sm text-blue-600">
+                Lectures attendues : {r.reading}
               </div>
             </div>
           ))}
 
-          <button
-            onClick={start}
-            className="w-full p-3 rounded-xl bg-gray-100"
-          >
-            Recommencer
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={start}
+              className="flex-1 p-3 rounded-xl bg-gray-100"
+            >
+              Recommencer
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -3453,6 +3423,10 @@ export default function App() {
   const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
   const [quizVocabMode, setQuizVocabMode] = useState<string | null>(null);
+  const [route, setRoute] = useState<"main" | "vocabSelect" | "vocabQuiz">("main");
+  const [selectedModules, setSelectedModules] = useState<number[]>([]);
+  const [selectedPacks, setSelectedPacks] = useState<number[]>([]);
+  const [quizWords, setQuizWords] = useState<any[]>([]);
   const [selectedVocabModules, setSelectedVocabModules] = useState<number[]>(() => {
   try {
     const raw = window.localStorage.getItem("selectedVocabModules");
@@ -3530,6 +3504,42 @@ React.useEffect(() => {
         {route === "quiz" && quizSection === "kanji" && !quizMode && (
           <QuizMenu setQuizMode={setQuizMode} onBackToTypes={() => setQuizSection(null)} />
         )}
+
+
+{route === "vocabSelect" && (
+      <VocabSection
+        onExit={() => setRoute("main")}
+        selectedModules={selectedModules}
+        setSelectedModules={setSelectedModules}
+        selectedPacks={selectedPacks}
+        setSelectedPacks={setSelectedPacks}
+        onStartQuiz={(wordsForQuiz) => {
+          setQuizWords(wordsForQuiz);
+          setRoute("vocabQuiz");
+        }}
+      />
+    )}
+
+        {route === "vocabSelect" && (
+      <VocabSection
+        onExit={() => setRoute("main")}
+        selectedModules={selectedModules}
+        setSelectedModules={setSelectedModules}
+        selectedPacks={selectedPacks}
+        setSelectedPacks={setSelectedPacks}
+        onStartQuiz={(wordsForQuiz) => {
+          setQuizWords(wordsForQuiz);
+          setRoute("vocabQuiz");
+        }}
+      />
+    )}
+
+    {route === "vocabQuiz" && (
+      <QuizVocabulaire
+        words={quizWords}
+        onBack={() => setRoute("main")}
+      />
+    )}
 
         {route === "vocab" && (
         <VocabSection
