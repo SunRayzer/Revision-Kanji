@@ -2109,81 +2109,195 @@ function getActiveVocabPool(
 
 /** ================== QUIZ VOC TRAD/LECTURE ================== */
 
-function QuizVocabulaire({ picked, onBack, title }) {
+function QuizVocabulaire({
+  picked,
+  onBack,
+  title,
+}: {
+  picked: {
+    french: string;
+    reading: string; // kana correct (ex: おんな)
+    kanji?: string;  // optionnel, ex: 女
+  }[];
+  onBack: () => void;
+  title: string;
+}) {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
 
   // ordre des questions
-  const [order, setOrder] = useState([]);
+  const [order, setOrder] = useState<
+    { french: string; reading: string; kanji?: string }[]
+  >([]);
   const [idx, setIdx] = useState(0);
 
   // saisie utilisateur
   const [input, setInput] = useState("");
-  const [status, setStatus] = useState("idle"); // "idle" | "hit" | "miss"
+  const [status, setStatus] = useState<"idle" | "hit" | "miss">("idle");
 
   // récap final
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<
+    {
+      french: string;
+      kanji?: string;
+      correctReading: string;
+      userAnswer: string;
+      correct: boolean;
+    }[]
+  >([]);
 
-  // pour focus auto champ texte
-  const inputRef = useRef(null);
+  // focus sur l'input
+  const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (started && !finished) {
       const t = setTimeout(() => {
-        if (inputRef.current) inputRef.current.focus();
+        inputRef.current?.focus();
       }, 0);
       return () => clearTimeout(t);
     }
   }, [started, finished, idx, status]);
 
-  // petites utils locales
-  const kataToHira = (s) =>
-    Array.from(s).map(ch => {
+  // --- utils ---
+
+  // Katakana → Hiragana
+  const kataToHira = (s: string) =>
+    Array.from(s).map((ch) => {
       const code = ch.charCodeAt(0);
-      return (code >= 0x30A1 && code <= 0x30F6)
+      return code >= 0x30a1 && code <= 0x30f6
         ? String.fromCharCode(code - 0x60)
         : ch;
     }).join("");
 
-  const stripAccents = (s) =>
+  // Normalisation kana utilisateur (enlève espaces et transforme カタカナ -> ひらがな)
+  const normKana = (s: string) =>
+    kataToHira(s)
+      .trim()
+      .replace(/\s+/g, "");
+
+  // Pour le romaji: on convertit la lecture correcte (kana) en romaji
+  // et on normalise la saisie utilisateur en romaji simple (minuscule, sans accents)
+  const stripAccents = (s: string) =>
     (s ?? "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-  const normRoma = (s) =>
+  const normRoma = (s: string) =>
     stripAccents(s)
       .trim()
       .toLowerCase()
       .replace(/\s+/g, "");
 
-  const normKana = (s) =>
-    kataToHira(s)
-      .trim()
-      .replace(/\s+/g, "");
+  // Kana → rōmaji (Hepburn simplifié)
+  const kanaToRomaji = (input: string) => {
+    if (!input) return "";
+    const map: Record<string, string> = {
+      "あ":"a","い":"i","う":"u","え":"e","お":"o",
+      "か":"ka","き":"ki","く":"ku","け":"ke","こ":"ko",
+      "さ":"sa","し":"shi","す":"su","せ":"se","そ":"so",
+      "た":"ta","ち":"chi","つ":"tsu","て":"te","と":"to",
+      "な":"na","に":"ni","ぬ":"nu","ね":"ne","の":"no",
+      "は":"ha","ひ":"hi","ふ":"fu","へ":"he","ほ":"ho",
+      "ま":"ma","み":"mi","む":"mu","め":"me","も":"mo",
+      "や":"ya","ゆ":"yu","よ":"yo",
+      "ら":"ra","り":"ri","る":"ru","れ":"re","ろ":"ro",
+      "わ":"wa","を":"o","ん":"n",
+      "が":"ga","ぎ":"gi","ぐ":"gu","げ":"ge","ご":"go",
+      "ざ":"za","じ":"ji","ず":"zu","ぜ":"ze","ぞ":"zo",
+      "だ":"da","ぢ":"ji","づ":"zu","で":"de","ど":"do",
+      "ば":"ba","び":"bi","ぶ":"bu","べ":"be","ぼ":"bo",
+      "ぱ":"pa","ぴ":"pi","ぷ":"pu","ぺ":"pe","ぽ":"po",
+      "きゃ":"kya","きゅ":"kyu","きょ":"kyo",
+      "しゃ":"sha","しゅ":"shu","しょ":"sho",
+      "ちゃ":"cha","ちゅ":"chu","ちょ":"cho",
+      "にゃ":"nya","にゅ":"nyu","にょ":"nyo",
+      "ひゃ":"hya","ひゅ":"hyu","ひょ":"hyo",
+      "みゃ":"mya","みゅ":"myu","みょ":"myo",
+      "りゃ":"rya","りゅ":"ryu","りょ":"ryo",
+      "ぎゃ":"gya","ぎゅ":"gyu","ぎょ":"gyo",
+      "じゃ":"ja","じゅ":"ju","じょ":"jo",
+      "びゃ":"bya","びゅ":"byu","びょ":"byo",
+      "ぴゃ":"pya","ぴゅ":"pyu","ぴょ":"pyo",
+      "ぁ":"a","ぃ":"i","ぅ":"u","ぇ":"e","ぉ":"o",
+      "ゃ":"ya","ゅ":"yu","ょ":"yo",
+      "っ":"*", // sokuon, handled below
+      "ー":"-"  // long vowel marker
+    };
 
-  // retourne true si la réponse utilisateur matche au moins une lecture attendue
-  function isAnswerCorrect(user, item) {
-    if (!user || !item) return false;
+    const chars = Array.from(input);
+    let out = "";
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      const next = chars[i + 1] ?? "";
+      const pair = ch + next;
 
-    // normalisation utilisateur
-    const userRomaNorm = normRoma(user);
-    const userKanaNorm = normKana(user);
+      // digrammes (きゃ, しゃ, etc.)
+      if (map[pair]) {
+        // double small tsu before pair:
+        if (pair[0] === "っ") {
+          const romaNext = map[pair.slice(1)] || "";
+          if (romaNext) {
+            const c = romaNext[0];
+            if (/[bcdfghjklmnpqrstvwxyz]/.test(c)) out += c;
+            out += romaNext;
+          }
+        } else {
+          out += map[pair];
+        }
+        i++;
+        continue;
+      }
 
-    // normalisation des lectures attendues
-    const validKanaList = (item.readingsKana || []).map(normKana); // ex ["たべる"]
-    const validRomaList = (item.readingsRoma || []).map(normRoma); // ex ["taberu"]
+      // petit っ pour doubler la consonne
+      if (ch === "っ") {
+        const romaNext = map[next] || "";
+        if (romaNext) {
+          const c = romaNext[0];
+          if (/[bcdfghjklmnpqrstvwxyz]/.test(c)) {
+            out += c;
+          }
+        }
+        continue;
+      }
 
-    // accepte si kana correspond OU rōmaji correspond
-    const okKana = validKanaList.includes(userKanaNorm);
-    const okRoma = validRomaList.includes(userRomaNorm);
+      // long vowel mark "ー": on répète la dernière voyelle
+      if (ch === "ー") {
+        const m = out.match(/[aiueo]$/);
+        if (m) out += m[0];
+        continue;
+      }
 
-    return okKana || okRoma;
+      // fallback simple kana
+      if (map[ch]) {
+        out += map[ch];
+      } else {
+        out += ch; // caractère inconnu => on le laisse tel quel
+      }
+    }
+    return out;
+  };
+
+  // Vérifie si la réponse utilisateur est correcte
+  function isAnswerCorrect(userAnswer: string, expectedKana: string) {
+    const userKanaNorm = normKana(userAnswer);
+    const expectedKanaNorm = normKana(expectedKana);
+
+    if (userKanaNorm && userKanaNorm === expectedKanaNorm) {
+      return true; // l'utilisateur a tapé la bonne lecture en kana
+    }
+
+    const userRomaNorm = normRoma(userAnswer);
+    const expectedRomaNorm = normRoma(kanaToRomaji(expectedKana));
+
+    if (userRomaNorm && userRomaNorm === expectedRomaNorm) {
+      return true; // l'utilisateur a tapé la bonne lecture en romaji
+    }
+
+    return false;
   }
 
-  // démarrer le quiz
+  // Lancer le quiz (shuffle, une seule fois chaque mot)
   const start = () => {
-    // on mélange les mots sélectionnés et on ne les pose qu'une seule fois chacun
     const shuffled = [...picked].sort(() => Math.random() - 0.5);
-
     setOrder(shuffled);
     setIdx(0);
     setInput("");
@@ -2196,54 +2310,60 @@ function QuizVocabulaire({ picked, onBack, title }) {
   const current = order[idx];
   const total = order.length;
 
-  // valider une réponse
+  // Validation d'une réponse
   const handleSubmit = () => {
     if (!current) return;
-    const correct = isAnswerCorrect(input, current);
 
-    setResults(r => [
-      ...r,
+    const correct = isAnswerCorrect(input, current.reading);
+
+    // On pousse le résultat
+    setResults((prev) => [
+      ...prev,
       {
-        word: current.word,               // le mot japonais
-        translationFR: current.translationFR,
+        french: current.french,
+        kanji: current.kanji,
+        correctReading: current.reading,
         userAnswer: input,
         correct,
-        expectedKana: current.readingsKana || [],
-        expectedRoma: current.readingsRoma || [],
       },
     ]);
 
+    // Question suivante ou fin
     if (idx + 1 < total) {
-      // question suivante
       setIdx(idx + 1);
       setInput("");
       setStatus("idle");
     } else {
-      // terminé
       setFinished(true);
     }
   };
 
-  // affichage
+  // --- rendu ---
   return (
     <div className="p-4 bg-white rounded-2xl shadow-sm">
-      {/* header quiz */}
+      {/* header du quiz */}
       <div className="flex items-center gap-2 mb-2">
-        <button onClick={onBack} className="px-3 py-1 rounded bg-gray-100">
+        <button
+          onClick={onBack}
+          className="px-3 py-1 rounded bg-gray-100"
+        >
           ← Retour
         </button>
+
         <span className="font-semibold">{title}</span>
+
         <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
           {picked.length} mots sélectionnés
         </span>
+
         {finished && (
           <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-            Score: {results.filter(r => r.correct).length}/{results.length}
+            Score : {results.filter((r) => r.correct).length}/{results.length}
           </span>
         )}
       </div>
 
-      {/* écran démarrage */}
+      {/* Écran avant de commencer */}
       {!started ? (
         <button
           onClick={start}
@@ -2255,17 +2375,17 @@ function QuizVocabulaire({ picked, onBack, title }) {
           Commencer le {title}
         </button>
       ) : !finished ? (
-        // écran quiz en cours
+        // Écran quiz en cours
         <div className="flex flex-col items-center gap-4 p-4">
           <div className="text-sm text-gray-600">
             Mot {idx + 1} / {total}
           </div>
 
-          {/* On affiche la traduction FR, l'utilisateur doit donner la lecture japonaise */}
+          {/* On montre la traduction FR, l'utilisateur doit donner la lecture japonaise */}
           <div className="text-center">
             <div className="text-sm text-gray-500 mb-1">Traduction :</div>
             <div className="text-2xl font-semibold text-gray-900">
-              {current?.translationFR || "—"}
+              {current?.french || "—"}
             </div>
           </div>
 
@@ -2273,13 +2393,13 @@ function QuizVocabulaire({ picked, onBack, title }) {
             ref={inputRef}
             type="text"
             className="w-full max-w-md p-3 rounded-xl border text-lg text-center"
-            placeholder="Lecture en japonais (kana ou rōmaji)"
+            placeholder="Lecture japonaise (kana ou rōmaji)"
             value={input}
-            onChange={e => {
+            onChange={(e) => {
               setInput(e.target.value);
               if (status !== "idle") setStatus("idle");
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === "Enter" && input.trim()) {
                 e.preventDefault();
                 handleSubmit();
@@ -2298,12 +2418,12 @@ function QuizVocabulaire({ picked, onBack, title }) {
           </button>
         </div>
       ) : (
-        // écran récapitulatif
+        // Écran récapitulatif
         <div className="space-y-3">
           <div className="p-3 rounded-xl bg-gray-50 font-semibold flex items-center justify-between">
             <span>Récapitulatif</span>
             <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-              Score: {results.filter(r => r.correct).length}/{results.length}
+              Score : {results.filter((r) => r.correct).length}/{results.length}
             </span>
           </div>
 
@@ -2313,7 +2433,15 @@ function QuizVocabulaire({ picked, onBack, title }) {
               className="p-3 rounded-xl bg-gray-50 flex flex-col gap-2"
             >
               <div className="flex items-center justify-between">
-                <div className="text-lg font-bold">{r.translationFR}</div>
+                <div className="text-lg font-bold">
+                  {r.french}
+                  {r.kanji ? (
+                    <span className="text-gray-500 font-normal ml-2">
+                      ({r.kanji})
+                    </span>
+                  ) : null}
+                </div>
+
                 <div
                   className={`text-lg font-bold ${
                     r.correct ? "text-green-600" : "text-red-600"
@@ -2330,31 +2458,9 @@ function QuizVocabulaire({ picked, onBack, title }) {
 
               <div className="text-sm">
                 <span className="text-gray-500">Lecture attendue :</span>{" "}
-                {/* on affiche les kana en priorité */}
-                {r.expectedKana && r.expectedKana.length > 0 ? (
-                  r.expectedKana.map((kana, idx2) => (
-                    <span
-                      key={idx2}
-                      className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700"
-                    >
-                      {kana}
-                    </span>
-                  ))
-                ) : (
-                  "—"
-                )}
-              </div>
-
-              {/* on peut aussi montrer les rōmaji possibles */}
-              {r.expectedRoma && r.expectedRoma.length > 0 && (
-                <div className="text-xs text-gray-500">
-                  <span className="text-gray-500">Rōmaji :</span>{" "}
-                  {r.expectedRoma.join(", ")}
-                </div>
-              )}
-
-              <div className="text-xs text-gray-400">
-                Mot : <span className="font-mono">{r.word}</span>
+                <span className="inline-block mx-1 px-2 py-0.5 rounded-full border text-xs border-blue-300 bg-blue-50 text-blue-700">
+                  {r.correctReading}
+                </span>
               </div>
             </div>
           ))}
@@ -3477,7 +3583,7 @@ React.useEffect(() => {
 )}
 
 {route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
-  <QuizVocabTraductionLecture
+  <QuizVocabulaire
     onExit={() => {
       setQuizVocabMode(null);
     }}
