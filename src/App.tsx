@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import vocabQuizzes from "./assets/vocab_quizzes.json";
+
 
 /** ================== Données JLPT N5 (kanji) ================== */
 const DATA = [
@@ -122,430 +122,16 @@ const DATA = [
 ];
 
 
-// ================== Données vocabulaire (modules / packs) ==================
-
-
-
-// 1. Associer les packs à leur module
-const MODULE_MAP: Record<number, number> = {};
-
-function mapRangeToModule(start: number, end: number, moduleNumber: number) {
-  for (let p = start; p <= end; p++) {
-    MODULE_MAP[p] = moduleNumber;
-  }
-}
-
-// Répartition que tu m'as donnée :
-mapRangeToModule(1, 5, 2);    // Module 2 = packs 1-5
-mapRangeToModule(6, 10, 3);   // Module 3 = packs 6-10
-mapRangeToModule(11, 13, 4);  // Module 4 = packs 11-13
-mapRangeToModule(14, 18, 5);  // Module 5 = packs 14-18
-mapRangeToModule(19, 23, 6);  // Module 6 = packs 19-23
-mapRangeToModule(24, 28, 7);  // Module 7 = packs 24-28
-mapRangeToModule(29, 32, 8);  // Module 8 = packs 29-32
-mapRangeToModule(33, 36, 9);  // Module 9 = packs 33-36
-mapRangeToModule(37, 42, 10); // Module 10 = packs 37-42
-
-// 2. Construire la liste de tous les packs à partir du JSON
-//    vocabQuizzes doit déjà être importé tout en haut :
-/*
-   import vocabQuizzes from "./assets/vocab_quizzes.json";
-*/
-const ALL_PACKS = vocabQuizzes.map((rawPack: any, index: number) => {
-  const packNumber = index + 1; // pack 1 = premier dans le JSON
-  return {
-    packNumber,
-    title: rawPack.title,
-    moduleNumber: MODULE_MAP[packNumber],
-    items: rawPack.items, // [{ id, french, reading, kanji }]
-  };
-});
-
-// 3. Construire les modules avec leurs packs
-const MODULE_NUMBERS = [2,3,4,5,6,7,8,9,10];
-
-const MODULES = MODULE_NUMBERS.map((num) => {
-  const packs = ALL_PACKS.filter((p) => p.moduleNumber === num);
-  return {
-    moduleNumber: num,
-    label: `Module ${num}`,
-    packs, // chaque pack = { packNumber, title, items[...] }
-  };
-});
-
-function VocabSection({
-  onExit,
-  selectedModules,
-  setSelectedModules,
-  selectedPacks,
-  setSelectedPacks,
-  onStartQuiz,
-}: {
-  onExit: () => void;
-  selectedModules: number[];
-  setSelectedModules: React.Dispatch<React.SetStateAction<number[]>>;
-  selectedPacks: number[];
-  setSelectedPacks: React.Dispatch<React.SetStateAction<number[]>>;
-  onStartQuiz: (wordsForQuiz: any[]) => void;
-}) {
-  // subPage contrôle où on est :
-  const [subPage, setSubPage] = React.useState<"modules" | "packs" | "words">("modules");
-
-  // module affiché actuellement
-  const [moduleView, setModuleView] = React.useState<any>(null);
-
-  // pack affiché en détail
-  const [packView, setPackView] = React.useState<any>(null);
-
-  // ⚠️ SUPPRIMER ces 2 lignes dans ta version :
-  // const [selectedModules, setSelectedModules] = React.useState<number[]>([]);
-  // const [selectedPacks, setSelectedPacks] = React.useState<number[]>([]);
-  // --> maintenant ils viennent des props, donc on ne les redéclare pas ici.
-
-  // --- helpers sélection ------------------------
-
-  function toggleModule(moduleNumber: number) {
-    setSelectedModules((prev) =>
-      prev.includes(moduleNumber)
-        ? prev.filter((m) => m !== moduleNumber)
-        : [...prev, moduleNumber]
-    );
-  }
-
-  function togglePack(packNumber: number) {
-    setSelectedPacks((prev) =>
-      prev.includes(packNumber)
-        ? prev.filter((p) => p !== packNumber)
-        : [...prev, packNumber]
-    );
-  }
-
-  // retourne tous les numéros de packs appartenant aux modules sélectionnés
-  function getPackNumbersFromSelectedModules() {
-    const packsFromModules: number[] = [];
-    MODULES.forEach((m) => {
-      if (selectedModules.includes(m.moduleNumber)) {
-        m.packs.forEach((p: any) => {
-          packsFromModules.push(p.packNumber);
-        });
-      }
-    });
-    return packsFromModules;
-  }
-
-  // packs finaux utilisés pour le quiz :
-  // - si au moins 1 pack est coché => on prend uniquement ceux-là
-  // - sinon => on prend tous les packs des modules cochés
-  function getChosenPackNumbersForQuiz() {
-    if (selectedPacks.length > 0) {
-      return [...new Set(selectedPacks)];
-    }
-    const fromModules = getPackNumbersFromSelectedModules();
-    return [...new Set(fromModules)];
-  }
-
-  // compter le nombre total de mots qui vont être utilisés dans le quiz
-  function getChosenWordCount() {
-    const chosenPackNumbers = getChosenPackNumbersForQuiz();
-    let count = 0;
-    ALL_PACKS.forEach((pack: any) => {
-      if (chosenPackNumbers.includes(pack.packNumber)) {
-        count += pack.items.length;
-      }
-    });
-    return count;
-  }
-
-  // lancer le quiz vocabulaire
-  // (pour l'instant on n'a pas encore fait l'écran quiz vocab
-  // donc je fais juste un alert() avec les packs choisis)
-function handleStartQuiz() {
-  const chosenPackNumbers = getChosenPackNumbersForQuiz();
-
-  if (chosenPackNumbers.length === 0) {
-    alert("Sélectionne au moins un module ou un pack 👍");
-    return;
-  }
-
-  // construire la liste unique de mots à partir des packs choisis
-  const wordsMap = new Map<string, any>();
-  ALL_PACKS.forEach((pack: any) => {
-    if (chosenPackNumbers.includes(pack.packNumber)) {
-      pack.items.forEach((it: any) => {
-        if (!wordsMap.has(it.id)) {
-          wordsMap.set(it.id, it);
-        }
-      });
-    }
-  });
-
-  const wordsForQuiz = Array.from(wordsMap.values());
-
-  // 👇 petit debug facultatif
-  alert(
-    "Quiz lancé avec packs : " +
-      chosenPackNumbers.join(", ") +
-      "\nNombre total de mots : " +
-      wordsForQuiz.length
-  );
-
-  // 👇 ici on dit au parent "voilà les mots", le parent va switcher vers l'écran Quiz
-  onStartQuiz(wordsForQuiz);
-}
 
 
 
 
-  // -------------------------------------------------
-  // 1) PAGE : LISTE DES MODULES
-  // -------------------------------------------------
-  if (subPage === "modules") {
-    return (
-      <div className="p-4 max-w-3xl mx-auto">
-        <div className="text-center mb-6">
-          <div className="text-2xl font-bold mb-2">📘 Modules de vocabulaire</div>
-          <div className="text-sm text-gray-600">
-            Coche un ou plusieurs modules, ou ouvre un module pour choisir des packs.
-          </div>
-        </div>
-
-        <div className="grid gap-4">
-          {MODULES.map((mod) => {
-            const isChecked = selectedModules.includes(mod.moduleNumber);
-
-            return (
-              <div
-                key={mod.moduleNumber}
-                className="rounded-xl border bg-white shadow-sm p-4 flex flex-col gap-3"
-              >
-                {/* ligne module + checkbox */}
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 accent-pink-500"
-                    checked={isChecked}
-                    onChange={() => toggleModule(mod.moduleNumber)}
-                  />
-
-                  <div className="flex-1">
-                    <div className="text-lg font-semibold flex items-center gap-2">
-                      <span>{mod.label}</span>
-                      <span className="text-xs text-gray-500 font-normal">
-                        ({mod.packs.length} packs)
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {mod.packs.reduce(
-                        (n: number, p: any) => n + p.items.length,
-                        0
-                      )}{" "}
-                      mots
-                    </div>
-                  </div>
-                </label>
-
-                {/* bouton pour aller voir le détail des packs */}
-                <div className="flex justify-end">
-                  <button
-                    className="px-3 py-1.5 text-sm rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold"
-                    onClick={() => {
-                      setModuleView(mod);
-                      setSubPage("packs");
-                    }}
-                  >
-                    Voir les packs →
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Barre d'action quiz */}
-        <div className="mt-6 flex flex-col items-center gap-3">
-          <div className="text-sm text-gray-600">
-            {getChosenPackNumbersForQuiz().length > 0
-              ? `${getChosenPackNumbersForQuiz().length} pack(s) sélectionné(s) • ${getChosenWordCount()} mots`
-              : "Aucune sélection pour l'instant"}
-          </div>
-
-          <button
-            onClick={handleStartQuiz}
-            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold disabled:opacity-30"
-            disabled={getChosenPackNumbersForQuiz().length === 0}
-          >
-            Lancer le quiz vocabulaire
-          </button>
-
-          <button
-            onClick={onExit}
-            className="text-sm text-gray-500 hover:text-gray-700 underline"
-          >
-            ← Retour menu principal
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // -------------------------------------------------
-  // 2) PAGE : PACKS DANS UN MODULE
-  // -------------------------------------------------
-  if (subPage === "packs" && moduleView) {
-    return (
-      <div className="p-4 max-w-3xl mx-auto">
-        <div className="text-center mb-6">
-          <div className="text-2xl font-bold mb-2">
-            {moduleView.label}
-          </div>
-          <div className="text-sm text-gray-600">
-            Coche les packs que tu veux inclure dans le quiz.
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            Astuce : si tu coches au moins un pack, ce seront SEULEMENT ces packs-là qui seront utilisés (les modules cochés seront ignorés).
-          </div>
-        </div>
-
-        <div className="grid gap-4">
-          {moduleView.packs.map((pack: any) => {
-            const isChecked = selectedPacks.includes(pack.packNumber);
-            return (
-              <div
-                key={pack.packNumber}
-                className="rounded-xl border bg-white shadow-sm p-4 flex flex-col gap-3"
-              >
-                {/* ligne pack + checkbox */}
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    className="mt-1 h-4 w-4 accent-pink-500"
-                    checked={isChecked}
-                    onChange={() => togglePack(pack.packNumber)}
-                  />
-
-                  <div className="flex-1">
-                    <div className="text-base font-semibold flex items-center gap-2">
-                      <span>Pack {pack.packNumber}</span>
-                      <span className="text-xs text-gray-500 font-normal">
-                        ({pack.items.length} mots)
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600 truncate">
-                      {pack.title.replace(/^Vocab\s*–\s*/, "")}
-                    </div>
-                  </div>
-                </label>
-
-                {/* bouton pour lire les mots du pack */}
-                <div className="flex justify-end">
-                  <button
-                    className="px-3 py-1.5 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 font-medium"
-                    onClick={() => {
-                      setPackView(pack);
-                      setSubPage("words");
-                    }}
-                  >
-                    Voir les mots →
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Barre d'action quiz */}
-        <div className="mt-6 flex flex-col items-center gap-3">
-          <div className="text-sm text-gray-600">
-            {getChosenPackNumbersForQuiz().length > 0
-              ? `${getChosenPackNumbersForQuiz().length} pack(s) sélectionné(s) • ${getChosenWordCount()} mots`
-              : "Aucune sélection pour l'instant"}
-          </div>
-
-          <button
-            onClick={handleStartQuiz}
-            className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-semibold disabled:opacity-30"
-            disabled={getChosenPackNumbersForQuiz().length === 0}
-          >
-            Lancer le quiz vocabulaire
-          </button>
-
-          <div className="flex flex-col items-center gap-2 text-sm">
-            <button
-              onClick={() => setSubPage("modules")}
-              className="text-gray-500 hover:text-gray-700 underline"
-            >
-              ← Retour modules
-            </button>
-            <button
-              onClick={onExit}
-              className="text-gray-500 hover:text-gray-700 underline"
-            >
-              Menu principal
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // -------------------------------------------------
-  // 3) PAGE : LISTE DES MOTS D’UN PACK
-  // -------------------------------------------------
-  if (subPage === "words" && packView) {
-    return (
-      <div className="p-4 max-w-3xl mx-auto">
-        <div className="text-center mb-6">
-          <div className="text-xl font-bold mb-1">
-            {packView.title.replace(/^Vocab\s*–\s*/, "")}
-          </div>
-          <div className="text-sm text-gray-600">
-            {packView.items.length} mots
-          </div>
-          <div className="text-xs text-gray-400 mt-1">
-            (On affiche seulement la traduction FR)
-          </div>
-        </div>
-
-        <div className="rounded-xl border bg-white shadow-sm divide-y">
-          {packView.items.map((it: any) => (
-            <div
-              key={it.id}
-              className="p-3 text-base font-medium text-gray-900"
-            >
-              {it.french}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 flex flex-col items-center gap-2 text-sm">
-          <button
-            onClick={() => setSubPage("packs")}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 font-medium"
-          >
-            ← Retour packs
-          </button>
-
-          <button
-            onClick={onExit}
-            className="text-gray-500 hover:text-gray-700 underline"
-          >
-            Menu principal
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // fallback
-  return null;
-}
 
 
 
 
-// --------------------
-// STYLES
-// --------------------
+  
+
 
 
 
@@ -2125,329 +1711,6 @@ function getActiveVocabPool(
 
 
 
-/** ================== QUIZ VOCABULAIRE ================== */
-
-/** ================== QUIZ VOC TRAD/LECTURE ================== */
-
-function QuizVocabulaire({
-  words,
-  onBack,
-}: {
-  words: Array<{ id: string; french: string; reading: string; kanji?: string }>;
-  onBack: () => void;
-}) {
-  const [started, setStarted] = useState(false);
-  const [finished, setFinished] = useState(false);
-
-  // ordre des questions (shuffle au départ)
-  const [order, setOrder] = useState<any[]>([]);
-  const [idx, setIdx] = useState(0);
-
-  const [input, setInput] = useState("");
-  const [status, setStatus] = useState<"idle" | "hit" | "miss">("idle");
-  const autoNext = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // récap
-  const results = useRef<
-    Array<{
-      id: string;
-      french: string;
-      reading: string;
-      user: string;
-      ok: boolean;
-    }>
-  >([]);
-
-  // focus auto
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  useEffect(() => {
-    if (started && !finished) {
-      const t = setTimeout(() => inputRef.current?.focus(), 0);
-      return () => clearTimeout(t);
-    }
-  }, [started, finished, idx, status]);
-
-  // Helpers pour comparaison
-  // reading dans vocabQuizzes peut être "き" ou "き / きのき"
-  function normalizeAllAcceptableReadings(readingField: string) {
-    // on coupe sur / , ・ , espaces multiples
-    const rawPieces = readingField
-      .split(/[\/;,、]/)
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    // pour chaque forme kana, on ajoute aussi la version romaji
-    const normKeys = new Set<string>();
-    rawPieces.forEach(piece => {
-      // forme kana/hira/katakana normalisée
-      if (piece) {
-        const hira = normalizeKana(piece);       // ex "キ" -> "き"
-        const roma = norm(kanaToRomaji(piece));  // ex "き" -> "ki"
-        normKeys.add(norm(hira));
-        normKeys.add(roma);
-      }
-    });
-
-    return Array.from(normKeys); // liste de clés possibles
-  }
-
-  // prépare la question actuelle
-  const currentQ = useMemo(() => {
-    if (!started || idx >= order.length) return null;
-
-    const w = order[idx];
-    return {
-      id: w.id,
-      french: w.french,
-      reading: w.reading,
-      acceptableKeys: normalizeAllAcceptableReadings(w.reading),
-    };
-  }, [started, idx, order]);
-
-  const total = order.length;
-  const remaining = Math.max(0, total - idx - 1);
-
-  useEffect(() => {
-    return () => {
-      if (autoNext.current) clearTimeout(autoNext.current);
-    };
-  }, []);
-
-  const start = () => {
-    // mélange les mots reçus en props
-    const shuffled = [...words].sort(() => Math.random() - 0.5);
-
-    setOrder(shuffled);
-    setIdx(0);
-    setInput("");
-    setStatus("idle");
-    results.current = [];
-    setFinished(false);
-    setStarted(true);
-
-    setTimeout(() => inputRef.current?.focus(), 0);
-  };
-
-  function goNext(okForThisOne: boolean, userAnswer: string) {
-    if (!currentQ) return;
-
-    // on pousse le résultat pour le mot courant
-    results.current.push({
-      id: currentQ.id,
-      french: currentQ.french,
-      reading: currentQ.reading,
-      user: userAnswer,
-      ok: okForThisOne,
-    });
-
-    // question suivante ou fin
-    if (idx + 1 < total) {
-      setIdx(idx + 1);
-      setInput("");
-      setStatus("idle");
-      setTimeout(() => inputRef.current?.focus(), 0);
-    } else {
-      setFinished(true);
-    }
-  }
-
-  function handleSubmit() {
-    if (!currentQ) return;
-    const raw = input.trim();
-    if (!raw) return;
-
-    const userKeyKana = norm(normalizeKana(raw));      // si kana
-    const userKeyRoma = norm(raw);                     // si romaji direct
-    const userIsValid =
-      currentQ.acceptableKeys.includes(userKeyKana) ||
-      currentQ.acceptableKeys.includes(userKeyRoma);
-
-    if (userIsValid) {
-      setStatus("hit");
-      if (autoNext.current) clearTimeout(autoNext.current);
-      autoNext.current = setTimeout(() => {
-        goNext(true, raw);
-      }, 500);
-    } else {
-      // faux -> on force à réessayer, PAS skip auto
-      setStatus("miss");
-      setInput("");
-    }
-  }
-
-  function skip() {
-    goNext(false, input);
-  }
-
-  // score final
-  const score = results.current.filter(r => r.ok).length;
-
-  return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm max-w-xl mx-auto">
-      <div className="flex items-center gap-2 mb-2">
-        <button
-          onClick={onBack}
-          className="px-3 py-1 rounded bg-gray-100"
-        >
-          ← Retour
-        </button>
-
-        <span className="font-semibold flex-1">Quiz vocabulaire</span>
-
-        {finished && (
-          <span className="px-2 py-1 rounded-full text-xs bg-pink-200/70">
-            Score: {score}/{results.current.length}
-          </span>
-        )}
-      </div>
-
-      {!started ? (
-        <button
-          onClick={start}
-          disabled={words.length === 0}
-          className={`w-full p-3 rounded-xl text-white ${
-            words.length > 0 ? "bg-pink-400" : "bg-gray-300"
-          }`}
-        >
-          Commencer le quiz vocabulaire
-        </button>
-      ) : !finished ? (
-        <div className="flex flex-col items-center gap-4 p-4">
-          <div className="text-sm text-gray-600">
-            Question {idx + 1} / {total}
-          </div>
-
-          <div className="text-center">
-            <div className="text-sm text-gray-500 mb-1">
-              Traduction française :
-            </div>
-            <div className="text-2xl font-semibold">
-              {currentQ?.french}
-            </div>
-          </div>
-
-          <input
-            ref={inputRef}
-            autoFocus
-            type="text"
-            className={`w-full max-w-md p-3 rounded-xl border text-lg ${
-              status === "miss"
-                ? "border-red-400"
-                : status === "hit"
-                ? "border-green-500"
-                : ""
-            }`}
-            placeholder="Lecture en kana OU en rōmaji, puis Entrée"
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              if (status !== "idle") setStatus("idle");
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && input.trim()) {
-                e.preventDefault();
-                handleSubmit();
-              }
-            }}
-            disabled={status === "hit"}
-          />
-
-          <div className="flex items-center gap-2 w-full max-w-md">
-            <button
-              onClick={handleSubmit}
-              disabled={!input.trim() || status === "hit"}
-              className={`flex-1 p-3 rounded-xl text-white ${
-                input.trim() && status !== "hit"
-                  ? "bg-pink-400"
-                  : "bg-gray-300"
-              }`}
-            >
-              Valider
-            </button>
-
-            <button
-              onClick={skip}
-              className="px-4 py-3 rounded-xl bg-gray-100"
-            >
-              Suivant
-            </button>
-
-            <span className="px-3 py-3 text-sm text-gray-500">
-              Restants: {Math.max(0, total - idx - 1)}
-            </span>
-          </div>
-
-          {status === "miss" && (
-            <div className="text-sm text-red-600">
-              Incorrect. Réessaie ou clique sur "Suivant".
-            </div>
-          )}
-          {status === "hit" && (
-            <div className="text-sm text-green-600">
-              Correct !
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-3">
-          <div className="p-3 rounded-xl bg-gray-50 font-semibold">
-            Récapitulatif
-          </div>
-
-          {results.current.map((r, i) => (
-            <div
-              key={i}
-              className="p-3 rounded-xl bg-gray-50"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="text-sm">
-                  <div className="text-gray-500 text-xs">
-                    Français :
-                  </div>
-                  <div className="text-base font-semibold">
-                    {r.french}
-                  </div>
-                </div>
-
-                <div
-                  className={
-                    r.ok
-                      ? "text-green-600 font-bold"
-                      : "text-red-600 font-bold"
-                  }
-                >
-                  {r.ok ? "Correct" : "Faux"}
-                </div>
-              </div>
-
-              <div className="text-sm mb-1">
-                <span className="text-gray-500">
-                  Ta réponse :
-                </span>{" "}
-                {r.user || "—"}
-              </div>
-
-              <div className="text-sm text-blue-600">
-                Lectures attendues : {r.reading}
-              </div>
-            </div>
-          ))}
-
-          <div className="flex gap-2">
-            <button
-              onClick={start}
-              className="flex-1 p-3 rounded-xl bg-gray-100"
-            >
-              Recommencer
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
 
 /** ================== QUIZ COMPLET ================== */
 
@@ -3274,7 +2537,7 @@ function QuizLectureKanjiComplete({
   );
 }
 
-/** ================== Menu Quiz Kanji / Vocabulaire ================== */
+/** ================== Menu Quiz Kanji  ================== */
 
 /** ================== Menu type de Quiz (Kanji | Vocabulaire) ================== */
 function QuizTypeMenu({ setQuizSection }: { setQuizSection: (s:'kanji'|'vocab')=>void }) {
@@ -3285,38 +2548,11 @@ function QuizTypeMenu({ setQuizSection }: { setQuizSection: (s:'kanji'|'vocab')=
         Kanji
       </button>
       <button onClick={()=>setQuizSection('vocab')} className="w-full p-3 rounded-xl text-white bg-pink-400">
-        Vocabulaire
+        Vocabulaire1
       </button>
     </div>
   );
 }
-
-/** ================== Sous-menu Vocabulaire (placeholder) ================== */
-function QuizVocabMenu({onStartTraductionLecture, onBackToTypes }: {
-  onStartTraductionLecture: () => void;
-  onBackToTypes: () => void;
-}) {
-  return (
-    <div className="p-4 max-w-sm mx-auto bg-white rounded-2xl shadow-sm space-y-4">
-      <div className="flex items-center gap-2">
-        <button onClick={onBackToTypes}
-          className="px-3 py-1 rounded bg-gray-100 text-sm"
-        >
-          ← Types
-        </button>
-        <div className="font-semibold text-lg">Quiz Vocabulaire</div>
-      </div>
-
-      <button onClick={onStartTraductionLecture}className="w-full p-3 rounded-xl text-white bg-pink-500 hover:bg-pink-600 font-semibold text-center">
-        Traduction / Lecture
-      </button>
-      <button onClick={()=>onStartTraductionLecture("voctradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400">Q Traduction / Lecture</button>
-      <button onClick={() => setQuizMode("tradLecture")} className="w-full p-3 rounded-xl text-white bg-pink-400 hover:bg-pink-500">Quiz Vocabulaire — Traduction / Lecture</button>
-    </div>
-  );
-}
-
-
 
 
 /** ================== Menu Quiz Kanji ================== */
@@ -3356,28 +2592,12 @@ function QuizAllTypeMenu({
       <div className="text-lg font-semibold mb-2">Quiz Complet</div>
       <p className="text-sm text-gray-600 mb-1">Choisis le type</p>
       <button onClick={() => setQuizAllSection('kanji')}className="w-full p-3 rounded-xl text-white bg-pink-400">Kanji</button>
-      <button onClick={() => setQuizAllSection('vocab')}className="w-full p-3 rounded-xl text-white bg-pink-400">Vocabulaire</button>
+      <button onClick={() => setQuizAllSection('vocab')}className="w-full p-3 rounded-xl text-white bg-pink-400">Vocabulaire1</button>
     </div>
   );
 }
 
-/** ====== Sous-menu VOCAB pour QUIZ COMPLET (placeholder) ====== */
-function VocabAllMenu({ onBackToTypes }: { onBackToTypes: () => void }) {
-  return (
-    <div className="p-4 bg-white rounded-2xl shadow-sm space-y-3">
-      <div className="flex items-center gap-2 mb-2">
-        <button onClick={onBackToTypes} className="px-3 py-1 rounded bg-gray-100">← Types</button>
-        <span className="font-semibold">Vocabulaire — Quiz Complet</span>
-      </div>
-      <p className="text-sm text-gray-600">
-        Ici on listera les “quiz complet” de vocabulaire depuis ta nouvelle base (fichiers que tu m’enverras).
-      </p>
-      <button disabled className="w-full p-3 rounded-xl text-white bg-gray-300 cursor-not-allowed">
-        (à venir) Vocab — Quiz Complet 1
-      </button>
-    </div>
-  );
-}
+
 
 
 function QuizCompletMenu({
@@ -3413,51 +2633,11 @@ function QuizCompletMenu({
  
 /** ================== App ================== */
 export default function App() {
+  const [route, setRoute] = useState("select");
   const [quizMode, setQuizMode] = useState(null);
   const [quizAllMode, setQuizAllMode] = useState<string|null>(null);
-  const [quizSection, setQuizSection] = useState<'kanji'|'vocab'|null>(null);
-  const [quizAllSection, setQuizAllSection] = useState<'kanji'|'vocab'|null>(null);
-  const [quizVocabMode, setQuizVocabMode] = useState<string | null>(null);
-  const [route, setRoute] = useState<"main" | "vocabSelect" | "vocabQuiz">("select");
-  const [selectedModules, setSelectedModules] = useState<number[]>([]);
-  const [selectedPacks, setSelectedPacks] = useState<number[]>([]);
-  const [quizWords, setQuizWords] = useState<any[]>([]);
-  const [selectedVocabModules, setSelectedVocabModules] = useState<number[]>(() => {
-  try {
-    const raw = window.localStorage.getItem("selectedVocabModules");
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-  });
-
-  const [selectedVocabPacks, setSelectedVocabPacks] = useState<number[]>(() => {
-  try {
-    const raw = window.localStorage.getItem("selectedVocabPacks");
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-  });
-
-React.useEffect(() => {
-  try {
-    window.localStorage.setItem(
-      "selectedVocabModules",
-      JSON.stringify(selectedVocabModules)
-    );
-  } catch {}
-}, [selectedVocabModules]);
-
-React.useEffect(() => {
-  try {
-    window.localStorage.setItem(
-      "selectedVocabPacks",
-      JSON.stringify(selectedVocabPacks)
-    );
-  } catch {}
-}, [selectedVocabPacks]);
-
+  const [quizSection, setQuizSection] = useState<'kanji'|null>(null);
+  const [quizAllSection, setQuizAllSection] = useState<'kanji'|null>(null);
   const [selectedIds, setSelectedIds] = useState(() => {
     try {
       const raw = localStorage.getItem("jlpt_selected_ids");
@@ -3484,8 +2664,6 @@ React.useEffect(() => {
             <button onClick={()=>{ setRoute("select"); setQuizMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Kanji</button>
             <button onClick={()=>{ setRoute("quiz"); setQuizSection(null); setQuizMode(null); setQuizVocabMode(null);}} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz</button>
             <button onClick={()=>{ setRoute("quizAll"); setQuizAllSection(null); setQuizAllMode(null); }} className="px-3 py-1 rounded-lg hover:bg-pink-100">Quiz Complet</button>
-            <button onClick={()=>{ setRoute("vocab"); }} className="px-3 py-1 rounded-lg hover:bg-pink-100 text-pink-600 font-semibold">Vocabulaire</button>
-
           </div>
         </div>
       </header>
@@ -3500,33 +2678,6 @@ React.useEffect(() => {
          <QuizMenu setQuizMode={setQuizMode} onBackToTypes={() => setQuizSection(null)} />
         )}
 
-
-
-        {route === "vocabSelect" && (
-      <VocabSection
-        onExit={() => setRoute("main")}
-        selectedModules={selectedModules}
-        setSelectedModules={setSelectedModules}
-        selectedPacks={selectedPacks}
-        setSelectedPacks={setSelectedPacks}
-        onStartQuiz={(wordsForQuiz) => {
-          setQuizWords(wordsForQuiz);
-          setRoute("vocabQuiz");
-        }}
-      />
-    )}
-
- {/* SELECTION VOCABULAIRE */}
-
-        {route === "vocab" && (
-        <VocabSection
-    onExit={() => setRoute("select")}
-    selectedModules={selectedVocabModules}
-    setSelectedModules={setSelectedVocabModules}
-    selectedPacks={selectedVocabPacks}
-    setSelectedPacks={setSelectedVocabPacks}
-  />
-)}
 
         {/* 3.1 — Écran 1 : choix du type de quiz */}
         {route === "quiz" && quizSection === null && (
@@ -3556,27 +2707,7 @@ React.useEffect(() => {
 
 
 
-       {/*  Sous menu QUIZ VOCABULAIRE */}
-        {route === "quiz" && quizSection === "vocab" && quizVocabMode === null && (
-         <QuizVocabMenu onBackToTypes={() => {setQuizSection(null); setQuizVocabMode(null);}} />
-        )}
-
-
-
-        {route === "quiz" && quizSection === "vocab" && quizVocabMode === "tradLecture" && (
-  <QuizVocabulaire
-    onBack={() => {
-      // on revient au sous-menu vocab
-      setQuizVocabMode(null);
-    }}
-    title="Quiz Vocabulaire : Traduction → Lecture"
-  />
-)}
-
-
-        {route === "vocab" && quizVocabMode === "tradLecture" && (
-         <QuizVocabulaire onBack={() => setQuizMode(null)} title="Quiz Vocabulaire : Traduction → Lecture" />
-        )}
+       
 
         {/* 3.1 — Écran 1 : choix du type COMPET (Kanji | Vocab) */}
         {route === "quizAll" && quizAllSection === null && (
