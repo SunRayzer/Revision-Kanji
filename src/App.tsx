@@ -144,7 +144,6 @@ const splitFR = (s) => (s||"").split(/[;、,]/).map(t=>t.trim()).filter(Boolean)
 const shuffle = (arr) => [...arr].sort(() => Math.random() - 0.5);
 const stripAccents = (s) => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const normalize = (s) => stripAccents(s).trim().toLowerCase();
-const VOCAB_WORDS = ALL_PACKS.flatMap((pack: any) => pack.items);
 
 /** Kana -> rōmaji (Hepburn simplifié) */
 function kanaToRomaji(input){
