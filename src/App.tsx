@@ -117,8 +117,7 @@ const DATA = [
   { id: "電", meaningFR: "électricité", meaningEN: "electricity", onyomi: ["デン"], kunyomi: [], aSavoir: [""] },
   { id: "魚", meaningFR: "poisson", meaningEN: "fish", onyomi: ["ギョ"], kunyomi: ["さかな"], aSavoir: [""] },
   { id: "犬", meaningFR: "chien", meaningEN: "dog", onyomi: ["ケン"], kunyomi: ["いぬ"], aSavoir: [""] },
-  { id: "立", meaningFR: "se lever; être debout; se dresser", meaningEN: "", onyomi: ["リツ"], kunyomi: ["た"], aSavoir: [""] }, },
-
+  { id: "立", meaningFR: "se lever; être debout; se dresser", meaningEN: "", onyomi: ["リツ"], kunyomi: ["た"], aSavoir: [""] },
 ];
 
 
