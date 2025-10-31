@@ -98,7 +98,6 @@ const DATA = [
   { id: "気", meaningFR: "esprit; air; humeur", meaningEN: "spirit; air", onyomi: ["キ"], kunyomi: ["いき"], aSavoir: ["げんき"] },
   { id: "先", meaningFR: "avant; précédent", meaningEN: "before; previous", onyomi: ["セン"], kunyomi: ["さき","まず"], aSavoir: ["さき"] },
   { id: "長", meaningFR: "long; chef", meaningEN: "long; leader", onyomi: ["チョウ"], kunyomi: ["ながい"], aSavoir: ["ながい"] },
- 
   { id: "間", meaningFR: "intervalle; entre", meaningEN: "interval; between", onyomi: ["カン","ケン"], kunyomi: ["あいだ","ま"], aSavoir: [""] },
   { id: "売", meaningFR: "vendre", meaningEN: "to sell", onyomi: ["バイ"], kunyomi: ["うる"], aSavoir: [""]　},
   { id: "道", meaningFR: "route; chemin", meaningEN: "road; way", onyomi: ["ドウ"], kunyomi: ["みち"], aSavoir: [""] },
